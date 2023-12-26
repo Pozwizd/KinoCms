@@ -1,0 +1,52 @@
+package spacelab.kinocms.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import spacelab.kinocms.model.ImagesEntity.ImageHall;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "hall")
+public class Hall {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+    @Column
+    private String hallNumber;
+    @Column
+    private String description;
+    @Column
+    String urlSchemeImageHall;
+    @Column
+    private String topBanner;
+    @Column
+    String logoPath;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hall")
+    private List<ImageHall> imagesHall = new ArrayList<>();
+    @Column
+    private Date dateCreated;
+    @Column
+    private String seoUrl;
+    @Column
+    private String seoTitle;
+    @Column
+    private String seoKeywords;
+    @Column
+    private String seoDescription;
+
+    @ManyToOne
+    @JoinColumn(name = "cinema_id")
+    private Cinema cinema;
+
+}
