@@ -26,6 +26,6 @@ public class Banner {
 
     @ManyToOne
     @JoinColumn(name = "banner_block_id")
-    private bannerBlock bannerBlock;
+    private BannerBlock bannerBlock;
 
 }

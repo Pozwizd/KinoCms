@@ -1,7 +1,9 @@
 package spacelab.kinocms.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import spacelab.kinocms.model.ImagesEntity.ImageStocks;
 
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "stocks")
 public class Stocks {

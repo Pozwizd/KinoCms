@@ -1,16 +1,23 @@
 package spacelab.kinocms.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import spacelab.kinocms.model.ImagesEntity.ImageNews;
 
+import javax.persistence.TemporalType;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "news")
 public class News {
@@ -25,6 +32,8 @@ public class News {
     private String name;
     @Column
     private Date datePosting;
+
+    @DateTimeFormat(pattern = "dd.MM.yyyy - HH:mm")
     @Column
     private Date dateCreated;
     @Column
