@@ -25,4 +25,5 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:/" + Paths.get("images").toFile().getAbsolutePath() + "/")
         ;
     }
+
 }

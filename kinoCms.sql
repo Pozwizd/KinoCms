@@ -1,0 +1,1 @@
+create schema kino_cms;

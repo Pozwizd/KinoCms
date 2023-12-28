@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import spacelab.kinocms.model.page.Gender;
+import spacelab.kinocms.model.page.Lanquage;
 
 import java.util.Date;
 
