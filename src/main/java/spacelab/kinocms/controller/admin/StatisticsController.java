@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
-@RequestMapping(value = "/admin/")
+@RequestMapping(value = "/admin")
 public class StatisticsController {
 
 
