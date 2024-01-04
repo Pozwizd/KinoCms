@@ -8,16 +8,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
-@RequestMapping( "/admin")
-public class StatisticsController {
+@RequestMapping(value = "/admin/banners")
+public class BannerController {
 
 
     @GetMapping({"/", ""})
     public ModelAndView index(Model model) {
-        model.addAttribute("title", "Статистика");
-        model.addAttribute("pageActive", "statistics");
+        model.addAttribute("title", "Banners");
+        model.addAttribute("pageActive", "banners");
 
-        return new ModelAndView("admin/statistics");
+        return new ModelAndView("admin/banners");
     }
 
 }

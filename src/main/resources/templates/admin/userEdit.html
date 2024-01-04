@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+
+<body>
+<div layout:fragment="content">
+    <!-- Multi Column with Form Separator -->
+    <div class="card mb-4">
+        <form class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="mb-3 row">
+                        <label for="html5-text-input" class="col-md-2 col-form-label">Имя</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" value="Vuexy" id="html5-text-input" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3 row">
+                        <label for="multicol-language" class="col-md-2 col-form-label">Язык</label>
+                        <div class="col-md-10">
+                            <div id="multicol-language" class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                <input
+                                        type="radio"
+                                        class="btn-check"
+                                        name="language"
+                                        id="language-ru"
+                                        autocomplete="off"
+                                />
+                                <label class="btn btn-outline-primary" for="language-ru">Русский</label>
+
+                                <input
+                                        type="radio"
+                                        class="btn-check"
+                                        name="language"
+                                        id="language-ua"
+                                        autocomplete="off" />
+                                <label class="btn btn-outline-primary" for="language-ua">Українська</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3 row">
+                        <label for="html5-text-surname" class="col-md-2 col-form-label">Фамилия</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" value="Vuexy" id="html5-text-surname" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3 row">
+                        <label for="multicol-gender" class="col-md-2 col-form-label">Пол</label>
+                        <div class="col-md-10">
+                            <div id="multicol-gender" class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                <input
+                                        type="radio"
+                                        class="btn-check"
+                                        name="gender"
+                                        id="multicol-gender-male"
+                                        autocomplete="off"
+                                />
+                                <label class="btn btn-outline-primary" for="language-ru">Мужской</label>
+
+                                <input
+                                        type="radio"
+                                        class="btn-check"
+                                        name="gender"
+                                        id="multicol-gender-female"
+                                        autocomplete="off" />
+                                <label class="btn btn-outline-primary" for="language-ua">Женский</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 mx-n4" />
+            <div class="pt-4">
+                <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                <button type="reset" class="btn btn-label-secondary">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../../assets/vendor/libs/cleavejs/cleave.js"></script>
+<script src="../../assets/vendor/libs/cleavejs/cleave-phone.js"></script>
+<script src="../../assets/vendor/libs/moment/moment.js"></script>
+<script src="../../assets/vendor/libs/flatpickr/flatpickr.js"></script>
+<script src="../../assets/vendor/libs/select2/select2.js"></script>
+<script src="../../assets/js/form-layouts.js"></script>
+</body>
+</html>

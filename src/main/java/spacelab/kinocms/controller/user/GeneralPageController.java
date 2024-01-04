@@ -1,4 +1,4 @@
-package spacelab.kinocms.controller.admin;
+package spacelab.kinocms.controller.user;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -6,18 +6,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-
 @Controller
-@RequestMapping( "/admin")
-public class StatisticsController {
+@RequestMapping( "/")
+public class GeneralPageController {
 
 
     @GetMapping({"/", ""})
     public ModelAndView index(Model model) {
-        model.addAttribute("title", "Статистика");
-        model.addAttribute("pageActive", "statistics");
+        model.addAttribute("title", "Главная");
 
-        return new ModelAndView("admin/statistics");
+        return new ModelAndView("user/index");
     }
 
 }

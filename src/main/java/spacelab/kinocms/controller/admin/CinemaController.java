@@ -6,18 +6,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-
 @Controller
-@RequestMapping( "/admin")
-public class StatisticsController {
-
-
+@RequestMapping("admin/cinema")
+public class CinemaController {
     @GetMapping({"/", ""})
-    public ModelAndView index(Model model) {
-        model.addAttribute("title", "Статистика");
-        model.addAttribute("pageActive", "statistics");
-
-        return new ModelAndView("admin/statistics");
+    public ModelAndView index(Model model){
+        model.addAttribute("title", "Кинотеатр");
+        model.addAttribute("pageActive", "cinema");
+        return new ModelAndView("admin/cinemas");
     }
 
 }

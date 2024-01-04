@@ -6,18 +6,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-
 @Controller
-@RequestMapping( "/admin")
-public class StatisticsController {
-
+@RequestMapping("admin/news")
+public class NewsController {
 
     @GetMapping({"/", ""})
-    public ModelAndView index(Model model) {
-        model.addAttribute("title", "Статистика");
-        model.addAttribute("pageActive", "statistics");
+    public ModelAndView index (Model model){
+        model.addAttribute("title", "Новости");
+        model.addAttribute("pageActive", "news");
 
-        return new ModelAndView("admin/statistics");
+        return new ModelAndView("admin/news");
     }
 
 }
