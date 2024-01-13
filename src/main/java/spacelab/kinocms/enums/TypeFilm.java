@@ -1,4 +1,4 @@
-package spacelab.kinocms.model;
+package spacelab.kinocms.enums;
 
 import lombok.Getter;
 

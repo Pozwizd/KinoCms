@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import spacelab.kinocms.enums.Status;
 import spacelab.kinocms.model.ImagesEntity.ImageNews;
 import java.util.ArrayList;
 import java.util.Date;

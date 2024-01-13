@@ -10,9 +10,6 @@ public class KinoCmsApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(KinoCmsApplication.class, args);
-
-        SpringTemplateEngine engine = new SpringTemplateEngine();
-        engine.addDialect(new LayoutDialect());
     }
 
 }

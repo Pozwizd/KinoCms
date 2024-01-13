@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.model.Status;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +23,9 @@ public class ContactPage{
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column
+    private String name;
+
     @OneToMany(mappedBy = "contactPage")
     private List<ContactCinema> contactCinemas = new ArrayList<>();
 
@@ -31,6 +34,9 @@ public class ContactPage{
 
     @Column
     private String seoUrl;
+
+    @Column
+    private Date dateOfCreated;
 
     @Column
     private String seoTitle;

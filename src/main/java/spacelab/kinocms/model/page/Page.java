@@ -5,29 +5,31 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.model.Status;
-import spacelab.kinocms.model.page.imagesPage.ImageChildRoomPage;
+import spacelab.kinocms.enums.Status;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "child_room_page")
-public class ChildRoomPage{
+@Table(name = "page")
+public class Page{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
+
     @Column
-    private Status status;
+    private Boolean status;
+
+    @Column
+    private Date dateOfCreated;
 
     @Column
     private String name;
@@ -38,8 +40,8 @@ public class ChildRoomPage{
     @Column
     private String  mainImage;
 
-    @OneToMany(mappedBy = "childRoomPage")
-    private List<ImageChildRoomPage> imagesChildRoomPage = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "page")
+    private List<ImagePage> imagesAboutCinema = new ArrayList<>();
 
     @Column
     private String seoUrl;

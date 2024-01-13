@@ -1,4 +1,4 @@
-package spacelab.kinocms.model.page;
+package spacelab.kinocms.enums;
 
 public enum Lanquage {
 

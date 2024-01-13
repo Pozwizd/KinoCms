@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+
+<body>
+<div layout:fragment="content">
+    <!-- Responsive Table -->
+    <div class="d-flex flex-row justify-content-center align-items-center">
+        <h4 class="fw-bold pt-3">Список Страниц</h4>
+    </div>
+    <div class="d-flex flex-row justify-content-end align-items-center">
+        <a href="/admin/pages/create" class="btn btn-primary">Добавить страницу</a>
+    </div>
+    <br/>
+    <div class="card">
+        <div class="card-body">
+            <div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Дата создания</th>
+                            <th>Статус</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                        <tr>
+                            <td th:text="${mainPage.name}">1</td>
+                            <td th:text="${mainPage.dateOfCreated}">2</td>
+                            <td th:text="${mainPage.status == true ? 'Активен' : 'Отключен'}">
+                                3</td>
+                            <th>
+                                <a style="max-width: 24px;"
+                                   th:href="@{pages/editMainPage}"
+                                   class="btn btn-primary">
+                                    <i class="ti ti-edit">
+                                    </i>
+                                </a>
+                            </th>
+                        </tr>
+                        <tr th:each="basicPage : ${basicPages}">
+                            <td th:text="${basicPage.name}">1</td>
+                            <td th:text="${basicPage.dateOfCreated}">2</td>
+                            <td th:text="${basicPage.status == true ? 'Активен' : 'Отключен'}">3</td>
+                            <td >
+                                <a style="max-width: 24px;"
+                                   th:href="@{pages/editPage/{id}(id=${basicPage.id})}"
+                                   class="btn btn-primary">
+                                    <i class="ti ti-edit">
+                                    </i>
+                                </a>
+                                <a style="max-width: 24px;"
+                                   th:href="@{admin/pages/removePage/{id}(id=${basicPage.id})}"
+                                   class="btn btn-danger"
+                                   th:classappend="${'disabled'}">
+                                    <i class="ti ti-trash">
+                                    </i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-center pb-0"></div>
+    </div>
+</div>
+</body>
+</html>

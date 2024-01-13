@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import spacelab.kinocms.model.page.Gender;
-import spacelab.kinocms.model.page.Lanquage;
+import spacelab.kinocms.enums.Gender;
+import spacelab.kinocms.enums.Lanquage;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
+import java.sql.Date;
 
 @Getter
 @Setter

@@ -1,19 +1,19 @@
-package spacelab.kinocms.model.page.imagesPage;
+package spacelab.kinocms.model.page;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.model.page.VipLoungePage;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "image_vip_lounge_page")
-public class ImageVipLoungePage {
+@Table(name = "image_page")
+public class ImagePage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -23,7 +23,7 @@ public class ImageVipLoungePage {
     private String url;
 
     @ManyToOne
-    @JoinColumn(name = "vip_lounge_page_id")
-    private VipLoungePage vipLoungePage;
+    @JoinColumn(name = "page_id", nullable = false)
+    private Page page;
 
 }

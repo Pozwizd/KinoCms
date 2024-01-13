@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+
+<body>
+<div layout:fragment="content">
+    <!-- Multi Column with Form Separator -->
+    <div class="card mb-4">
+        <form class="card-body" th:action="@{/admin/users/{id}(id=${user.id})}" method="post" th:object="${user}">
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3 row">
+                        <label for="first-name" class="col-sm-4 col-form-label">Имя</label>
+                        <div class="col-sm-8">
+                            <input type="text"
+                                   class="form-control"
+                                   id="first-name"
+                                   placeholder="Введите ваше имя"
+                                   th:field="*{name}">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="last-name" class="col-sm-4 col-form-label">Фамилия</label>
+                        <div class="col-sm-8">
+                            <input type="text"
+                                   class="form-control"
+                                   id="last-name"
+                                   placeholder="Введите вашу фамилию"
+                                   th:field="*{surname}">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="alias" class="col-sm-4 col-form-label">Псевдоним</label>
+                        <div class="col-sm-8">
+                            <input type="text"
+                                   class="form-control"
+                                   id="alias"
+                                   placeholder="Введите псевдоним"
+                                   th:field="*{nickname}">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="email" class="col-sm-4 col-form-label">E-mail</label>
+                        <div class="col-sm-8">
+                            <input type="email"
+                                   class="form-control"
+                                   id="email"
+                                   placeholder="Введите E-mail"
+                                   th:field="*{email}">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="address" class="col-sm-4 col-form-label">Адрес</label>
+                        <div class="col-sm-8">
+                            <input type="text"
+                                   class="form-control"
+                                   id="address"
+                                   placeholder="Введите адрес"
+                                   th:field="*{address}">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="password" class="col-sm-4 col-form-label">Пароль</label>
+                        <div class="col-sm-8">
+                            <input type="password"
+                                   class="form-control"
+                                   id="password"
+                                   placeholder="Введите пароль"
+                                   th:field="*{password}">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="card-number" class="col-sm-4 col-form-label">Номер карты</label>
+                        <div class="col-sm-8">
+                            <input type="text"
+                                   class="form-control"
+                                   id="card-number"
+                                   placeholder="Введите номер карты"
+                                   th:field="*{cardNumber}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Язык</label>
+                        <div class="col-sm-8">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="language"
+                                       id="russian"
+                                       th:field="*{language}"
+                                       value="Русский">
+                                <label class="form-check-label" for="russian">Русский</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="language"
+                                       id="ukrainian"
+                                       th:field="*{language}"
+                                       value="Українська">
+                                <label class="form-check-label" for="ukrainian">Украинский</label>
+                            </div>
+                            <!-- Добавьте другие варианты языка -->
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Пол</label>
+                        <div class="col-sm-8">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       id="male"
+                                       th:field="*{gender}"
+                                       value="MALE">
+                                <label class="form-check-label" for="male">Мужской</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       id="female"
+                                       th:field="*{gender}"
+                                       value="FEMALE">
+                                <label class="form-check-label" for="female">Женский</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="phone" class="col-sm-4 col-form-label">Телефон</label>
+                        <div class="col-sm-8">
+                            <input type="tel"
+                                   class="form-control"
+                                   id="phone"
+                                   placeholder="Введите номер телефона"
+                                   th:field="*{phoneNumber}">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="dob" class="col-sm-4 col-form-label">Дата рождения</label>
+                        <div class="col-sm-8">
+                            <input type="date"
+                                   class="form-control"
+                                   id="dob"
+                                   placeholder="Введите дату рождения"
+                                   th:field="*{dateOfBirth}"
+                                   name="dateOfBirth">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="city" class="col-sm-4 col-form-label">Город</label>
+                        <div class="col-sm-8">
+                            <select class="form-select" id="city" th:field="*{city}">
+                                <option value="Kharkiv">Харьков</option>
+                                <option value="Kiev">Киев</option>
+                                <!-- Добавьте другие варианты городов -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="confirm-password" class="col-sm-4 col-form-label">Повторите пароль</label>
+                        <div class="col-sm-8">
+                            <input type="password"
+                                   class="form-control"
+                                   id="confirm-password"
+                                   placeholder="Повторите пароль"
+                                   name="confirmPassword">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/assets/vendor/libs/cleavejs/cleave.js"></script>
+<script src="/assets/vendor/libs/cleavejs/cleave-phone.js"></script>
+<script src="/assets/vendor/libs/moment/moment.js"></script>
+<script src="/assets/vendor/libs/flatpickr/flatpickr.js"></script>
+<script src="/assets/vendor/libs/select2/select2.js"></script>
+<script src="/assets/js/form-layouts.js"></script>
+</body>
+</html>

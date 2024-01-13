@@ -2,6 +2,7 @@ package spacelab.kinocms.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import spacelab.kinocms.enums.TypeFilm;
 import spacelab.kinocms.model.ImagesEntity.ImageFilm;
 
 import java.util.ArrayList;

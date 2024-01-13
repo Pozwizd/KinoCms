@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.model.Status;
+import spacelab.kinocms.enums.Status;
 
 @Getter
 @Setter

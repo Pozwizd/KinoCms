@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <form th:method="post"
+              th:object="${page}"
+              th:action="@{{id}(id=${page.id})}"
+              enctype="multipart/form-data">
+            <div class="row justify-content-end">
+                <div class="flex justify-content-end row">
+                    <div class="card-header">
+                        <ul class="nav nav-pills card-header-pills" role="tablist"
+                            style="display: flex; justify-content: flex-end;">
+                            <div class="form-check form-switch form-check-inline col-1 my-auto">
+                                <label>
+                                    <input class="form-check-input" type="checkbox" th:field="*{status}"/>
+                                </label>
+                            </div>
+                            <li class="nav-item ml-auto">
+                                <button
+                                        type="button"
+                                        class="nav-link active"
+                                        role="tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#navs-pills-within-card-active"
+                                        aria-controls="navs-pills-within-card-active"
+                                        aria-selected="true"
+                                >
+                                    Русский
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button
+                                        type="button"
+                                        class="nav-link"
+                                        role="tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#navs-pills-within-card-link"
+                                        aria-controls="navs-pills-within-card-link"
+                                        aria-selected="false"
+                                >
+                                    Link
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button
+                                        type="button"
+                                        class="nav-link disabled"
+                                        role="tab"
+                                        data-bs-toggle="tab"
+                                        aria-selected="false"
+                                >
+                                    English
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="tab-content p-0 pt-4">
+                    <div class="tab-pane fade show active" id="navs-pills-within-card-active" role="tabpanel">
+                        <div class="row mb-4">
+                            <label class="col-sm-1 col-form-label-sm">Название</label>
+                            <div class="col-sm-6">
+                                <input type="text"
+                                       class="form-control form-control-sm"
+                                       th:field="*{name}">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label class="col-sm-1 col-form-label-sm">Описание</label>
+                            <div class="col-sm-11">
+                                <div class="card-body">
+                                    <textarea id="autosize-demo"
+                                              rows="3"
+                                              class="form-control"
+                                              th:field="*{description}">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="row align-items-center">
+                                <div class="col-6">
+                                    <label class="col-form-label col-sm-2">
+                                        Главная картинка
+                                    </label>
+                                    <img th:src="${page.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : page.mainImage}"
+                                         class="img-fluid"
+                                         style="max-width: 250px; max-height: 200px;">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">
+                                        <input type="file"
+                                               class="form-control"
+                                               accept="image/png, image/jpeg"
+                                               name="mainImagePage"/>
+                                    </label>
+                                    <label class="form-label">
+                                        <a th:href="@{/editPage/{id}/deleteMainImage(id=${page.id})}">
+                                            <button
+                                                    type="button"
+                                                    class="btn btn-danger">
+                                                Удалить
+                                            </button>
+                                        </a>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label>Галерея картинок</label>
+                            <div class="col-12">
+                                <div class="row align-items-center" id="gallery-image">
+                                    <div class="col-3"
+                                         th:if="${page.imagesAboutCinema != null}"
+                                         th:each="imageAboutCinema : ${page.imagesAboutCinema}">
+                                        <div class="d-flex flex-column" style="max-width: 100%;">
+                                            <img th:src="${imageAboutCinema.url != null ?
+                                             imageAboutCinema.url :
+                                             'https://via.placeholder.com/250x200.png?text=Нет+Изображения'}"
+                                                 class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">
+
+                                            <label class="form-label" style="max-width: 250px;">
+                                                <input type="file"
+                                                       name="imageAboutCinema[]"
+                                                       class="form-control"
+                                                       accept="image/png, image/jpeg" multiple/>
+                                            </label>
+
+                                            <label class="form-label" style="max-width: 250px;">
+                                                <button style="width: 250px;"
+                                                        type="button"
+                                                        class="btn btn-danger"
+                                                        onclick="removeBlock(this)">
+                                                    Удалить
+                                                </button>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
+                            </div>
+                            <script>
+                                let index = 1;
+                                const addBlock = () => {
+                                    const newBlock = `
+                                <div class="col-3">
+                                        <div class="d-flex flex-column" style="max-width: 100%;">
+                                            <img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"
+                                                 class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">
+
+                                            <label class="form-label" style="max-width: 250px;">
+                                                <input type="file"
+                                                       name="imageAboutCinema[]"
+                                                       class="form-control"
+                                                       accept="image/png, image/jpeg" multiple/>
+                                            </label>
+
+                                            <label class="form-label" style="max-width: 250px;">
+                                                <button style="width: 250px;"
+                                                        type="button"
+                                                        class="btn btn-danger"
+                                                        onclick="removeBlock(this)">
+                                                    Удалить
+                                                </button>
+                                            </label>
+                                        </div>
+                                    </div>
+                                `;
+                                    document.querySelector('#gallery-image').insertAdjacentHTML('beforeend', newBlock);
+                                    index++;
+                                }
+                                document.querySelector('#add-image-button').addEventListener('click', addBlock);
+
+                                function removeBlock(element) {
+                                    let block = element.closest('.col-3');
+                                    block.remove();
+                                }
+                            </script>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-2">
+                                <label class="col-form-label-sm">SEO блок</label>
+                            </div>
+                            <div class="col-10">
+                                <div class="seo_block col-sm-10">
+                                    <div class="row">
+                                        <label for="seoUrl"
+                                               class="col-sm-2 col-form-label-sm justify-content-end">Url:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text"
+                                                   id="seoUrl"
+                                                   class="form-control form-control-sm col-sm-8"
+                                                   th:field="*{seoUrl}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 mt-2">
+                                    <div class="row">
+                                        <label for="seoTitle" class="col-sm-2 col-form-label-sm justify-content-end">Title:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="seoTitle"
+                                                   class="form-control"
+                                                   th:field="*{seoTitle}"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 mt-2">
+                                    <div class="row">
+                                        <label for="seoKeywords" class="col-sm-2 col-form-label-sm justify-content-end">Keywords:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="seoKeywords"
+                                                   class="form-control"
+                                                   th:field="*{seoKeywords}"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 mt-2">
+                                    <div class="row">
+                                        <label for="seoDescription"
+                                               class="col-sm-2 col-form-label-sm justify-content-end">Description:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="seoDescription"
+                                                   class="form-control"
+                                                   th:field="*{seoDescription}">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="d-grid gap-2 col-3 mx-auto mt-3">
+                                    <button type="submit" class="btn btn-outline-primary">Сохранить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="navs-pills-within-card-link" role="tabpanel">
+                        <h4 class="card-title">Special link title</h4>
+                        <p class="card-text">
+                            With supporting text below as a natural lead-in to additional content.
+                        </p>
+                        <a href="javascript:void(0)" class="btn btn-secondary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -5,11 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.model.Status;
+import spacelab.kinocms.enums.Status;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -24,15 +22,24 @@ public class MainPage{
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
+    @Column(name = "name")
+    private String name;
+
+
     @Column
-    private Status status;
+    private boolean status;
 
     @Column
     private String phoneNumber;
 
     @Column
     private String phoneNumber2;
+
+    @Column
+    private String seoText;
+
+    @Column
+    private Date dateOfCreated;
 
     @Column
     private String seoUrl;

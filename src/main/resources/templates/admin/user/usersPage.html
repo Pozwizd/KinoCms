@@ -31,8 +31,8 @@
                             <th>ФИО</th>
                             <th>Псевдоним</th>
                             <th>Город</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
+                            <th></th>
+
                         </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
@@ -100,12 +100,10 @@
         }
 
         function drawTable(result, page) {
-            // Отрисовка данных в таблице
             for (const data of result.content) {
-                // Форматирование даты
-                let dateRegString =  new Date(data.dateOfRegistration).toLocaleDateString();
+
+                let dateRegString =  new Date(data.dateOfRegistration).toLocaleDateString("uk");
                 let dateOfBirthString =  new Date(data.dateOfBirth).toLocaleDateString("uk");
-                // Генерация HTML-кода для строки таблицы с данными пользователя
 
                 $('<tr>\n' +
                     '<td>' + data.id + '</td>\n' +
@@ -116,22 +114,19 @@
                     '<td>' + data.name + ' ' + data.surname + '</td>\n' +
                     '<td>' + data.nickname + '</td>\n' +
                     '<td>' + data.city + '</td>\n' +
-                    '<td>\n' +
+                    '<td class="row">\n' +
                     '<a style="max-width: 24px;" ' +
                     'href="users/' + data.id + '" class="btn btn-primary">\n' +
                     '<i class="ti ti-edit"></i>\n' +
                     '</a>\n' +
-                    '</td>\n' +
-                    '' +
-                    '<td>\n' +
                     '<a style="max-width: 24px;" href="users/' + data.id + '" class="btn btn-danger">\n' +
                     '<i class="ti ti-trash"></i>\n' +
                     '</a>' +
                     '</td>\n' +
+                    '' +
                     '</tr>').appendTo("tbody");
             }
 
-            // Рисуем пагинацию
             if (result.totalPages > 1) {
 
                 showPagination(result.totalPages);
@@ -174,7 +169,6 @@
 
         }
 
-        // Удаляем усё перед прорисовкой
         function clearTableLine() {
             $("tbody").find("tr").each(function () {
                 this.remove();

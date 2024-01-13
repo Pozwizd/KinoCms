@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.User;
 import spacelab.kinocms.repository.UserRepository;
 import spacelab.kinocms.service.UserService;
@@ -15,7 +16,7 @@ import spacelab.kinocms.specification.UserSpecification;
 
 import java.util.List;
 
-@Repository
+@Service
 public class UserServiceImp implements UserService, UserDetailsService {
     private final UserRepository userRepository;
 

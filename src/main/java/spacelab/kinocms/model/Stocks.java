@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import spacelab.kinocms.enums.Status;
 import spacelab.kinocms.model.ImagesEntity.ImageStocks;
 
 import java.util.ArrayList;
