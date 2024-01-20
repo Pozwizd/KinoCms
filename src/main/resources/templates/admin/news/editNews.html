@@ -7,8 +7,8 @@
 <div layout:fragment="content">
     <div class="container">
         <form th:method="post"
-              th:object="${pageCommon}"
-              th:action="@{{id}(id=${pageCommon.id})}"
+              th:object="${news}"
+              th:action="@{{id}(id=${news.id})}"
               enctype="multipart/form-data">
             <div class="row justify-content-end">
                 <div class="flex justify-content-end row">
@@ -67,12 +67,21 @@
                     <div class="tab-pane fade show active" id="navs-pills-within-card-active" role="tabpanel">
                         <div class="row mb-4">
                             <label class="col-sm-1 col-form-label-sm">Название</label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-5">
                                 <input type="text"
                                        class="form-control form-control-sm"
                                        th:field="*{name}">
                             </div>
+                            <label for="datePosting" class="col-sm-2 col-form-label">Дата публикации</label>
+                            <div class="col-sm-3">
+                                <input type="date"
+                                       class="form-control"
+                                       id="datePosting"
+                                       placeholder="Введите дату рождения"
+                                       th:field="*{datePosting}">
+                            </div>
                         </div>
+
                         <div class="row mb-4">
                             <label class="col-sm-1 col-form-label-sm">Описание</label>
                             <div class="col-sm-11">
@@ -106,7 +115,7 @@
                                             <button
                                                     type="button"
                                                     class="btn btn-danger"
-                                            onclick="deleteMainImage(this)">
+                                                    onclick="deleteMainImage(this)">
                                                 Удалить
                                             </button>
                                         </a>
@@ -135,7 +144,7 @@
 
                                 showMainImage = () =>{
                                     $.ajax({
-                                        url: '/admin/pages/editPage/showMainPage/' + [[${pageCommon.id}]],
+                                        url: '/admin/stocks/editStock/showMainPage/' + [[${news.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -161,7 +170,7 @@
                                     formData.append("file", file);
 
                                     $.ajax({
-                                        url: '/admin/pages/editPage/editMainPage/' + [[${pageCommon.id}]],
+                                        url: '/admin/stocks/editStock/editMainPage/' + [[${news.id}]],
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
@@ -183,16 +192,16 @@
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
                                     $.ajax({
-                                        url: '/admin/pages/editPage/deleteMainPage/' + [[${pageCommon.id}]],
+                                        url: '/admin/stocks/editStock/deleteMainPage/' + [[${news.id}]],
                                         method: 'POST',
                                         processData: false,
                                         contentType: false,
                                         success: function (result) {
+                                            console.log(result);
                                             showMainImage();
-                                            console.log("Удаление файла прошла успешно");
                                         },
-                                        error: function (error) {
-                                            console.log("Ошибка при удалении файла:", error);
+                                        error: function (){
+                                            console.log("Error delete mainPage")
                                         }
                                     })
 
@@ -200,12 +209,15 @@
 
                                 showAllImages = () => {
                                     $.ajax({
-                                        url: '/admin/pages/editPage/showAllImages/' + [[${pageCommon.id}]],
+                                        url: '/admin/news/editNews/showAllImages/' + [[${news.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
                                             console.log(result);
                                             drawImages(result)
+                                        },
+                                        error: function (error) {
+                                            console.log(error);
                                         }
                                     })
                                 }
@@ -239,7 +251,7 @@
                                 const addBlock = () => {
                                     let index;
                                     $.ajax({
-                                        url: '/admin/pages/editPage/createNewImage/' + [[${pageCommon.id}]],
+                                        url: '/admin/news/editNews/createNewImage/' + [[${news.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -276,7 +288,7 @@
                                     formData.append("file", file);
 
                                     $.ajax({
-                                        url: '/admin/pages/editPage/editImagePage/' + id,
+                                        url: '/admin/news/editNews/editImageNews/' + id,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
@@ -284,7 +296,7 @@
                                         success: function (result) {
                                             console.log("Выгрузка файла прошла успешно");
                                             $.ajax({
-                                                url: '/admin/pages/editPage/getImage/' + id,
+                                                url: '/admin/news/editNews/getImage/' + id,
                                                 method: 'GET',
                                                 success: function (result) {
                                                     console.log("Загрузка файла прошла успешно");
@@ -313,7 +325,7 @@
                                     let block = element.closest('.col-3');
                                     block.remove();
                                     $.ajax({
-                                        url: '/admin/pages/editPage/deleteImage/' + id,
+                                        url: '/admin/news/editNews/deleteImage/' + id,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -328,7 +340,7 @@
                                 <label class="col-form-label-sm">SEO блок</label>
                             </div>
                             <div class="col-10">
-                                <div class="col-sm-10">
+                                <div class="seo_block col-sm-10">
                                     <div class="row">
                                         <label for="seoUrl"
                                                class="col-sm-2 col-form-label-sm justify-content-end">Url:</label>

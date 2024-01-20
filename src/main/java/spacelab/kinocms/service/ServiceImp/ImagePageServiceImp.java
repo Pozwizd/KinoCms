@@ -29,7 +29,8 @@ public class ImagePageServiceImp implements ImagePageService {
 
     @Override
     public ImagePage getLastImagePage() {
-        return imagePageRepository.findLastImagePage();
+
+        return imagePageRepository.findAll().get(imagePageRepository.findAll().size() - 1);
     }
 
     @Override

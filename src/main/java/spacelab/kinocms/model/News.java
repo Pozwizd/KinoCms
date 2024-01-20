@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import spacelab.kinocms.enums.Status;
 import spacelab.kinocms.model.ImagesEntity.ImageNews;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Getter
@@ -25,13 +25,11 @@ public class News {
     @Column(name = "id", nullable = false)
     private Long id;
     @Column
-    private Status status;
+    private Boolean status;
     @Column
     private String name;
     @Column
     private Date datePosting;
-
-    @DateTimeFormat(pattern = "dd.MM.yyyy - HH:mm")
     @Column
     private Date dateCreated;
     @Column

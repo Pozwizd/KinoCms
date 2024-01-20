@@ -58,8 +58,9 @@ public class PageServiceImp implements PageService {
     }
 
     @Override
-    public void editPage(Page page, MultipartFile mainImagePage, List<MultipartFile> imagesAboutCinema) {
-        if (mainImagePage != null){
+    public void editPage(Page page, MultipartFile mainImagePage) {
+
+        if (mainImagePage.getOriginalFilename() != null && mainImagePage.getOriginalFilename() != "" && mainImagePage.getSize() > 0){
             String filePath = Paths.get("").toFile().getAbsolutePath() + pageRepository.findById(page.getId()).get().getMainImage();
             File file = new File(filePath);
             file.delete();
@@ -70,35 +71,11 @@ public class PageServiceImp implements PageService {
                 e.printStackTrace();
             }
             page.setMainImage("/images/" + fileName);
+        } else {
+            page.setMainImage(pageRepository.findById(page.getId()).get().getMainImage());
         }
 
-        for(ImagePage imagePage : page.getImagesAboutCinema()){
-            String filePath = Paths.get("").toFile().getAbsolutePath() + imagePage.getUrl();
-            File file = new File(filePath);
-            file.delete();
-        }
-
-        imagePageService.deleteImagePageByPage(page);
-        page.getImagesAboutCinema().clear();
-        if (imagesAboutCinema != null){
-            for(MultipartFile image : imagesAboutCinema){
-                String fileName = image.getOriginalFilename();
-                try {
-                    image.transferTo(new File(UPLOAD_FOLDER + fileName));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                ImagePage imagePage = new ImagePage();
-                imagePage.setPage(page);
-                imagePage.setUrl("/images/" + fileName);
-                imagePageService.saveImagePage(imagePage);
-                page.getImagesAboutCinema().add(imagePage);
-            }
-        }
-
-
-
+        page.setDateOfCreated(pageRepository.findById(page.getId()).get().getDateOfCreated());
         pageRepository.save(page);
     }
 

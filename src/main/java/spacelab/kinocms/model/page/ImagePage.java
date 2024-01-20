@@ -1,5 +1,6 @@
 package spacelab.kinocms.model.page;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class ImagePage {
     @Column
     private String url;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "page_id", nullable = false)
     private Page page;

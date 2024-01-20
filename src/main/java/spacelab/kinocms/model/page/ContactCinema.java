@@ -22,9 +22,8 @@ public class ContactCinema {
     @Column(name = "name")
     private String name;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
+    private Boolean status;
 
     @Column(name = "address")
     private String address;

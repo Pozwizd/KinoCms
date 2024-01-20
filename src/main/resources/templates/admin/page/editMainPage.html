@@ -8,7 +8,7 @@
     <div class="container">
         <form th:method="post"
               th:object="${mainPage}"
-              th:action="@{editMainPage{id}(id=${mainPage.id})}">
+              th:action="@{editMainPage/{id}(id=${mainPage.id})}">
             <div class="row justify-content-end">
                 <div class="flex justify-content-end row">
                     <div class="card-header">

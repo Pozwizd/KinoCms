@@ -10,8 +10,9 @@ import java.util.List;
 
 @Repository
 public interface ImagePageRepository extends JpaRepository<ImagePage, Long> {
-    @Query("select i from ImagePage i order by i.id desc")
-    ImagePage findLastImagePage();
+    @Query("SELECT i FROM ImagePage i ORDER BY i.id DESC")
+    ImagePage findLatestImagePage();
+
 
     List<ImagePage> findAllByPage(Page page);
 

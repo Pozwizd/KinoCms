@@ -26,11 +26,14 @@ public class ContactPage{
     @Column
     private String name;
 
-    @OneToMany(mappedBy = "contactPage")
+    @OneToMany(mappedBy = "contactPage",fetch = FetchType.EAGER)
     private List<ContactCinema> contactCinemas = new ArrayList<>();
 
     @Column
     private String  linkVideo;
+
+    @Column
+    private Boolean status;
 
     @Column
     private String seoUrl;

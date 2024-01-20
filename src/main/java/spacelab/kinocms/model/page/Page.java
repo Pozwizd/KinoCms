@@ -40,7 +40,7 @@ public class Page{
     @Column
     private String  mainImage;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "page")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "page")
     private List<ImagePage> imagesAboutCinema = new ArrayList<>();
 
     @Column

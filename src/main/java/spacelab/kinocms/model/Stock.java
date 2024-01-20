@@ -5,11 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.enums.Status;
-import spacelab.kinocms.model.ImagesEntity.ImageStocks;
+import spacelab.kinocms.model.ImagesEntity.ImageStock;
 
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -17,15 +16,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "stocks")
-public class Stocks {
+@Table(name = "stock")
+public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Column
-    private Status status;
+    private Boolean status;
     @Column
     private String name;
     @Column
@@ -36,8 +35,8 @@ public class Stocks {
     private String description;
     @Column
     private String mainImage;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "stocks")
-    private List<ImageStocks> imagesStocks = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "stock")
+    private List<ImageStock> imagesStock = new ArrayList<>();
     @Column
     private String linkVideo;
     @Column

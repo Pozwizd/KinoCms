@@ -1,9 +1,10 @@
-create schema kino_cms;
-
 use kino_cms;
-INSERT INTO User (name, surname, nickname, email, address, password, card_number, language, gender, phone_number, date_of_birth, city)
-VALUES ('John', 'Doe', 'johndoe', 'user1@example.com', '123 Main St', '0000', '1234567890123456', 'Русский', 'MALE', '1234567890', '1990-01-01', 'New York'),
-       ('Jane', 'Smith', 'janesmith', 'user2@example.com', '456 Elm St', '000', '9876543210987654', 'Русский', 'FEMALE', '9876543210', '1995-02-15', 'Paris');
+INSERT INTO User (name, surname, nickname, email, address, password, card_number, language, gender, phone_number,
+                  date_of_birth, city)
+VALUES ('John', 'Doe', 'johndoe', 'user1@example.com', '123 Main St', '0000', '1234567890123456', 'Русский', 'MALE',
+        '1234567890', '1990-01-01', 'New York'),
+       ('Jane', 'Smith', 'janesmith', 'user2@example.com', '456 Elm St', '0000', '9876543210987654', 'Русский',
+        'FEMALE', '9876543210', '1995-02-15', 'Paris');
 
 insert into main_page(id,
                       phone_number,
@@ -14,14 +15,14 @@ insert into main_page(id,
                       seo_url,
                       status,
                       date_of_created)
-    VALUES (1, '+7 (999) 999-99-99',
-            '+7 (888) 888-88-88',
-            'This is the SEO description of the main page.',
-            'This is the SEO keywords of the main page.',
-            'This is the SEO title of the main page.',
-            'main-page',
-            'ACTIVE',
-            '2020-01-01');
+VALUES (1, '+7 (999) 999-99-99',
+        '+7 (888) 888-88-88',
+        'This is the SEO description of the main page.',
+        'This is the SEO keywords of the main page.',
+        'This is the SEO title of the main page.',
+        'main-page',
+        true,
+        '2020-01-01');
 
 insert into page (description,
                   main_image,
@@ -104,6 +105,83 @@ insert into contact_cinema(id,
            'Москва',
            'logo.png',
            'Кинотеатр "Кино"',
-           'ACTIVE',
+           true,
            1);
 
+insert into stock (id,
+                   date_created,
+                   date_posting,
+                   description,
+                   link_video,
+                   main_image,
+                   name,
+                   seo_description,
+                   seo_keywords,
+                   seo_title,
+                   seo_url,
+                   status)
+    value (1,
+           '2020-01-01',
+           '2020-01-01',
+           'This is the description of the first stock.',
+           'https://www.youtube.com/embed/dQw4w9WgXcQ',
+           'This is the main image of the first stock.',
+           'First Stock',
+           'This is the SEO description of the first stock.',
+           'This is the SEO keywords of the first stock.',
+           'This is the SEO title of the first stock.',
+           'first-stock',
+           true),
+    (2,
+     '2020-01-01',
+     '2020-01-01',
+     'This is the description of the second stock.',
+     'https://www.youtube.com/embed/dQw4w9WgXcQ',
+     'This is the main image of the second stock.',
+     'Second Stock',
+     'This is the SEO description of the second stock.',
+     'This is the SEO keywords of the second stock.',
+     'This is the SEO title of the second stock.',
+     'second-stock',
+     true);
+
+insert into news (id,
+                  date_created,
+                  date_posting,
+                  description,
+                  link_video,
+                  main_image,
+                  name,
+                  seo_description,
+                  seo_keywords,
+                  seo_title,
+                  seo_url,
+                  status)
+    VALUE (
+           1,
+           '2020-01-01',
+           '2020-01-01',
+           'This is the description of the first news.',
+           'https://www.youtube.com/embed/dQw4w9WgXcQ',
+           'This is the main image of the first news.',
+           'First News',
+           'This is the SEO description of the first news.',
+           'This is the SEO keywords of the first news.',
+           'This is the SEO title of the first news.',
+           'first-news',
+           true
+    ),
+    (
+     2,
+     '2020-01-01',
+     '2020-01-01',
+     'This is the description of the first news.',
+     'https://www.youtube.com/embed/dQw4w9WgXcQ',
+     'This is the main image of the first news.',
+     'First News',
+     'This is the SEO description of the first news.',
+     'This is the SEO keywords of the first news.',
+     'This is the SEO title of the first news.',
+     'first-news',
+     true
+        );

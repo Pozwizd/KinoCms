@@ -10,7 +10,7 @@
         <h4 class="fw-bold pt-3">Список Страниц</h4>
     </div>
     <div class="d-flex flex-row justify-content-end align-items-center">
-        <a href="/admin/pages/create" class="btn btn-primary">Добавить страницу</a>
+        <a th:href="@{pages/createNewPage}" class="btn btn-primary">Добавить страницу</a>
     </div>
     <br/>
     <div class="card">
@@ -61,7 +61,45 @@
                                 </a>
                             </td>
                         </tr>
-
+                        <tr>
+                            <td th:text="${contactPage.name}">1</td>
+                            <td th:text="${contactPage.dateOfCreated}">2</td>
+                            <td th:text="${contactPage.status == true ? 'Активен' : 'Отключен'}">3</td>
+                            <td >
+                                <a style="max-width: 24px;"
+                                   th:href="@{pages/contactPage/}"
+                                   class="btn btn-primary">
+                                    <i class="ti ti-edit">
+                                    </i>
+                                </a>
+                                <a style="max-width: 24px;"
+                                   th:href="@{admin/pages/removePage/{id}(id=${contactPage.id})}"
+                                   class="btn btn-danger"
+                                   th:classappend="${'disabled'}">
+                                    <i class="ti ti-trash">
+                                    </i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:each="newsPage : ${newsPages}">
+                            <td th:text="${newsPage.name}">1</td>
+                            <td th:text="${newsPage.dateOfCreated}">2</td>
+                            <td th:text="${newsPage.status == true ? 'Активен' : 'Отключен'}">3</td>
+                            <td >
+                                <a style="max-width: 24px;"
+                                   th:href="@{pages/editPage/{id}(id=${newsPage.id})}"
+                                   class="btn btn-primary">
+                                    <i class="ti ti-edit">
+                                    </i>
+                                </a>
+                                <a style="max-width: 24px;"
+                                   th:href="@{pages/removePage/{id}(id=${newsPage.id})}"
+                                   class="btn btn-danger">
+                                    <i class="ti ti-trash">
+                                    </i>
+                                </a>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
