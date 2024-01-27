@@ -1,5 +1,6 @@
 package spacelab.kinocms.service.ServiceImp;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.ImagesEntity.ImageStock;
 import spacelab.kinocms.model.Stock;
@@ -9,14 +10,10 @@ import spacelab.kinocms.service.ImageStockService;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ImageStockServiceImp implements ImageStockService {
 
     private final ImageStocksRepository imageStockRepository;
-
-    public ImageStockServiceImp(ImageStocksRepository imageStockRepository) {
-        this.imageStockRepository = imageStockRepository;
-    }
-
 
     @Override
     public void saveImageStock(ImageStock imageStock) {

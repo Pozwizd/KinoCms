@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.model.page.ContactCinema;
 import spacelab.kinocms.model.page.ContactPage;
+import spacelab.kinocms.model.page.ContactPageDto;
+import spacelab.kinocms.service.ContactCinemaService;
 import spacelab.kinocms.service.ContactService;
 
 import java.util.List;
@@ -18,8 +20,11 @@ public class ContactController {
 
     private final ContactService contactService;
 
-    public ContactController(ContactService contactService) {
+    private final ContactCinemaService contactCinemaService;
+
+    public ContactController(ContactService contactService, ContactCinemaService contactCinemaService) {
         this.contactService = contactService;
+        this.contactCinemaService = contactCinemaService;
     }
 
     @GetMapping("admin/pages/contactPage/")
@@ -41,11 +46,21 @@ public class ContactController {
     }
 
     @PostMapping("admin/pages/contactPage/")
-    public ModelAndView contact(@ModelAttribute ContactPage contactPage,
-                                @RequestParam("logoImage[]") List<MultipartFile> logoImage,
+    public ModelAndView contact(@ModelAttribute ContactPageDto contactPage,
                                 HttpServletRequest request) {
 
-        contactService.saveContactPage(contactPage, logoImage);
+        contactService.saveContactPage(contactPage);
+
+        String referer = request.getHeader("Referer");
+        return new ModelAndView("redirect:" + referer);
+    }
+
+    @GetMapping("admin/pages/contactPage/deleteImage/{id}")
+    public ModelAndView deleteContactImage(HttpServletRequest request, @PathVariable String id) {
+
+        ContactCinema contactCinema = contactCinemaService.getContactCinema(Long.parseLong(id));
+        contactCinema.setLogo(null);
+        contactCinemaService.updateContactCinema(contactCinema);
 
         String referer = request.getHeader("Referer");
         return new ModelAndView("redirect:" + referer);

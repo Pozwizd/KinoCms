@@ -1,5 +1,6 @@
 package spacelab.kinocms.model.ImagesEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class ImageCinema {
 
     @ManyToOne
     @JoinColumn(name = "cinema_id")
+    @JsonIgnore
     private Cinema cinema;
 
 }

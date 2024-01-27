@@ -1,5 +1,6 @@
 package spacelab.kinocms.service.ServiceImp;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.page.ImagePage;
 import spacelab.kinocms.model.page.Page;
@@ -9,13 +10,10 @@ import spacelab.kinocms.service.ImagePageService;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ImagePageServiceImp implements ImagePageService {
 
     private final ImagePageRepository imagePageRepository;
-
-    public ImagePageServiceImp(ImagePageRepository imagePageRepository) {
-        this.imagePageRepository = imagePageRepository;
-    }
 
     @Override
     public void saveImagePage(ImagePage imagePage) {

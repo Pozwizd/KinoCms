@@ -1,5 +1,6 @@
 package spacelab.kinocms.service.ServiceImp;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.Stock;
 import spacelab.kinocms.model.page.ImagePage;
@@ -7,13 +8,11 @@ import spacelab.kinocms.repository.StocksRepository;
 import spacelab.kinocms.service.StockService;
 
 @Service
+@AllArgsConstructor
 public class StockServiceImp implements StockService {
 
     private final StocksRepository stocksRepository;
 
-    public StockServiceImp(StocksRepository stocksRepository) {
-        this.stocksRepository = stocksRepository;
-    }
 
     @Override
     public Iterable<Stock> listAllStocks() {

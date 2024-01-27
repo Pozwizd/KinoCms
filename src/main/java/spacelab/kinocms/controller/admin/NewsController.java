@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("admin/news")
@@ -172,7 +173,7 @@ public class NewsController {
             File oldFile = new File(filePath);
             oldFile.delete();
         }
-        String fileName = file.getOriginalFilename();
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
         try {
             file.transferTo(new File(UPLOAD_FOLDER + fileName));
         } catch (IOException e) {

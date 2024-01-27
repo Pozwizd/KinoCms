@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.page.ImagePage;
 import spacelab.kinocms.model.page.MainPage;
 import spacelab.kinocms.model.page.Page;
@@ -15,11 +16,8 @@ import spacelab.kinocms.service.ImagePageService;
 import spacelab.kinocms.service.MainPageService;
 import spacelab.kinocms.service.PageService;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Date;
-import java.sql.SQLData;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -33,15 +31,18 @@ public class PagesController {
     private final PageService pageService;
     private final ContactService contactService;
 
-    public PagesController(ImagePageService imagePageService, MainPageService mainPageService, PageService pageService, ContactService contactService) {
+    private final UploadFile uploadFile;
+
+    public PagesController(ImagePageService imagePageService, MainPageService mainPageService, PageService pageService, ContactService contactService, UploadFile uploadFile) {
         this.imagePageService = imagePageService;
         this.mainPageService = mainPageService;
         this.pageService = pageService;
         this.contactService = contactService;
+        this.uploadFile = uploadFile;
     }
 
     @GetMapping({"/", ""})
-    public ModelAndView index(Model model){
+    public ModelAndView index(Model model) {
         model.addAttribute("title", "Страницы");
         model.addAttribute("pageActive", "pages");
 
@@ -54,8 +55,8 @@ public class PagesController {
     }
 
     @GetMapping("/editMainPage")
-    public ModelAndView showEditMainPage(Model model){
-        MainPage  mainPage = mainPageService.getMainPage();
+    public ModelAndView showEditMainPage(Model model) {
+        MainPage mainPage = mainPageService.getMainPage();
         model.addAttribute("title", mainPage.getName());
         model.addAttribute("pageActive", "pages");
         model.addAttribute("mainPage", mainPage);
@@ -63,7 +64,7 @@ public class PagesController {
     }
 
     @PostMapping("/editMainPage/{id}")
-    public ModelAndView editMainPage(@ModelAttribute MainPage mainPage, HttpServletRequest request){
+    public ModelAndView editMainPage(@ModelAttribute MainPage mainPage, HttpServletRequest request) {
         mainPageService.updateMainPage(mainPage);
 
         String referer = request.getHeader("Referer");
@@ -72,8 +73,8 @@ public class PagesController {
     }
 
     @GetMapping("/editPage/{id}")
-    public ModelAndView editBasicPage(Model model, @PathVariable long id){
-        model.addAttribute("title","Редактирование cтраницы "  + pageService.getPage(id).getName());
+    public ModelAndView editBasicPage(Model model, @PathVariable long id) {
+        model.addAttribute("title", "Редактирование cтраницы " + pageService.getPage(id).getName());
         model.addAttribute("pageActive", "pages");
         model.addAttribute("pageCommon", pageService.getPage(id));
         return new ModelAndView("admin/page/editPage");
@@ -82,8 +83,8 @@ public class PagesController {
     @PostMapping("/editPage/{id}")
     public ModelAndView editBasicPage(@ModelAttribute Page page,
                                       @PathVariable String id,
-                                      @RequestParam(name = "mainImagePage", required = false) MultipartFile  mainImagePage
-                                      ){
+                                      @RequestParam(name = "mainImagePage", required = false) MultipartFile mainImagePage
+    ) {
 
         pageService.editPage(page, mainImagePage);
         return new ModelAndView("redirect:/admin/pages");
@@ -91,29 +92,29 @@ public class PagesController {
 
 
     @GetMapping("/createNewPage")
-    public ModelAndView createNewPage(HttpServletRequest request){
+    public ModelAndView createNewPage(HttpServletRequest request) {
         Page page = new Page();
         page.setDateOfCreated(Date.valueOf(LocalDate.now()));
         page.setName("Новая страница");
         pageService.savePage(page);
-        String  referer = request.getHeader("Referer");
+        String referer = request.getHeader("Referer");
         return new ModelAndView("redirect:" + referer);
     }
 
     @PostMapping("/removePage/{id}")
-    public ModelAndView removePage(Model model, @PathVariable String id, HttpServletRequest request){
+    public ModelAndView removePage(Model model, @PathVariable String id, HttpServletRequest request) {
         pageService.deletePage(pageService.getPage(Long.parseLong(id)));
         model.addAttribute("title", "Страницы");
 
 
-        String  referer = request.getHeader("Referer");
+        String referer = request.getHeader("Referer");
         return new ModelAndView("redirect:" + referer);
     }
 //   Ajax  ====================================================================
 
     @GetMapping("/editPage/showMainPage/{id}")
     @ResponseBody
-    public Page showMainPage(Model model, @PathVariable long id){
+    public Page showMainPage(Model model, @PathVariable long id) {
         return pageService.getPage(id); // для отображения картинки в форме редактирования страницы и для отправки картинки на сервер для загрузки в форму редактирования страницы и для отправки картинки на сервер для загрузки в форму редактирования страницы и для отправки картинки на сервер для загрузки в форму редактирования страницы и для отправ�
     }
 
@@ -122,19 +123,9 @@ public class PagesController {
     public ResponseEntity<String> editMainPage(@RequestPart("file") MultipartFile file,
                                                @PathVariable Long id) {
 
+
         Page page = pageService.getPage(id);
-        if (page.getMainImage() != null){
-            String filePath = Paths.get("").toFile().getAbsolutePath() + page.getMainImage();
-            File oldFile = new File(filePath);
-            oldFile.delete();
-        }
-        String fileName = file.getOriginalFilename();
-        try {
-            file.transferTo(new File(UPLOAD_FOLDER + fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        page.setMainImage("/images/" + fileName);
+        page.setMainImage(uploadFile.uploadFile(file, page.getMainImage()));
         pageService.savePage(page);
 
         return ResponseEntity.ok("Файл успешно загружен");
@@ -142,13 +133,11 @@ public class PagesController {
 
     @PostMapping("/editPage/deleteMainPage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteMainPage(Model model, @PathVariable long id){
+    public ResponseEntity<String> deleteMainPage(Model model, @PathVariable long id) {
         Page page = pageService.getPage(id);
-        if (page.getMainImage() != null){
-            String filePath = Paths.get("").toFile().getAbsolutePath() + page.getMainImage();
-            File oldFile = new File(filePath);
-            oldFile.delete();
-        }
+
+        uploadFile.deleteFile(page.getMainImage());
+
         page.setMainImage(null);
         pageService.savePage(page);
         model.addAttribute("title", "Редактирование страницы " + page.getName());
@@ -191,18 +180,7 @@ public class PagesController {
                                                 @PathVariable Long id) {
 
         ImagePage imagePage = imagePageService.getImagePage(id);
-        if (imagePage.getUrl() != null){
-            String filePath = Paths.get("").toFile().getAbsolutePath() + imagePage.getUrl();
-            File oldFile = new File(filePath);
-            oldFile.delete();
-        }
-        String fileName = file.getOriginalFilename();
-        try {
-            file.transferTo(new File(UPLOAD_FOLDER + fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        imagePage.setUrl("/images/" + fileName);
+        imagePage.setUrl(uploadFile.uploadFile(file, imagePage.getUrl()));
         imagePageService.saveImagePage(imagePage);
 
         return ResponseEntity.ok("Файл успешно загружен");

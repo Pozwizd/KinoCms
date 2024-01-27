@@ -15,7 +15,7 @@
           th:object="${contactPage}"
           th:action="@{/admin/pages/contactPage/}">
         <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="col-12">
+            <div class="col-12" id="contactsCinema">
                 <div th:each="contact, cont : ${contactPage.contactCinemas}">
                     <div class="card" data-contact-block>
                         <div class="card-body">
@@ -23,6 +23,9 @@
                                 <label class="col-sm-auto col-form-label-sm">Название</label>
                                 <div class="col-sm-6">
                                     <label>
+                                        <input type=hidden
+                                               th:field="*{contactCinemas[__${cont.index}__].id}"
+                                               class="form-control form-control-sm">
                                         <input type="text"
                                                th:field="*{contactCinemas[__${cont.index}__].name}"
                                                class="form-control form-control-sm">
@@ -64,7 +67,11 @@
                                         <label class="col-form-label col-sm-2">
                                             Главная картинка
                                         </label>
-                                        <img alt="">
+                                        <img
+                                                th:src="${contacts[__${cont.index}__].logo == null ? 'https://via.placeholder.com/250x200&text=Empty' : contacts[__${cont.index}__].logo}"
+                                                alt=""
+                                             style="max-width: 250px; max-height: 200px;"
+                                        >
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label">
@@ -72,18 +79,13 @@
                                                    th:field="*{contactCinemas[__${cont.index}__].logo}"
                                                    class="form-control"
                                                    accept="image/png, image/jpeg"
-                                                   name="logoImage[]"
                                                    multiple
                                                    onchange=""/>
                                         </label>
                                         <label class="form-label">
-                                            <a>
-                                                <button
-                                                        type="button"
-                                                        class="btn btn-danger"
-                                                        onclick="">
-                                                    Удалить
-                                                </button>
+                                            <a th:href="@{/admin/pages/contactPage/deleteImage/{id}(id=${contacts.get(cont.index).id})}"
+                                               class="btn btn-danger">
+                                                Удалить
                                             </a>
                                         </label>
                                     </div>
@@ -101,6 +103,12 @@
                         class="btn btn-primary"
                         onclick="createNewContact()">Добавить
                 </button>
+                <button type="button"
+                        id=""
+                        class="btn btn-primary"
+                        onclick="deleteLastContact()">Удалить
+                </button>
+                
             </div>
         </div>
 
@@ -160,14 +168,13 @@
             <div class="d-grid gap-2 col-3 mx-auto mt-3">
                 <button type="submit" class="btn btn-outline-primary">Сохранить
                 </button>
+
             </div>
         </div>
 
     </form>
-    <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
-    <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js}"></script>
     <script>
-        let index = document.querySelectorAll('[data-contact-block]').length;
+        let index = (document.querySelectorAll('[data-contact-block]').length) + 1;
 
         function createNewContact() {
             $('<div>\n' +
@@ -177,6 +184,10 @@
                 '                                <label class="col-sm-auto col-form-label-sm">Название</label>\n' +
                 '                                <div class="col-sm-6">\n' +
                 '                                    <label>\n' +
+                '                                        <input type=hidden\n' +
+                '                                               name="contactCinemas[' + index + '].id"\n' +
+                '                                               value="' + index + '"\n' +
+                '                                               class="form-control form-control-sm">' +
                 '                                        <input type="text"\n' +
                 '                                               name="contactCinemas[' + index + '].name"\n' +
                 '                                               class="form-control form-control-sm">\n' +
@@ -225,17 +236,12 @@
                 '                                            <input type="file"\n' +
                 '                                                   class="form-control"\n' +
                 '                                                   accept="image/png, image/jpeg"\n' +
-                '                                                   name="logoImage[]"' +
-                '                                                   onchange="" multiple/> \n' +
+                '                                                   name="contactCinemas[' + index + '].logo"' +
+                '                                                   onchange=""/> \n' +
                 '                                        </label>\n' +
                 '                                        <label class="form-label">\n' +
-                '                                            <a>\n' +
-                '                                                <button\n' +
-                '                                                        type="button"\n' +
-                '                                                        class="btn btn-danger"\n' +
-                '                                                        onclick="">\n' +
-                '                                                    Удалить\n' +
-                '                                                </button>\n' +
+                '                                            <a  class="btn btn-danger" ' +
+                '                                                href="admin/pages/contactPage/deleteImage/' + index + '"> Удалить\n' +
                 '                                            </a>\n' +
                 '                                        </label>\n' +
                 '                                    </div>\n' +
@@ -245,8 +251,14 @@
                 '                    </div>\n' +
                 '                    <br/>\n' +
                 '                    <hr/>\n' +
-                '                </div>').appendTo('.col-12');
+                '                </div>').appendTo('#contactsCinema');
             index++;
+        }
+        
+        function deleteLastContact() {
+            let index = document.querySelectorAll('[data-contact-block]')
+            let lastElement = index.item(index.length - 1);
+            lastElement.remove();
         }
 
     </script>

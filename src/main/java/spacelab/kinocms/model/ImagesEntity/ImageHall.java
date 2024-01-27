@@ -1,5 +1,6 @@
 package spacelab.kinocms.model.ImagesEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class ImageHall {
     private String url;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "hall_id")
     private Hall hall;
 

@@ -1,5 +1,6 @@
 package spacelab.kinocms.service.ServiceImp;
 
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,12 +18,9 @@ import spacelab.kinocms.specification.UserSpecification;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImp implements UserService, UserDetailsService {
     private final UserRepository userRepository;
-
-    public UserServiceImp(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public void saveUser(User user) {

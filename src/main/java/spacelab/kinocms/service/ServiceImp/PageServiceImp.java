@@ -1,5 +1,6 @@
 package spacelab.kinocms.service.ServiceImp;
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,16 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class PageServiceImp implements PageService {
 
     private static final String UPLOAD_FOLDER = Paths.get("images").toFile().getAbsolutePath() + "/";;
     private final PageRepository pageRepository;
     private final ImagePageService imagePageService;
-
-    public PageServiceImp(PageRepository pageRepository, ImagePageService imagePageService) {
-        this.pageRepository = pageRepository;
-        this.imagePageService = imagePageService;
-    }
 
     @Override
     public void savePage(Page page) {

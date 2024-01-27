@@ -7,19 +7,14 @@
 <div layout:fragment="content">
     <div class="container">
         <form th:method="post"
-              th:object="${stock}"
-              th:action="@{{id}(id=${stock.id})}"
+              th:object="${film}"
+              th:action="@{{id}(id=${film.id})}"
               enctype="multipart/form-data">
             <div class="row justify-content-end">
                 <div class="flex justify-content-end row">
                     <div class="card-header">
                         <ul class="nav nav-pills card-header-pills" role="tablist"
                             style="display: flex; justify-content: flex-end;">
-                            <div class="form-check form-switch form-check-inline col-1 my-auto">
-                                <label>
-                                    <input class="form-check-input" type="checkbox" th:field="*{status}"/>
-                                </label>
-                            </div>
                             <li class="nav-item ml-auto">
                                 <button
                                         type="button"
@@ -67,18 +62,10 @@
                     <div class="tab-pane fade show active" id="navs-pills-within-card-active" role="tabpanel">
                         <div class="row mb-4">
                             <label class="col-sm-1 col-form-label-sm">Название</label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-5">
                                 <input type="text"
                                        class="form-control form-control-sm"
                                        th:field="*{name}">
-                            </div>
-                            <label for="datePosting" class="col-sm-2 col-form-label">Дата публикации</label>
-                            <div class="col-sm-3">
-                                <input type="date"
-                                       class="form-control"
-                                       id="datePosting"
-                                       placeholder="Введите дату рождения"
-                                       th:field="*{datePosting}">
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -114,7 +101,7 @@
                                             <button
                                                     type="button"
                                                     class="btn btn-danger"
-                                            onclick="deleteMainImage(this)">
+                                                    onclick="deleteMainImage(this)">
                                                 Удалить
                                             </button>
                                         </a>
@@ -136,20 +123,19 @@
                             <script>
                                 $(document).ready(function () {
                                     showMainImage();
-                                    // Загружаем страницу и требуем все картинки
                                     showAllImages();
                                 });
 
 
                                 showMainImage = () =>{
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/showMainPage/' + [[${stock.id}]],
+                                        url: '/admin/films/editFilm/showMainPage/' + [[${film.id}]],
                                         method: 'GET',
-                                        dataType: 'JSON',
+                                        dataType: 'Text',
                                         success: function (result) {
                                             console.log(result)
                                             $('<img src="' +
-                                                (result.mainImage == null ? 'https://via.placeholder.com/250x200&text=Empty' : result.mainImage)
+                                                (result == null ? 'https://via.placeholder.com/250x200&text=Empty' : result)
                                                 + '"' +
                                                 ' class="img-fluid"\n' +
                                                 ' id="mainImage" \n' +
@@ -169,7 +155,7 @@
                                     formData.append("file", file);
 
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/editMainPage/' + [[${stock.id}]],
+                                        url: '/admin/films/editFilm/editMainPage/' + [[${film.id}]],
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
@@ -191,7 +177,7 @@
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/deleteMainPage/' + [[${stock.id}]],
+                                        url: '/admin/films/editFilm/deleteMainPage/' + [[${film.id}]],
                                         method: 'POST',
                                         processData: false,
                                         contentType: false,
@@ -200,7 +186,7 @@
                                             showMainImage();
                                         },
                                         error: function (){
-                                          console.log("Error delete mainPage")
+                                            console.log("Error delete mainPage")
                                         }
                                     })
 
@@ -208,12 +194,15 @@
 
                                 showAllImages = () => {
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/showAllImages/' + [[${stock.id}]],
+                                        url: '/admin/films/editFilm/showAllImages/' + [[${film.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
                                             console.log(result);
                                             drawImages(result)
+                                        },
+                                        error: function (error) {
+                                            console.log(error);
                                         }
                                     })
                                 }
@@ -247,7 +236,7 @@
                                 const addBlock = () => {
                                     let index;
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/createNewImage/' + [[${stock.id}]],
+                                        url: '/admin/films/editFilm/createNewImage/' + [[${film.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -284,7 +273,7 @@
                                     formData.append("file", file);
 
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/editImageStock/' + id,
+                                        url: '/admin/films/editFilm/editImageFilm/' + id,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
@@ -292,7 +281,7 @@
                                         success: function (result) {
                                             console.log("Выгрузка файла прошла успешно");
                                             $.ajax({
-                                                url: '/admin/stocks/editStock/getImage/' + id,
+                                                url: '/admin/films/editFilm/getImage/' + id,
                                                 method: 'GET',
                                                 success: function (result) {
                                                     console.log("Загрузка файла прошла успешно");
@@ -321,7 +310,7 @@
                                     let block = element.closest('.col-3');
                                     block.remove();
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/deleteImage/' + id,
+                                        url: '/admin/films/editFilm/deleteImage/' + id,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -336,7 +325,26 @@
                             <div class="col-sm-9">
                                 <input type="text"
                                        class="form-control form-control-sm"
-                                       th:field="*{linkVideo}">
+                                       th:field="*{linkTrailer}">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label class="col-sm-2 col-form-label-sm">Тип кино</label>
+                            <div class="col-sm-3 film-types d-flex flex-row align-items-baseline">
+                                <div class="col-3 form-check form-check-inline ">
+                                    <input type="checkbox" class="form-check-input" name="filmTypes">
+                                    <label class="form-label">
+                                        3D
+                                    </label>
+                                    <input type="checkbox" class="form-check-input" name="filmTypes">
+                                    <label class="form-label">
+                                        2D
+                                    </label>
+                                    <input type="checkbox" class="form-check-input" name="filmTypes">
+                                    <label class="form-label">
+                                        IMAX
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -396,6 +404,11 @@
                                     <button type="submit" class="btn btn-outline-primary">Сохранить
                                     </button>
                                 </div>
+                                <div class="d-grid gap-2 col-3 mx-auto mt-3">
+                                    <a type="submit" class="btn btn-outline-primary">Вернуть базовую версию
+                                    </a>
+                                </div>
+
                             </div>
                         </div>
                     </div>

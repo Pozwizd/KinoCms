@@ -93,20 +93,7 @@ insert into contact_page(id,
            'contact-page',
            '2020-01-01');
 
-insert into contact_cinema(id,
-                           address,
-                           location,
-                           logo,
-                           name,
-                           status,
-                           contact_page_id)
-    value (1,
-           'г. Москва, ул. Ленина, д. 1',
-           'Москва',
-           'logo.png',
-           'Кинотеатр "Кино"',
-           true,
-           1);
+
 
 insert into stock (id,
                    date_created,
@@ -185,3 +172,110 @@ insert into news (id,
      'first-news',
      true
         );
+
+insert into cinemas (id, conditions,
+                     description, logo_path,
+                     name, seo_description,
+                     seo_keywords, seo_title,
+                     seo_url,
+                     top_banner)
+VALUES (
+        1,
+        'This is the description of the first cinema.',
+        'This is the logo of the first cinema.',
+        'first-cinema',
+        'First Cinema',
+        'This is the SEO description of the first cinema.',
+        'This is the SEO keywords of the first cinema.',
+        'This is the SEO title of the first cinema.',
+        'first-cinema',
+        'This is the top banner of the first cinema.'
+        ),
+       (
+        2,
+        'This is the description of the second cinema.',
+        'This is the logo of the second cinema.',
+        'second-cinema',
+        'Second Cinema',
+        'This is the SEO description of the second cinema.',
+        'This is the SEO keywords of the second cinema.',
+        'This is the SEO title of the second cinema.',
+        'second-cinema',
+        'This is the top banner of the second cinema.'
+       );
+
+insert into hall (id,
+                  date_created,
+                  description,
+                  hall_number,
+                  logo_path,
+                  seo_description,
+                  seo_keywords,
+                  seo_title,
+                  seo_url,
+                  top_banner,
+                  url_scheme_image_hall,
+                  cinema_id)
+VALUES (1,
+        '2020-01-01',
+        'This is the description of the first hall.',
+        '1',
+        null,
+        'This is the SEO description of the first hall.',
+        'This is the SEO keywords of the first hall.',
+        'This is the SEO title of the first hall.',
+        'first-hall',
+        'This is the top banner of the first hall.',
+        'This is the url scheme image of the first hall.',
+        1
+       ),
+       (2,
+        '2020-01-01',
+        'This is the description of the second hall.',
+        '2',
+        null,
+        'This is the SEO description of the second hall.',
+        'This is the SEO keywords of the second hall.',
+        'This is the SEO title of the second hall.',
+        'second-hall',
+        'This is the top banner of the second hall.',
+        'This is the url scheme image of the second hall.',
+        1
+       );
+
+insert into film (id, description, link_trailer, main_image, name,
+                  seo_description, seo_keywords, seo_title, seo_url, type_film)
+VALUES
+       (1, 'This is the description of the first film.',
+        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+        null,
+        'First Film',
+        'This is the SEO description of the first film.',
+        'This is the SEO keywords of the first film.',
+        'This is the SEO title of the first film.',
+        'first-film',
+        'IMAX'
+       ),
+
+       (2, 'This is the description of the second film.',
+        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+        null,
+        'Second Film',
+        'This is the SEO description of the second film.',
+        'This is the SEO keywords of the second film.',
+        'This is the SEO title of the second film.',
+        'second-film',
+        'IMAX'
+       ),
+
+
+       (3, 'This is the description of the third film.',
+        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+        null,
+        'Third Film',
+        'This is the SEO description of the third film.',
+        'This is the SEO keywords of the third film.',
+        'This is the SEO title of the third film.',
+        'third-film',
+        'Threedimensional'
+       );

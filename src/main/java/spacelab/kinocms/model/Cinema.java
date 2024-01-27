@@ -25,11 +25,11 @@ public class Cinema {
     private String name;
     @Column
     private String description;
-    @Column(name = "conditions")
+    @Column
     String conditions;
-    @Column(name = "logoPath")
+    @Column
     String logoPath;
-    @Column(name = "topBanner")
+    @Column
     private String topBanner;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "cinema")
     private List<ImageCinema> imagesCinema = new ArrayList<>();

@@ -1,5 +1,6 @@
 package spacelab.kinocms.model.ImagesEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class ImageFilm {
     private String url;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "film_id")
     private Film film;
 

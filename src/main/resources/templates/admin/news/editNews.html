@@ -17,6 +17,11 @@
                             style="display: flex; justify-content: flex-end;">
                             <div class="form-check form-switch form-check-inline col-1 my-auto">
                                 <label>
+                                    ВКЛ
+                                </label>
+                            </div>
+                            <div class="form-check form-switch form-check-inline col-1 my-auto">
+                                <label>
                                     <input class="form-check-input" type="checkbox" th:field="*{status}"/>
                                 </label>
                             </div>
@@ -334,6 +339,14 @@
                                     })
                                 }
                             </script>
+                        </div>
+                        <div class="row mb-4">
+                            <label class="col-sm-2 col-form-label-sm">Ссылка на видео</label>
+                            <div class="col-sm-9">
+                                <input type="text"
+                                       class="form-control form-control-sm"
+                                       th:field="*{linkVideo}">
+                            </div>
                         </div>
                         <div class="row mb-4">
                             <div class="col-2">

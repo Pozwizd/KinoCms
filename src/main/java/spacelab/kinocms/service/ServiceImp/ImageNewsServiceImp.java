@@ -1,5 +1,6 @@
 package spacelab.kinocms.service.ServiceImp;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.ImagesEntity.ImageNews;
 import spacelab.kinocms.model.News;
@@ -9,14 +10,11 @@ import spacelab.kinocms.service.ImageNewsService;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ImageNewsServiceImp implements ImageNewsService {
 
     private final ImageNewsRepository imageNewsRepository;
 
-
-    public ImageNewsServiceImp(ImageNewsRepository imageNewsRepository) {
-        this.imageNewsRepository = imageNewsRepository;
-    }
 
     @Override
     public void saveImageNews(ImageNews imageNews) {

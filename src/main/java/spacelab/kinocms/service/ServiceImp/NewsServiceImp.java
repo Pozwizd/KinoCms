@@ -1,18 +1,16 @@
 package spacelab.kinocms.service.ServiceImp;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.News;
 import spacelab.kinocms.repository.NewsRepository;
 import spacelab.kinocms.service.NewsService;
 
 @Service
+@AllArgsConstructor
 public class NewsServiceImp implements NewsService {
 
     private final NewsRepository newsRepository;
-
-    public NewsServiceImp(NewsRepository newsRepository) {
-        this.newsRepository = newsRepository;
-    }
 
     @Override
     public Iterable<News> listAllNews() {
