@@ -7,17 +7,22 @@
 <div layout:fragment="content">
     <!-- Multi Column with Form Separator -->
     <div class="card mb-4">
-        <form class="card-body" th:action="@{/admin/users/{id}(id=${user.id})}" method="post" th:object="${user}">
+        <form class="card-body needs-validation" novalidate
+              th:action="@{/admin/users/{id}(id=${user.id})}"
+              method="post"
+              th:object="${user}"
+              id="user-form">
             <div class="row">
                 <div class="col">
                     <div class="mb-3 row">
-                        <label for="first-name" class="col-sm-4 col-form-label">Имя</label>
+                        <label class="col-sm-4 col-form-label">Имя</label>
                         <div class="col-sm-8">
                             <input type="text"
                                    class="form-control"
-                                   id="first-name"
                                    placeholder="Введите ваше имя"
-                                   th:field="*{name}">
+                                   id="userName"
+                                   th:field="*{name}" required>
+                            <div class="invalid-feedback"> Please enter your name.</div>
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -48,6 +53,7 @@
                                    id="email"
                                    placeholder="Введите E-mail"
                                    th:field="*{email}">
+                            <div class="invalid-feedback">Введите корректную почту</div>
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -61,13 +67,16 @@
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label for="password" class="col-sm-4 col-form-label">Пароль</label>
+                        <label for="userPassword" class="col-sm-4 col-form-label">Пароль</label>
                         <div class="col-sm-8">
                             <input type="password"
                                    class="form-control"
-                                   id="password"
+                                   id="userPassword"
                                    placeholder="Введите пароль"
-                                   th:field="*{password}">
+                                   pattern="^(?=.*[a-z])(?=.*[A-Z]).*$"
+                                   th:field="*{password}"
+                                   required>
+                            <div id="password-error-message" class="invalid-feedback">Введите корректный пароль</div>
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -165,7 +174,9 @@
                                    class="form-control"
                                    id="confirm-password"
                                    placeholder="Повторите пароль"
-                                   name="confirmPassword">
+                                   name="confirmPassword"
+                                   required>
+                            <div class="invalid-feedback">Пароли не соответствуют</div>
                         </div>
                     </div>
                 </div>
@@ -175,12 +186,56 @@
             </div>
         </form>
     </div>
+
+    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log("Привет, мир!");
+        });
+        $(document).ready(function () {
+            $('#user-form').submit(function (event) {
+                event.preventDefault();
+
+                var form = $(this);
+                var inputs = form.find('.form-control');
+                var isValid = true;
+
+                inputs.each(function () {
+                    if (!this.checkValidity()) {
+                        isValid = false;
+                    }
+
+                    if (this.id === 'userEmail') {
+                        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailRegex.test(this.value)) {
+                            isValid = false;
+                        }
+                    }
+                    if (this.id === 'userPassword') {
+                        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).*$/;
+                        if (!passwordRegex.test(this.value)) {
+                            isValid = false;
+                        }
+                    }
+
+                    if (this.id === 'confirm-password') {
+                        var password = $('#userPassword')
+                        if (this.value !== password.val()) {
+                            isValid = false;
+                        }
+                    }
+                });
+
+                if (isValid) {
+                    form[0].submit();
+                } else {
+                    form.addClass('was-validated');
+                }
+            });
+        });
+
+    </script>
 </div>
-<script src="/assets/vendor/libs/cleavejs/cleave.js"></script>
-<script src="/assets/vendor/libs/cleavejs/cleave-phone.js"></script>
-<script src="/assets/vendor/libs/moment/moment.js"></script>
-<script src="/assets/vendor/libs/flatpickr/flatpickr.js"></script>
-<script src="/assets/vendor/libs/select2/select2.js"></script>
-<script src="/assets/js/form-layouts.js"></script>
+
 </body>
 </html>
