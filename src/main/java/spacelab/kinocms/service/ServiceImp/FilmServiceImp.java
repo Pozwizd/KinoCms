@@ -6,6 +6,8 @@ import spacelab.kinocms.model.Film;
 import spacelab.kinocms.repository.FilmRepository;
 import spacelab.kinocms.service.FilmService;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -14,6 +16,17 @@ public class FilmServiceImp implements FilmService {
 
     private final FilmRepository filmRepository;
 
+
+    @Override
+    public List<Film> getAllFutureFilm() {
+        Date currentDate = new Date(System.currentTimeMillis()); // Текущая дата
+
+        return filmRepository.findByStartPremiereDateAfter(currentDate);
+    }
+    @Override
+    public List<Film> getAllCurrentFilm() {
+        return filmRepository.getAllCurrentFilm();
+    }
 
     @Override
     public void saveFilm(Film film) {
@@ -34,9 +47,8 @@ public class FilmServiceImp implements FilmService {
     public List<Film> getAllFilms() {
         return filmRepository.findAll();
     }
-
     @Override
     public void updateFilm(Film film) {
-        filmRepository.saveAndFlush(film);
+        filmRepository.save(film);
     }
 }

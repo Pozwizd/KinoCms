@@ -37,20 +37,7 @@
                                         data-bs-target="#navs-pills-within-card-link"
                                         aria-controls="navs-pills-within-card-link"
                                         aria-selected="false"
-                                >
-                                    Link
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button
-                                        type="button"
-                                        class="nav-link disabled"
-                                        role="tab"
-                                        data-bs-toggle="tab"
-                                        aria-selected="false"
-                                >
-                                    English
-                                </button>
+                                >English</button>
                             </li>
                         </ul>
                     </div>
@@ -62,11 +49,32 @@
                     <div class="tab-pane fade show active" id="navs-pills-within-card-active" role="tabpanel">
                         <div class="row mb-4">
                             <label class="col-sm-1 col-form-label-sm">Название</label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <input type="text"
                                        class="form-control form-control-sm"
                                        th:field="*{name}">
                             </div>
+                            <label class="col-sm-2 col-form-label-sm">Период проката:</label>
+                            <div class="col-sm-2">
+                                <input type="date"
+                                       class="form-control"
+                                       placeholder="Введите дату рождения"
+                                       th:field="*{startPremiereDate}"
+                                       name="dateOfBirth">
+                            </div>
+
+                            <div class="col-sm-2">
+                                <input type="date"
+                                       class="form-control"
+                                       placeholder="Введите дату рождения"
+                                       th:field="*{endPremiereDate}"
+                                       name="dateOfBirth">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+
+
+
                         </div>
                         <div class="row mb-4">
                             <label class="col-sm-1 col-form-label-sm">Описание</label>
@@ -86,7 +94,6 @@
                                     <label class="col-form-label col-sm-2">
                                         Главная картинка
                                     </label>
-
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">
@@ -118,8 +125,7 @@
                             <div class="col-12 text-center">
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
-                            <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
-                            <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js}"></script>
+                            <script src="/assets/vendor/libs/jquery/jquery.js"></script>
                             <script>
                                 $(document).ready(function () {
                                     showMainImage();
@@ -127,7 +133,7 @@
                                 });
 
 
-                                showMainImage = () =>{
+                                showMainImage = () => {
                                     $.ajax({
                                         url: '/admin/films/editFilm/showMainPage/' + [[${film.id}]],
                                         method: 'GET',
@@ -143,13 +149,13 @@
                                                 ' max-height: 200px;">').appendTo('#mainImageBlock');
 
                                         },
-                                        error: function (){
+                                        error: function () {
                                             console.log('error Main page');
                                         }
                                     })
                                 }
 
-                                function changeMainPage(element){
+                                function changeMainPage(element) {
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
@@ -172,7 +178,7 @@
                                     });
                                 }
 
-                                function deleteMainImage(element){
+                                function deleteMainImage(element) {
 // Получение ближайшего элемента img от текущего элемента
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
@@ -185,7 +191,7 @@
                                             console.log(result);
                                             showMainImage();
                                         },
-                                        error: function (){
+                                        error: function () {
                                             console.log("Error delete mainPage")
                                         }
                                     })
@@ -206,6 +212,7 @@
                                         }
                                     })
                                 }
+
                                 // Рисуем картинки
                                 function drawImages(result) {
                                     for (const data of result) {
@@ -214,7 +221,7 @@
                                             '<img src="' + (data.url != null ? data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
                                             ' id="imagePage' + data.id + '" ' +
                                             'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                            '<label class="form-label" id="imagePageEdit' +data.id+'" style="max-width: 250px;">' +
+                                            '<label class="form-label" id="imagePageEdit' + data.id + '" style="max-width: 250px;">' +
                                             '<input type="file" ' +
                                             'class="form-control" ' +
                                             'accept="image/png, image/jpeg" onchange="editImagePage(this,' + data.id + ')" multiple/>' +
@@ -232,6 +239,7 @@
 
                                     }
                                 }
+
                                 // Добавляем картинку
                                 const addBlock = () => {
                                     let index;
@@ -244,12 +252,12 @@
                                             $('<div class="col-3">' +
                                                 '<div class="d-flex flex-column" style="max-width: 100%;">' +
                                                 '<img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"' +
-                                                ' id="imagePage"'+ result.id +' ' +
+                                                ' id="imagePage"' + result.id + ' ' +
                                                 'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                                '<label class="form-label"  id="imagePageEdit'+ result.id +'" style="max-width: 250px;">' +
+                                                '<label class="form-label"  id="imagePageEdit' + result.id + '" style="max-width: 250px;">' +
                                                 '<input type="file" ' +
                                                 'class="form-control"' +
-                                                'accept="image/png, image/jpeg" onchange="editImagePage(this,'+ result.id +')" multiple/>' +
+                                                'accept="image/png, image/jpeg" onchange="editImagePage(this,' + result.id + ')" multiple/>' +
                                                 '</label>' +
                                                 '<label class="form-label" style="max-width: 250px;">' +
                                                 '<button style="width: 250px;" ' +
@@ -328,23 +336,23 @@
                                        th:field="*{linkTrailer}">
                             </div>
                         </div>
+
                         <div class="row mb-4">
                             <label class="col-sm-2 col-form-label-sm">Тип кино</label>
-                            <div class="col-sm-3 film-types d-flex flex-row align-items-baseline">
-                                <div class="col-3 form-check form-check-inline ">
-                                    <input type="checkbox" class="form-check-input" name="filmTypes">
-                                    <label class="form-label">
-                                        3D
-                                    </label>
-                                    <input type="checkbox" class="form-check-input" name="filmTypes">
-                                    <label class="form-label">
-                                        2D
-                                    </label>
-                                    <input type="checkbox" class="form-check-input" name="filmTypes">
-                                    <label class="form-label">
-                                        IMAX
-                                    </label>
-                                </div>
+                            <div class="col-sm-1">
+                                <input type="checkbox" class="form-check-input" name="filmTypes" value="Threedimensional"
+                                       th:checked="${film.typeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).Threedimensional)}">
+                                <label class="form-label ml-2">3D</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="checkbox" class="form-check-input" name="filmTypes" value="Twodimensional"
+                                       th:checked="${film.typeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).Twodimensional)}">
+                                <label class="form-label ml-2"> 2D </label>
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="checkbox" class="form-check-input" name="filmTypes" value="IMAX"
+                                       th:checked="${film.typeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).IMAX)}">
+                                <label class="form-label ml-2"> IMAX </label>
                             </div>
                         </div>
                         <div class="row mb-4">

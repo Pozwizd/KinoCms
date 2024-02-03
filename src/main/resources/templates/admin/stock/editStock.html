@@ -86,8 +86,8 @@
                             <div class="col-sm-11">
                                 <div class="card-body">
                                     <textarea id="autosize-demo"
-                                              rows="3"
                                               class="form-control"
+                                              data-autosize
                                               th:field="*{description}">
                                     </textarea>
                                 </div>
@@ -136,8 +136,9 @@
                             <script>
                                 $(document).ready(function () {
                                     showMainImage();
-                                    // Загружаем страницу и требуем все картинки
                                     showAllImages();
+                                    const textarea = document.querySelectorAll('[data-autosize]');
+                                    autosize(textarea);
                                 });
 
 
@@ -187,7 +188,6 @@
                                 }
 
                                 function deleteMainImage(element){
-// Получение ближайшего элемента img от текущего элемента
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
                                     $.ajax({
@@ -217,7 +217,6 @@
                                         }
                                     })
                                 }
-                                // Рисуем картинки
                                 function drawImages(result) {
                                     for (const data of result) {
                                         $('<div class="col-3">' +
@@ -243,7 +242,6 @@
 
                                     }
                                 }
-                                // Добавляем картинку
                                 const addBlock = () => {
                                     let index;
                                     $.ajax({
@@ -277,7 +275,6 @@
                                 }
                                 document.querySelector('#add-image-button').addEventListener('click', addBlock);
 
-                                // Изменяем картинку
                                 function editImagePage(element, id) {
                                     let file = element.files[0];
                                     let formData = new FormData();
@@ -315,8 +312,6 @@
                                     });
                                 }
 
-
-                                // Удаляем картинку
                                 function removeBlock(element, id) {
                                     let block = element.closest('.col-3');
                                     block.remove();

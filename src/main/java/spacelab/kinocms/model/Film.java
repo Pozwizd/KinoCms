@@ -5,6 +5,7 @@ import lombok.*;
 import spacelab.kinocms.enums.TypeFilm;
 import spacelab.kinocms.model.ImagesEntity.ImageFilm;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +36,13 @@ public class Film {
     @Column
     private String linkTrailer;
 
+    @ElementCollection(targetClass = TypeFilm.class)
     @Enumerated(EnumType.STRING)
-    @Column
-    private TypeFilm typeFilm;
+    @CollectionTable(name = "film_type", joinColumns = @JoinColumn(name = "film_id"))
+    @Column(name = "type")
+    private List<TypeFilm> typeFilm = new ArrayList<>();
+
+
     @Column
     private String seoUrl;
     @Column
@@ -46,4 +51,8 @@ public class Film {
     private String seoKeywords;
     @Column
     private String seoDescription;
+    @Column
+    private Date startPremiereDate;
+    @Column
+    private Date endPremiereDate;
 }

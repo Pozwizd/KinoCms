@@ -30,15 +30,6 @@ public class MainPageServiceImp implements MainPageService {
 
     @Override
     public void updateMainPage(MainPage mainPage) {
-        MainPage mainPage1 = mainPageRepository.findById(1L).orElseThrow(() -> new UsernameNotFoundException("MainPage not found"));
-        mainPage1.setId(1L);
-        mainPage1.setPhoneNumber(mainPage.getPhoneNumber());
-        mainPage1.setPhoneNumber2(mainPage.getPhoneNumber2());
-        mainPage1.setSeoText(mainPage.getSeoText());
-        mainPage1.setSeoUrl(mainPage.getSeoUrl());
-        mainPage1.setStatus(mainPage.isStatus());
-        mainPage1.setSeoKeywords(mainPage.getSeoKeywords());
-        mainPage1.setSeoDescription(mainPage.getSeoDescription());
-        mainPageRepository.save(mainPage1);
+        mainPageRepository.saveAndFlush(mainPage);
     }
 }

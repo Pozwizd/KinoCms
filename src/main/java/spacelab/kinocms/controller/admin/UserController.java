@@ -5,10 +5,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.Mapper.UserMapper;
+import spacelab.kinocms.model.Dto.UserDto;
 import spacelab.kinocms.model.User;
 import spacelab.kinocms.service.UserService;
+import jakarta.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
@@ -16,6 +20,7 @@ import spacelab.kinocms.service.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
     private AuthenticationManager authenticationManager;
     private final int pageSize = 1;
 
@@ -30,7 +35,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ModelAndView viewUserDetails(@PathVariable Long userId, Model model) {
-        User user = userService.getUser(userId);
+        UserDto user = userMapper.toDto(userService.getUser(userId));
         model.addAttribute("title", "Пользователи");
         model.addAttribute("pageActive", "users");
         model.addAttribute("user", user);
@@ -38,29 +43,34 @@ public class UserController {
     }
 
     @PostMapping("/{userId}")
-    public ModelAndView editUserDetails(@ModelAttribute User user,
+    public ModelAndView editUserDetails(@ModelAttribute @Valid UserDto user,
                                         @RequestParam("confirmPassword") String confirmPassword,
-                                        Model model, @PathVariable String userId) {
-//        if (bindingResult.hasErrors()) {
-//            System.out.println("Ошибка валидации");
-//        }
+                                        BindingResult result, Model model, @PathVariable Long  userId) {
 
-        user.setId(Long.valueOf(userId));
-        userService.saveUser(user);
+        // Проверка ошибок валидации
+        if (result.hasErrors()) {
+            model.addAttribute("title", "Пользователи");
+            model.addAttribute("pageActive", "users");
+            model.addAttribute("user", user);
+            return new ModelAndView("redirect:/admin/users/" + userId);
+        }
+
+        user.setId(userId);
+        userService.saveUser(userMapper.toEntity(user));
 
         return new ModelAndView("redirect:/admin/users");
     }
+
 
     @GetMapping("/getPage")
     public @ResponseBody Page<User> getUsersOnPage(@RequestParam int page) {
         return userService.findAllUsers(page, pageSize);
     }
 
+
+
     @GetMapping("/getPageSearch")
     public @ResponseBody Page<User> getUsersPageBySearch(@RequestParam int page, @RequestParam String search) {
         return userService.findUsersByRequest(page, pageSize, search);
     }
-
-
-
 }

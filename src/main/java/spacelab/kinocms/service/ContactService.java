@@ -1,12 +1,8 @@
 package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import spacelab.kinocms.model.User;
 import spacelab.kinocms.model.page.ContactPage;
-import spacelab.kinocms.model.page.ContactPageDto;
-
-import java.util.List;
+import spacelab.kinocms.model.Dto.Page.ContactPageDto;
 
 @Service
 public interface ContactService {

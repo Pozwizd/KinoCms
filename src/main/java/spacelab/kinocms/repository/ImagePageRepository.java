@@ -8,6 +8,7 @@ import spacelab.kinocms.model.page.Page;
 
 import java.util.List;
 
+
 @Repository
 public interface ImagePageRepository extends JpaRepository<ImagePage, Long> {
     @Query("SELECT i FROM ImagePage i ORDER BY i.id DESC")

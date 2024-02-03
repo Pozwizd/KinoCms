@@ -1,7 +1,8 @@
-package spacelab.kinocms.model.page;
+package spacelab.kinocms.model.Dto.Page;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Value;
+import spacelab.kinocms.model.page.ContactPage;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -13,12 +14,13 @@ import java.util.List;
 @Data
 public class ContactPageDto implements Serializable {
     Long id;
+    @NotNull(message = "Name is required")
+    String address;
     String name;
     List<ContactCinemaDto> contactCinemas;
     String linkVideo;
     Boolean status;
     String seoUrl;
-    Date dateOfCreated;
     String seoTitle;
     String seoKeywords;
     String seoDescription;

@@ -27,7 +27,7 @@ public class MainPage{
 
 
     @Column
-    private boolean status;
+    private Boolean status;
 
     @Column
     private String phoneNumber;

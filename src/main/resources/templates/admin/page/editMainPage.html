@@ -75,12 +75,11 @@
                             <label for="seoText" class="col-sm-1 col-form-label-sm">SEO text</label>
                             <div class="col-sm-11">
                                 <textarea
+                                        data-autosize
                                         type="text"
                                         id="seoText"
                                         class="form-control"
-                                        rows="5"
                                         th:field="*{seoText}">
-
                                 </textarea>
                             </div>
                         </div>
@@ -142,9 +141,15 @@
                     </div>
                 </div>
             </div>
-
-
         </form>
+        <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                const textarea = document.querySelectorAll('[data-autosize]');
+                autosize(textarea);
+            });
+        </script>
     </div>
 </div>
 </body>

@@ -15,14 +15,16 @@ insert into main_page(id,
                       seo_url,
                       status,
                       date_of_created)
-VALUES (1, '+7 (999) 999-99-99',
-        '+7 (888) 888-88-88',
+VALUES (1,
+        '1234567890',
+        '9876543210',
         'This is the SEO description of the main page.',
         'This is the SEO keywords of the main page.',
         'This is the SEO title of the main page.',
         'main-page',
         true,
         '2020-01-01');
+
 
 insert into page (description,
                   main_image,
@@ -79,19 +81,17 @@ VALUES ('This is the description of the first page.',
         true,
         '2020-01-01');
 
-insert into contact_page(id,
-                         link_video,
-                         seo_description,
-                         seo_keywords,
-                         seo_title,
-                         seo_url,
-                         date_of_created)
-    VALUE (1, 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-           'This is the SEO description of the contact page.',
-           'This is the SEO keywords of the contact page.',
-           'This is the SEO title of the contact page.',
-           'contact-page',
-           '2020-01-01');
+insert into contact_page(id, date_of_created, link_video, name, seo_description,
+                         seo_keywords, seo_title, seo_url, status)
+VALUES (1,
+        '2020-01-01',
+        'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        'Контакты',
+        'This is the SEO description of the contact page.',
+        'This is the SEO keywords of the contact page.',
+        'This is the SEO title of the contact page.',
+        'contact-page',
+        true);
 
 
 
@@ -179,8 +179,7 @@ insert into cinemas (id, conditions,
                      seo_keywords, seo_title,
                      seo_url,
                      top_banner)
-VALUES (
-        1,
+VALUES (1,
         'This is the description of the first cinema.',
         'This is the logo of the first cinema.',
         'first-cinema',
@@ -189,10 +188,8 @@ VALUES (
         'This is the SEO keywords of the first cinema.',
         'This is the SEO title of the first cinema.',
         'first-cinema',
-        'This is the top banner of the first cinema.'
-        ),
-       (
-        2,
+        'This is the top banner of the first cinema.'),
+       (2,
         'This is the description of the second cinema.',
         'This is the logo of the second cinema.',
         'second-cinema',
@@ -201,8 +198,7 @@ VALUES (
         'This is the SEO keywords of the second cinema.',
         'This is the SEO title of the second cinema.',
         'second-cinema',
-        'This is the top banner of the second cinema.'
-       );
+        'This is the top banner of the second cinema.');
 
 insert into hall (id,
                   date_created,
@@ -227,8 +223,7 @@ VALUES (1,
         'first-hall',
         'This is the top banner of the first hall.',
         'This is the url scheme image of the first hall.',
-        1
-       ),
+        1),
        (2,
         '2020-01-01',
         'This is the description of the second hall.',
@@ -240,42 +235,36 @@ VALUES (1,
         'second-hall',
         'This is the top banner of the second hall.',
         'This is the url scheme image of the second hall.',
-        1
-       );
+        1);
 
-insert into film (id, description, link_trailer, main_image, name,
-                  seo_description, seo_keywords, seo_title, seo_url, type_film)
-VALUES
-       (1, 'This is the description of the first film.',
+insert into film (id, description, end_premiere_date, link_trailer, main_image, name,
+                  seo_description, seo_keywords, seo_title, seo_url, start_premiere_date)
+VALUES (1,
+        'This is the description of the first film.',
+        '2020-01-01',
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-        null,
+        'This is the main image of the first film.',
         'First Film',
         'This is the SEO description of the first film.',
         'This is the SEO keywords of the first film.',
         'This is the SEO title of the first film.',
         'first-film',
-        'IMAX'
-       ),
-
-       (2, 'This is the description of the second film.',
+        '2020-01-01'),
+       (2,
+        'This is the description of the second film.',
+        '2020-01-01',
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-        null,
+        'This is the main image of the second film.',
         'Second Film',
         'This is the SEO description of the second film.',
         'This is the SEO keywords of the second film.',
         'This is the SEO title of the second film.',
         'second-film',
-        'IMAX'
-       ),
+        '2020-01-01');
+
+insert into film_type (film_id, type)
+VALUES (1, 'Threedimensional'),
+       (1, 'Twodimensional'),
+       (2, 'IMAX');
 
 
-       (3, 'This is the description of the third film.',
-        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-        null,
-        'Third Film',
-        'This is the SEO description of the third film.',
-        'This is the SEO keywords of the third film.',
-        'This is the SEO title of the third film.',
-        'third-film',
-        'Threedimensional'
-       );

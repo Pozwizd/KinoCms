@@ -22,12 +22,12 @@ public class BannerBlock {
     private Long id;
 
     @Column (name = "status")
-    private Status status;
+    private Boolean status;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bannerBlock")
     private List<Banner> banners;
 
-    @Column(name = "timeChange")
+    @Column
     private Integer timeChange;
 
 }

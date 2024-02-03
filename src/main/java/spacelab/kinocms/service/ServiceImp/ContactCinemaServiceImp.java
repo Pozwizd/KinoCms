@@ -3,7 +3,7 @@ package spacelab.kinocms.service.ServiceImp;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.page.ContactCinema;
-import spacelab.kinocms.model.page.ContactCinemaDto;
+import spacelab.kinocms.model.Dto.Page.ContactCinemaDto;
 import spacelab.kinocms.model.page.ContactPage;
 import spacelab.kinocms.repository.ContactCinemaRepository;
 import spacelab.kinocms.service.ContactCinemaService;

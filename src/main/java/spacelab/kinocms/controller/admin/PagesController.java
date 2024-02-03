@@ -7,7 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.Mapper.MainPageMapper;
 import spacelab.kinocms.UploadFile;
+import spacelab.kinocms.model.Dto.Page.MainPageDto;
 import spacelab.kinocms.model.page.ImagePage;
 import spacelab.kinocms.model.page.MainPage;
 import spacelab.kinocms.model.page.Page;
@@ -25,7 +27,6 @@ import java.util.List;
 @RequestMapping("admin/pages")
 public class PagesController {
 
-    private static final String UPLOAD_FOLDER = Paths.get("images").toFile().getAbsolutePath() + "/";
     private final ImagePageService imagePageService;
     private final MainPageService mainPageService;
     private final PageService pageService;
@@ -56,19 +57,19 @@ public class PagesController {
 
     @GetMapping("/editMainPage")
     public ModelAndView showEditMainPage(Model model) {
-        MainPage mainPage = mainPageService.getMainPage();
-        model.addAttribute("title", mainPage.getName());
+        MainPageDto mainPageDto = MainPageMapper.toDto(mainPageService.getMainPage());
+        model.addAttribute("title",  "Редактирование cтраницы " + mainPageDto.getName());
         model.addAttribute("pageActive", "pages");
-        model.addAttribute("mainPage", mainPage);
+        model.addAttribute("mainPage", mainPageDto);
         return new ModelAndView("admin/page/editMainPage");
     }
 
     @PostMapping("/editMainPage/{id}")
-    public ModelAndView editMainPage(@ModelAttribute MainPage mainPage, HttpServletRequest request) {
-        mainPageService.updateMainPage(mainPage);
+    public ModelAndView editMainPage(@ModelAttribute MainPageDto mainPageDto, HttpServletRequest request) {
+        mainPageService.saveMainPage(MainPageMapper.toEntity(mainPageDto));
 
         String referer = request.getHeader("Referer");
-        return new ModelAndView("redirect:" + referer);
+        return new ModelAndView("redirect:/admin/pages");
 
     }
 
@@ -77,6 +78,7 @@ public class PagesController {
         model.addAttribute("title", "Редактирование cтраницы " + pageService.getPage(id).getName());
         model.addAttribute("pageActive", "pages");
         model.addAttribute("pageCommon", pageService.getPage(id));
+
         return new ModelAndView("admin/page/editPage");
     }
 
@@ -101,7 +103,7 @@ public class PagesController {
         return new ModelAndView("redirect:" + referer);
     }
 
-    @PostMapping("/removePage/{id}")
+    @GetMapping("/removePage/{id}")
     public ModelAndView removePage(Model model, @PathVariable String id, HttpServletRequest request) {
         pageService.deletePage(pageService.getPage(Long.parseLong(id)));
         model.addAttribute("title", "Страницы");

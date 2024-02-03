@@ -4,7 +4,359 @@
       layout:decorate="admin/template/layout.html">
 <body>
 <div layout:fragment="content">
-Баннера
+    <div class="container">
+        <form th:method="post"
+              enctype="multipart/form-data">
+            <div class="border rounded">
+                <div class="d-flex flex-row justify-content-center">
+                    <div></div>
+                    <h4 class="fw-bold pt-3">На главной верх</h4>
+                </div>
+                <div class="d-flex flex-row justify-content-end">
+                    <div class="form-check form-switch form-check-inline col-1 my-auto">
+                        <label>
+                            <input class="form-check-input" type="checkbox"/>
+                        </label>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="p-0 pt-4">
+                        <div>
+                            <div class="row mb-4">
+                                <div class="row align-items-center" id="mainBanners">
+                                    <div class="col-3">
+                                        <div class="dropdown position-absolute top-0 end-0">
+                                            <button
+                                                    type="button"
+                                                    class="btn dropdown-toggle hide-arrow p-0"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-expanded="false"
+                                            >
+                                                <i class="ti ti-dots-vertical text-muted"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                       href="">
+                                                        Редактировать
+                                                    </a></li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger"
+                                                       href="">
+                                                        Удалить
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"
+                                             class="img-thumbnail mb-1" alt="">
+                                        <button type="button" class="btn btn-primary mb-1" style="width: 100%;">
+                                            Добавить
+                                        </button>
+                                        <div class="form-group mb-1">
+                                            <input type="text" class="form-control" placeholder="URL">
+                                        </div>
+                                        <div class="form-group mb-1">
+                                            <input type="text" class="form-control" placeholder="Текст">
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"
+                                             class="img-thumbnail mb-1"
+                                             alt=""
+                                             id="imageMainBanner">
+                                        <button type="button"
+                                                class="btn btn-primary mb-1"
+                                                style="width: 100%;"
+                                                id="editImageButton">
+                                            Добавить
+                                        </button>
+                                        <div class="form-group mb-1">
+                                            <input type="text" class="form-control" placeholder="URL">
+                                        </div>
+                                        <div class="form-group mb-1">
+                                            <input type="text" class="form-control" placeholder="Текст">
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="line"/>
+                                <div class="col-12 d-flex justify-content-around">
+                                    <div class="col-1">
+                                        <select class="form-select form-select-sm">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-1">
+                                        <button type="button" class="btn btn-primary">
+                                            Добавить
+                                        </button>
+                                    </div>
+                                    <div class="col-1">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row mb-4">
+                    <div class="row align-items-center">
+                        <input
+                                name="default-radio-1"
+                                class="form-check-input col-3"
+                                type="radio"
+                                value=""
+                                id="defaultRadio1"
+                        />
+                        <div class="col-6">
+                            <label class="col-form-label col-sm-2">
+                                Главная картинка
+                            </label>
+                            <img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"
+                                 class="img-fluid" alt="..."
+                                 style="max-width: 250px; max-height: 200px;">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">
+                                <input type="file"
+                                       class="form-control"
+                                       accept="image/png, image/jpeg"
+                                       name="mainImagePage"
+                                       onchange="changeMainPage(this)"/>
+                            </label>
+                            <label class="form-label">
+                                <a>
+                                    <button
+                                            type="button"
+                                            class="btn btn-danger"
+                                            onclick="deleteMainImage(this)">
+                                        Удалить
+                                    </button>
+                                </a>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="row align-items-center">
+                        <input
+                                name="default-radio-1"
+                                class="form-check-input col-3"
+                                type="radio"
+                                value=""
+                        />
+                        <div class="col-6">
+                            <label class="col-form-label col-sm-4">
+                                Просто фон
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div>
+                <div class="d-flex flex-row justify-content-center align-items-center">
+                    <h4 class="fw-bold pt-3">На главной Новости Акции</h4>
+                </div>
+                <div class="card-body">
+                    <div class="p-0 pt-4">
+                        <div>
+                            <div class="row mb-4">
+                                <div class="row align-items-center" id="gallery-image">
+                                    <div class="col-3">
+                                        <div class="dropdown position-absolute top-0 end-0">
+                                            <button
+                                                    type="button"
+                                                    class="btn dropdown-toggle hide-arrow p-0"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-expanded="false"
+                                            >
+                                                <i class="ti ti-dots-vertical text-muted"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item">
+                                                        Редактировать
+                                                    </a></li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger">
+                                                        Удалить
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"
+                                             class="img-thumbnail mb-1" alt="...">
+                                        <button type="button" class="btn btn-primary mb-1" style="width: 100%;">
+                                            Добавить
+                                        </button>
+                                        <div class="form-group mb-1">
+                                            <input type="text" class="form-control" placeholder="URL">
+                                        </div>
+                                        <div class="form-group mb-1">
+                                            <input type="text" class="form-control" placeholder="Текст">
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"
+                                             class="img-thumbnail mb-1" alt="...">
+                                        <button type="button" class="btn btn-primary mb-1" style="width: 100%;">
+                                            Добавить
+                                        </button>
+                                        <div class="form-group mb-1">
+                                            <input type="text" class="form-control" placeholder="URL">
+                                        </div>
+                                        <div class="form-group mb-1">
+                                            <input type="text" class="form-control" placeholder="Текст">
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="line"/>
+                                <div class="col-12 d-flex justify-content-around">
+                                    <div class="col-1">
+                                        <select id="smallSelect" class="form-select form-select-sm">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-1">
+                                        <button type="button" id="add-image-button" class="btn btn-primary">
+                                            Добавить
+                                        </button>
+                                    </div>
+                                    <div class="col-1">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+<!--        <script>-->
+<!--            $(document).ready(function () {-->
+<!--                showAllImages()-->
+<!--            });-->
+
+<!--            showAllImages = () => {-->
+<!--                $.ajax({-->
+<!--                    url: '/admin/banners/showAllMainBanner/',-->
+<!--                    method: 'GET',-->
+<!--                    dataType: 'JSON',-->
+<!--                    success: function (result) {-->
+<!--                        console.log(result);-->
+<!--                        drawMainBanner(result)-->
+<!--                    }-->
+<!--                })-->
+<!--            }-->
+
+<!--            // Рисуем картинки-->
+<!--            function drawMainBanner(result) {-->
+<!--                for (const data of result) {-->
+<!--                    $('<div class="col-3">\n' +-->
+<!--                        '<img src="' + (data.url != null ? data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +-->
+<!--                        'class="img-thumbnail mb-1" alt="">\n' +-->
+<!--                        '<button type="button" class="btn btn-primary mb-1" style="width: 100%;">\n' +-->
+<!--                        'Добавить\n' +-->
+<!--                        '</button>\n' +-->
+<!--                        '<div class="form-group mb-1">\n' +-->
+<!--                        '<input type="text" class="form-control" placeholder="URL">\n' +-->
+<!--                        '</div>\n' +-->
+<!--                        '<div class="form-group mb-1">\n' +-->
+<!--                        '<input type="text" class="form-control" placeholder="Текст">\n' +-->
+<!--                        ' </div>\n' +-->
+<!--                        '</div>').appendTo('#mainBanners');-->
+
+<!--                }-->
+<!--            }-->
+
+<!--            // Добавляем картинку-->
+<!--            function addMainBanner() {-->
+<!--                let index;-->
+<!--                $.ajax({-->
+<!--                    url: '/admin/banners/createMainBanner/' + [[${bannerBlock.id}]],-->
+<!--                    method: 'GET',-->
+<!--                    dataType: 'JSON',-->
+<!--                    success: function (result) {-->
+<!--                        console.log(result)-->
+<!--                        $('<div class="col-3">\n' +-->
+<!--                            '<img src="' + (data.url != null ? data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +-->
+<!--                            'class="img-thumbnail mb-1" alt="">\n' +-->
+<!--                            '<button type="button" class="btn btn-primary mb-1" style="width: 100%;">\n' +-->
+<!--                            'Добавить\n' +-->
+<!--                            '</button>\n' +-->
+<!--                            '<div class="form-group mb-1">\n' +-->
+<!--                            '<input type="text" class="form-control" placeholder="URL">\n' +-->
+<!--                            '</div>\n' +-->
+<!--                            '<div class="form-group mb-1">\n' +-->
+<!--                            '<input type="text" class="form-control" placeholder="Текст">\n' +-->
+<!--                            ' </div>\n' +-->
+<!--                            '</div>').appendTo('#mainBanners');-->
+<!--                    }-->
+<!--                })-->
+<!--            }-->
+
+<!--            // Изменяем картинку-->
+<!--            function editMainBanner(element, id) {-->
+<!--                let file = element.files[0];-->
+<!--                let formData = new FormData();-->
+<!--                formData.append("file", file);-->
+
+<!--                $.ajax({-->
+<!--                    url: '/admin/banners/editMainBanner/' + id,-->
+<!--                    method: 'POST',-->
+<!--                    data: formData,-->
+<!--                    processData: false,-->
+<!--                    contentType: false,-->
+<!--                    success: function (result) {-->
+<!--                        console.log("Выгрузка файла прошла успешно");-->
+<!--                        $.ajax({-->
+<!--                            url: '/admin/banners/getMainBanner/' + id,-->
+<!--                            method: 'GET',-->
+<!--                            success: function (result) {-->
+<!--                                console.log("Загрузка файла прошла успешно");-->
+<!--                                let block = $(element).find('imageMainBanner');-->
+<!--                                $('<img src="' + result.url + '" ' +-->
+<!--                                    'id="imagePage' + result.id + '" ' +-->
+<!--                                    'class="img-fluid mb-2" ' +-->
+<!--                                    'style="max-width: 250px; max-height: 200px;">')-->
+<!--                                    .insertBefore($("#editImageButton" + result.id));-->
+<!--                                block.remove();-->
+<!--                            },-->
+<!--                            error: function (error) {-->
+<!--                                console.error("Ошибка при загрузке файла:", error);-->
+<!--                            }-->
+<!--                        });-->
+<!--                    },-->
+<!--                    error: function (error) {-->
+<!--                        console.error("Ошибка при загрузке файла:", error);-->
+<!--                    }-->
+<!--                });-->
+<!--            }-->
+
+
+<!--            // Удаляем картинку-->
+<!--            function removeBlock(element, id) {-->
+<!--                let block = element.closest('.col-3');-->
+<!--                block.remove();-->
+<!--                $.ajax({-->
+<!--                    url: '/admin/pages/editPage/deleteImage/' + id,-->
+<!--                    method: 'GET',-->
+<!--                    dataType: 'JSON',-->
+<!--                    success: function (result) {-->
+<!--                        console.log(result);-->
+<!--                    }-->
+<!--                })-->
+<!--            }-->
+<!--        </script>-->
+    </div>
 </div>
 </body>
 </html>

@@ -1,15 +1,13 @@
 package spacelab.kinocms.controller.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.model.page.ContactCinema;
 import spacelab.kinocms.model.page.ContactPage;
-import spacelab.kinocms.model.page.ContactPageDto;
+import spacelab.kinocms.model.Dto.Page.ContactPageDto;
 import spacelab.kinocms.service.ContactCinemaService;
 import spacelab.kinocms.service.ContactService;
 
@@ -32,6 +30,8 @@ public class ContactController {
 
         ContactPage contactPage = contactService.getContactPage();
         List<ContactCinema> contactCinema = contactService.getContactPage().getContactCinemas();
+        model.addAttribute("title", "Редактирование страницы " + contactPage.getName());
+        model.addAttribute("pageActive", "pages");
 
         model.addAttribute("contactPage",contactPage);
         model.addAttribute("contacts", contactCinema);
@@ -52,7 +52,7 @@ public class ContactController {
         contactService.saveContactPage(contactPage);
 
         String referer = request.getHeader("Referer");
-        return new ModelAndView("redirect:" + referer);
+        return new ModelAndView("redirect:/admin/pages");
     }
 
     @GetMapping("admin/pages/contactPage/deleteImage/{id}")

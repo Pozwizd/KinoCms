@@ -77,8 +77,8 @@
                             <label class="col-sm-1 col-form-label-sm">Описание</label>
                             <div class="col-sm-11">
                                 <div class="card-body">
-                                    <textarea id="autosize-demo"
-                                              rows="3"
+                                    <textarea
+                                              data-autosize
                                               class="form-control"
                                               th:field="*{description}">
                                     </textarea>
@@ -127,8 +127,9 @@
                             <script>
                                 $(document).ready(function () {
                                     showMainImage();
-                                    // Загружаем страницу и требуем все картинки
                                     showAllImages();
+                                    const textarea = document.querySelectorAll('[data-autosize]');
+                                    autosize(textarea);
                                 });
 
 

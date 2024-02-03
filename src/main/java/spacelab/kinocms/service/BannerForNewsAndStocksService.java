@@ -1,0 +1,18 @@
+package spacelab.kinocms.service;
+
+import org.springframework.stereotype.Service;
+import spacelab.kinocms.model.BannerBlockForNewsAndStocks;
+import spacelab.kinocms.model.BannerForNewsAndStocks;
+import spacelab.kinocms.repository.BannerForNewsAndStocksRepository;
+
+import java.util.List;
+
+@Service
+public interface BannerForNewsAndStocksService {
+
+    public BannerForNewsAndStocks getBannerForNewsAndStocksById(Long id);
+    public void saveBannerForNewsAndStocks(BannerForNewsAndStocks bannerForNewsAndStocks);
+    public void deleteBannerForNewsAndStocks(Long id);
+    public void updateBannerForNewsAndStocks(BannerForNewsAndStocks bannerForNewsAndStocks);
+    public List<BannerForNewsAndStocks> getAllBannerForNewsAndStocks();
+}

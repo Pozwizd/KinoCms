@@ -69,7 +69,7 @@ public class CinemaController {
         return new ModelAndView("redirect:" + referer);
     }
 
-    @PostMapping("/removeCinema/{id}")
+    @GetMapping("/removeCinema/{id}")
     public ModelAndView removeCinema(Model model, @PathVariable String id, HttpServletRequest request) {
         cinemaService.deleteCinema(Long.parseLong(id));
         String referer = request.getHeader("Referer");

@@ -45,8 +45,8 @@
                                 <label class="col-sm-3 col-form-label-sm">Описание</label>
                                 <div class="col-sm-11">
                                     <div class="card-body">
-                                        <textarea id="autosize-demo"
-                                                  rows="3"
+                                        <textarea rows="3"
+                                                  data-autosize
                                                   th:field="*{contactCinemas[__${cont.index}__].address}"
                                                   class="form-control">
                                         </textarea>
@@ -171,11 +171,15 @@
 
             </div>
         </div>
-
     </form>
+    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
     <script>
-        let index = (document.querySelectorAll('[data-contact-block]').length) + 1;
+        $(document).ready(function () {
+            const textarea = document.querySelectorAll('[data-autosize]');
+            autosize(textarea);
+        });
 
+        let index = (document.querySelectorAll('[data-contact-block]').length) + 1;
         function createNewContact() {
             $('<div>\n' +
                 '                    <div class="card" data-contact-block>\n' +
@@ -210,8 +214,7 @@
                 '                                        <textarea id="autosize-demo"\n' +
                 '                                                  rows="3"\n' +
                 '                                                  name="contactCinemas[' + index + '].address"\n' +
-                '                                                  class="form-control">\n' +
-                '                                        </textarea>\n' +
+                '                                                  class="form-control"></textarea>\n' +
                 '                                    </div>\n' +
                 '                                </div>\n' +
                 '                            </div>\n' +

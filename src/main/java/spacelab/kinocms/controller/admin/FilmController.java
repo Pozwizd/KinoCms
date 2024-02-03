@@ -8,8 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.Mapper.FilmMapper;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.enums.TypeFilm;
+import spacelab.kinocms.model.Dto.FilmDto;
 import spacelab.kinocms.model.Film;
 import spacelab.kinocms.model.ImagesEntity.ImageFilm;
 import spacelab.kinocms.model.ImagesEntity.ImageNews;
@@ -33,9 +35,8 @@ import java.util.UUID;
 public class FilmController {
 
     private final FilmService filmService;
-
     private final ImageFilmService imageFilmService;
-
+    private final FilmMapper filmMapper;
     private final UploadFile uploadFile;
 
 
@@ -45,7 +46,8 @@ public class FilmController {
         model.addAttribute("title", "Фильмы");
         model.addAttribute("pageActive", "films");
 
-        model.addAttribute("filmsList", filmService.getAllFilms());
+        model.addAttribute("filmsList", filmService.getAllCurrentFilm());
+        model.addAttribute("filmsFutureList", filmService.getAllFutureFilm());
 
         return new ModelAndView("admin/film/films");
     }
@@ -63,10 +65,10 @@ public class FilmController {
     }
 
     @PostMapping("/editFilm/{id}")
-    public ModelAndView editFilm(@ModelAttribute Film film,
-                                      @PathVariable String id) {
-
-        filmService.updateFilm(film);
+    public ModelAndView editFilm(@ModelAttribute FilmDto filmDto,
+                                      @PathVariable String id, @RequestParam List<TypeFilm> filmTypes) {
+        filmDto.setTypeFilm(filmTypes);
+        filmService.updateFilm(filmMapper.toEntity(filmDto));
         return new ModelAndView("redirect:/admin/films");
     }
 

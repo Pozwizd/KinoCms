@@ -76,7 +76,7 @@ public class NewsController {
         return new ModelAndView("redirect:" + referer);
     }
 
-    @PostMapping("/removeNews/{id}")
+    @GetMapping("/removeNews/{id}")
     public ModelAndView removePage(Model model, @PathVariable String id, HttpServletRequest request) {
         newsService.deleteNews(Long.parseLong(id));
         String referer = request.getHeader("Referer");

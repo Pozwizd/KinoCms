@@ -77,7 +77,6 @@
                                             class="form-control"
                                             data-autosize
                                             rows="3"
-                                            maxlength="255"
                                             th:field="*{description}">
                                     </textarea>
                                 </div>
@@ -160,8 +159,7 @@
                             <div class="col-12 text-center">
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
-                            <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
-                            <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js}"></script>
+                            <script src="/assets/vendor/libs/jquery/jquery.js"></script>
                             <script>
                                 $(document).ready(function () {
                                     showAllImages();

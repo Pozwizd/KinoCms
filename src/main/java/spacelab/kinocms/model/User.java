@@ -10,9 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import spacelab.kinocms.enums.Gender;
 import spacelab.kinocms.enums.Lanquage;
 
+import java.sql.Date;
 import java.util.Arrays;
 import java.util.Collection;
-import java.sql.Date;
 
 @Getter
 @Setter
@@ -24,7 +24,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
 
     private String name;
 
