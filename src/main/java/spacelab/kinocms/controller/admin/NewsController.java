@@ -39,7 +39,7 @@ public class NewsController {
     @GetMapping({"/", ""})
     public ModelAndView index(Model model) {
         model.addAttribute("title", "Новости");
-        model.addAttribute("pageActive", "News");
+        model.addAttribute("pageActive", "news");
 
         model.addAttribute("newsList", newsService.listAllNews());
 

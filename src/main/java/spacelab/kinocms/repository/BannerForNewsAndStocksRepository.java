@@ -1,6 +1,7 @@
 package spacelab.kinocms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.ResponseBody;
 import spacelab.kinocms.model.Banner;
@@ -11,5 +12,8 @@ import spacelab.kinocms.model.BannerForNewsAndStocks;
 
 @Repository
 public interface BannerForNewsAndStocksRepository extends JpaRepository<BannerForNewsAndStocks, Long> {
+
+    @Query("SELECT b FROM BannerForNewsAndStocks b ORDER BY b.id DESC limit 1")
+    BannerForNewsAndStocks findLastBannerForNewsAndStocks();
 
 }

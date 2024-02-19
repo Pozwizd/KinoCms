@@ -5,357 +5,687 @@
 <body>
 <div layout:fragment="content">
     <div class="container">
-        <form th:method="post"
-              enctype="multipart/form-data">
-            <div class="border rounded">
-                <div class="d-flex flex-row justify-content-center">
-                    <div></div>
-                    <h4 class="fw-bold pt-3">На главной верх</h4>
-                </div>
-                <div class="d-flex flex-row justify-content-end">
-                    <div class="form-check form-switch form-check-inline col-1 my-auto">
-                        <label>
-                            <input class="form-check-input" type="checkbox"/>
-                        </label>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="p-0 pt-4">
-                        <div>
-                            <div class="row mb-4">
-                                <div class="row align-items-center" id="mainBanners">
-                                    <div class="col-3">
-                                        <div class="dropdown position-absolute top-0 end-0">
-                                            <button
-                                                    type="button"
-                                                    class="btn dropdown-toggle hide-arrow p-0"
-                                                    data-bs-toggle="dropdown"
-                                                    aria-expanded="false"
-                                            >
-                                                <i class="ti ti-dots-vertical text-muted"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item"
-                                                       href="">
-                                                        Редактировать
-                                                    </a></li>
-                                                <li>
-                                                    <a class="dropdown-item text-danger"
-                                                       href="">
-                                                        Удалить
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"
-                                             class="img-thumbnail mb-1" alt="">
-                                        <button type="button" class="btn btn-primary mb-1" style="width: 100%;">
-                                            Добавить
-                                        </button>
-                                        <div class="form-group mb-1">
-                                            <input type="text" class="form-control" placeholder="URL">
-                                        </div>
-                                        <div class="form-group mb-1">
-                                            <input type="text" class="form-control" placeholder="Текст">
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"
-                                             class="img-thumbnail mb-1"
-                                             alt=""
-                                             id="imageMainBanner">
-                                        <button type="button"
-                                                class="btn btn-primary mb-1"
-                                                style="width: 100%;"
-                                                id="editImageButton">
-                                            Добавить
-                                        </button>
-                                        <div class="form-group mb-1">
-                                            <input type="text" class="form-control" placeholder="URL">
-                                        </div>
-                                        <div class="form-group mb-1">
-                                            <input type="text" class="form-control" placeholder="Текст">
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr class="line"/>
-                                <div class="col-12 d-flex justify-content-around">
-                                    <div class="col-1">
-                                        <select class="form-select form-select-sm">
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-1">
-                                        <button type="button" class="btn btn-primary">
-                                            Добавить
-                                        </button>
-                                    </div>
-                                    <div class="col-1">
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <form id="MainBannerForm"
+              class="p-2 form-block rounded-3 border">
             <div>
-                <div class="row mb-4">
-                    <div class="row align-items-center">
-                        <input
-                                name="default-radio-1"
-                                class="form-check-input col-3"
-                                type="radio"
-                                value=""
-                                id="defaultRadio1"
-                        />
-                        <div class="col-6">
-                            <label class="col-form-label col-sm-2">
-                                Главная картинка
-                            </label>
-                            <img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"
-                                 class="img-fluid" alt="..."
-                                 style="max-width: 250px; max-height: 200px;">
-                        </div>
-                        <div class="col-3">
-                            <label class="form-label">
-                                <input type="file"
-                                       class="form-control"
-                                       accept="image/png, image/jpeg"
-                                       name="mainImagePage"
-                                       onchange="changeMainPage(this)"/>
-                            </label>
-                            <label class="form-label">
-                                <a>
-                                    <button
-                                            type="button"
-                                            class="btn btn-danger"
-                                            onclick="deleteMainImage(this)">
-                                        Удалить
-                                    </button>
-                                </a>
+                <div>
+                    <div class="d-flex flex-row justify-content-center">
+                        <div></div>
+                        <h4 class="fw-bold pt-3">На главной верх</h4>
+                    </div>
+                    <div class="d-flex flex-row justify-content-end">
+                        <div class="form-check form-switch form-check-inline col-1 my-auto">
+                            <label>
+                                <input class="form-check-input" type="checkbox"
+                                       name="status"/>
                             </label>
                         </div>
                     </div>
                 </div>
-                <div class="row mb-4">
-                    <div class="row align-items-center">
-                        <input
-                                name="default-radio-1"
-                                class="form-check-input col-3"
-                                type="radio"
-                                value=""
-                        />
-                        <div class="col-6">
-                            <label class="col-form-label col-sm-4">
-                                Просто фон
-                            </label>
-                        </div>
+                <div class="row row-cols-1 row-cols-md-4 g-4 mb-5" id="MainBannersBlock">
+
+                </div>
+                <hr class="line"/>
+                <div class="col-12 d-flex justify-content-around">
+                    <div class="col-1">
+                        <select class="form-select form-select-sm"
+                                name="timeChange">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
                     </div>
-                </div>
-
-            </div>
-            <div>
-                <div class="d-flex flex-row justify-content-center align-items-center">
-                    <h4 class="fw-bold pt-3">На главной Новости Акции</h4>
-                </div>
-                <div class="card-body">
-                    <div class="p-0 pt-4">
-                        <div>
-                            <div class="row mb-4">
-                                <div class="row align-items-center" id="gallery-image">
-                                    <div class="col-3">
-                                        <div class="dropdown position-absolute top-0 end-0">
-                                            <button
-                                                    type="button"
-                                                    class="btn dropdown-toggle hide-arrow p-0"
-                                                    data-bs-toggle="dropdown"
-                                                    aria-expanded="false"
-                                            >
-                                                <i class="ti ti-dots-vertical text-muted"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item">
-                                                        Редактировать
-                                                    </a></li>
-                                                <li>
-                                                    <a class="dropdown-item text-danger">
-                                                        Удалить
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"
-                                             class="img-thumbnail mb-1" alt="...">
-                                        <button type="button" class="btn btn-primary mb-1" style="width: 100%;">
-                                            Добавить
-                                        </button>
-                                        <div class="form-group mb-1">
-                                            <input type="text" class="form-control" placeholder="URL">
-                                        </div>
-                                        <div class="form-group mb-1">
-                                            <input type="text" class="form-control" placeholder="Текст">
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"
-                                             class="img-thumbnail mb-1" alt="...">
-                                        <button type="button" class="btn btn-primary mb-1" style="width: 100%;">
-                                            Добавить
-                                        </button>
-                                        <div class="form-group mb-1">
-                                            <input type="text" class="form-control" placeholder="URL">
-                                        </div>
-                                        <div class="form-group mb-1">
-                                            <input type="text" class="form-control" placeholder="Текст">
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr class="line"/>
-                                <div class="col-12 d-flex justify-content-around">
-                                    <div class="col-1">
-                                        <select id="smallSelect" class="form-select form-select-sm">
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-1">
-                                        <button type="button" id="add-image-button" class="btn btn-primary">
-                                            Добавить
-                                        </button>
-                                    </div>
-                                    <div class="col-1">
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+                    <div class="col-1">
+                        <button type="button"
+                                class="btn btn-primary"
+                                onclick="addBlockMainBanner()">
+                            Добавить
+                        </button>
+                    </div>
+                    <div class="col-1">
+                        <button type="submit"
+                                class="btn btn-primary btn-form-block-multiple"
+                                id="saveButtonBanner">
+                            Сохранить
+                        </button>
                     </div>
                 </div>
             </div>
+            <br>
         </form>
-<!--        <script>-->
-<!--            $(document).ready(function () {-->
-<!--                showAllImages()-->
-<!--            });-->
+        <br/>
+        <div class="rounded-start border">
+            <div class="d-flex flex-row justify-content-center">
+                <div></div>
+                <h4 class="fw-bold pt-3">На главной верх</h4>
+            </div>
+            <div class="row">
+                <div class="col-1 align-items-center d-flex justify-content-center align-content-center">
+                    <input
+                            name="backgroundImage"
+                            class="form-check-input col-3"
+                            type="radio"
+                            value="false"
+                    />
+                </div>
+                <div class="col-2 align-items-center d-flex justify-content-center align-content-center">
+                    <p class="col-form-label col-sm-2  ">
+                        Фото на фон
+                    </p>
+                </div>
+                <div class="col-4" id="backgroundImageBlock">
+                </div>
+                <div class="col-3 d-flex justify-content-center align-items-center flex-column">
+                    <label class="form-label">
+                        <input type="file"
+                               class="form-control"
+                               accept="image/png, image/jpeg"
+                               name="mainImagePage"
+                               onchange="editBackgroundBanner(this)"/>
+                    </label>
+                    <br/>
+                    <label class="form-label">
+                        <a>
+                            <button
+                                    type="button"
+                                    class="btn btn-danger"
+                                    onclick="removeBackgroundBanner()">
+                                Удалить
+                            </button>
+                        </a>
+                    </label>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-1 align-items-center d-flex justify-content-center align-content-center">
+                    <input
+                            name="backgroundImage"
+                            class="form-check-input col-3"
+                            type="radio"
+                            value="true"
+                    />
+                </div>
+                <div class="col-2 align-items-center d-flex justify-content-center align-content-center">
+                    <p class="col-form-label col-sm-2  ">
+                        Просто фон
+                    </p>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <form id="BannerForNewsAndStocksForm"
+              class="p-2 form-block rounded-3 border">
+            <div>
+                <div>
+                    <div class="d-flex flex-row justify-content-center">
+                        <div></div>
+                        <h4 class="fw-bold pt-3">На главной верх</h4>
+                    </div>
+                    <div class="d-flex flex-row justify-content-end">
+                        <div class="form-check form-switch form-check-inline col-1 my-auto">
+                            <label>
+                                <input class="form-check-input" type="checkbox"
+                                       name="statusBlockBannerForNewsAndStocks"/>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-cols-1 row-cols-md-4 g-4 mb-5" id="BannerForNewsAndStocksBlock">
 
-<!--            showAllImages = () => {-->
-<!--                $.ajax({-->
-<!--                    url: '/admin/banners/showAllMainBanner/',-->
-<!--                    method: 'GET',-->
-<!--                    dataType: 'JSON',-->
-<!--                    success: function (result) {-->
-<!--                        console.log(result);-->
-<!--                        drawMainBanner(result)-->
-<!--                    }-->
-<!--                })-->
-<!--            }-->
+                </div>
+                <hr class="line"/>
+                <div class="col-12 d-flex justify-content-around">
+                    <div class="col-1">
+                        <select class="form-select form-select-sm"
+                                name="timeChangeBlockBannerForNewsAndStocks">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    <div class="col-1">
+                        <button type="button"
+                                class="btn btn-primary"
+                                onclick="addBlockBannerForNewsAndStocks()">
+                            Добавить
+                        </button>
+                    </div>
+                    <div class="col-1">
+                        <button type="submit" class="btn btn-primary btn-form-block-multiple"
+                        id="saveButtonBannerForNewsAndStocks">
+                            Сохранить
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </form>
+        <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+        <script src="/assets/vendor/libs/block-ui/block-ui.js"></script>
 
-<!--            // Рисуем картинки-->
-<!--            function drawMainBanner(result) {-->
-<!--                for (const data of result) {-->
-<!--                    $('<div class="col-3">\n' +-->
-<!--                        '<img src="' + (data.url != null ? data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +-->
-<!--                        'class="img-thumbnail mb-1" alt="">\n' +-->
-<!--                        '<button type="button" class="btn btn-primary mb-1" style="width: 100%;">\n' +-->
-<!--                        'Добавить\n' +-->
-<!--                        '</button>\n' +-->
-<!--                        '<div class="form-group mb-1">\n' +-->
-<!--                        '<input type="text" class="form-control" placeholder="URL">\n' +-->
-<!--                        '</div>\n' +-->
-<!--                        '<div class="form-group mb-1">\n' +-->
-<!--                        '<input type="text" class="form-control" placeholder="Текст">\n' +-->
-<!--                        ' </div>\n' +-->
-<!--                        '</div>').appendTo('#mainBanners');-->
+        <script>
+            $(document).ready(function () {
+                showAllImages()
+            });
 
-<!--                }-->
-<!--            }-->
+            function showAllImages() {
+                $.ajax({
+                    url: '/admin/banners/showAllMainBanner/',
+                    method: 'GET',
+                    dataType: 'JSON',
+                    success: function (result) {
+                        console.log(result);
+                        drawImages(result)
+                    },
+                    error: function (error) {
+                        console.log(error)
+                        console.log("Проблемма в отрисовке всех баннеров");
+                    }
+                })
+            }
 
-<!--            // Добавляем картинку-->
-<!--            function addMainBanner() {-->
-<!--                let index;-->
-<!--                $.ajax({-->
-<!--                    url: '/admin/banners/createMainBanner/' + [[${bannerBlock.id}]],-->
-<!--                    method: 'GET',-->
-<!--                    dataType: 'JSON',-->
-<!--                    success: function (result) {-->
-<!--                        console.log(result)-->
-<!--                        $('<div class="col-3">\n' +-->
-<!--                            '<img src="' + (data.url != null ? data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +-->
-<!--                            'class="img-thumbnail mb-1" alt="">\n' +-->
-<!--                            '<button type="button" class="btn btn-primary mb-1" style="width: 100%;">\n' +-->
-<!--                            'Добавить\n' +-->
-<!--                            '</button>\n' +-->
-<!--                            '<div class="form-group mb-1">\n' +-->
-<!--                            '<input type="text" class="form-control" placeholder="URL">\n' +-->
-<!--                            '</div>\n' +-->
-<!--                            '<div class="form-group mb-1">\n' +-->
-<!--                            '<input type="text" class="form-control" placeholder="Текст">\n' +-->
-<!--                            ' </div>\n' +-->
-<!--                            '</div>').appendTo('#mainBanners');-->
-<!--                    }-->
-<!--                })-->
-<!--            }-->
+            function drawImages(result) {
+                for (const data of result) {
+                    $('<div class="col" id="MainBannerBlock' + data.id + '">\n' +
+                        '                        <div class="card text-center mb-2">\n' +
+                        '                            <div class="card-header" id="MainBannerImageBlock' + data.id + '">\n' +
+                        '                                <a type="button" onclick="removeBlockMainBanner(this, ' + data.id + ')" \n' +
+                        '                                   class="btn rounded-pill btn-icon btn-label-danger position-absolute top-0 end-0">\n' +
+                        '                                <span class="fa-solid fa-x">\n' +
+                        '                                </span>\n' +
+                        '                                </a>\n' +
+                        '                                <img class="card-img-top"\n' +
+                        '                                     id="imageBanner' + data.id + '"\n' +
+                        '                                     src="' + (data.pathImage != null ? data.pathImage : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
+                        '                                     alt="Card image cap"/>\n' +
+                        '                            </div>\n' +
+                        '                            <div class="card-body">\n' +
+                        '                                <input type="file"\n' +
+                        '                                       class="form-control"  \n' +
+                        '                                       onchange="editMainBanner(this, ' + data.id + ')" ' +
+                        '                                       accept="image/png, image/jpeg"\n' +
+                        '                                <div class="form-group mb-1">\n' +
+                        '                                    <input type="hidden" name="id[]" class="form-control" value="' + data.id + '" placeholder="URL">\n' +
+                        '                                    <input type="text" name="url[]" class="form-control" value="' + data.url + '" placeholder="URL">\n' +
+                        '                                    <input type="text" name="text[]" class="form-control" value="' + data.title + '" placeholder="Текст">\n' +
+                        '                                </div>\n' +
+                        '                            </div>\n' +
+                        '                        </div>\n' +
+                        '                    </div>').appendTo('#MainBannersBlock');
+                }
+            }
 
-<!--            // Изменяем картинку-->
-<!--            function editMainBanner(element, id) {-->
-<!--                let file = element.files[0];-->
-<!--                let formData = new FormData();-->
-<!--                formData.append("file", file);-->
+            function editMainBanner(element, id) {
+                let file = element.files[0];
+                let formData = new FormData();
+                formData.append("file", file);
 
-<!--                $.ajax({-->
-<!--                    url: '/admin/banners/editMainBanner/' + id,-->
-<!--                    method: 'POST',-->
-<!--                    data: formData,-->
-<!--                    processData: false,-->
-<!--                    contentType: false,-->
-<!--                    success: function (result) {-->
-<!--                        console.log("Выгрузка файла прошла успешно");-->
-<!--                        $.ajax({-->
-<!--                            url: '/admin/banners/getMainBanner/' + id,-->
-<!--                            method: 'GET',-->
-<!--                            success: function (result) {-->
-<!--                                console.log("Загрузка файла прошла успешно");-->
-<!--                                let block = $(element).find('imageMainBanner');-->
-<!--                                $('<img src="' + result.url + '" ' +-->
-<!--                                    'id="imagePage' + result.id + '" ' +-->
-<!--                                    'class="img-fluid mb-2" ' +-->
-<!--                                    'style="max-width: 250px; max-height: 200px;">')-->
-<!--                                    .insertBefore($("#editImageButton" + result.id));-->
-<!--                                block.remove();-->
-<!--                            },-->
-<!--                            error: function (error) {-->
-<!--                                console.error("Ошибка при загрузке файла:", error);-->
-<!--                            }-->
-<!--                        });-->
-<!--                    },-->
-<!--                    error: function (error) {-->
-<!--                        console.error("Ошибка при загрузке файла:", error);-->
-<!--                    }-->
-<!--                });-->
-<!--            }-->
+                $.ajax({
+                    url: '/admin/banners/editMainBanner/' + id,
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        $.ajax({
+                            url: '/admin/banners/getMainBanner/' + id,
+                            method: 'GET',
+                            success: function (result) {
+                                console.log("Загружено", result);
+                                let imageBlock = $('#imageBanner' + id);
+
+                                $('<img class="card-img-top"\n' +
+                                    'id="imageBanner' + result.id + '" ' +
+                                    'src="' + (result.pathImage != null ? result.pathImage : 'https://via.placeholder.com/250x200&text=Empty') + '" ' +
+                                    'alt="Card image cap"/>').appendTo("#MainBannerImageBlock" + result.id);
+                                imageBlock.remove();
+                            },
+                            error: function (error) {
+                                console.error("Ошибка при загрузке файла:", error);
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        console.error("Ошибка при загрузке файла:", error);
+                    }
+                });
+
+            }
+
+            function addBlockMainBanner() {
+                let index;
+                $.ajax({
+                    url: '/admin/banners/createMainBanner/',
+                    method: 'GET',
+                    dataType: 'JSON',
+                    success: function (result) {
+                        console.log("Download", result);
+                        drawImages(result)
+                    }
+                })
+            }
+
+            function removeBlockMainBanner(element, id) {
+                let block = $('#MainBannerBlock' + id);
+                block.remove();
+                $.ajax({
+                    url: '/admin/banners/deleteMainBanner/' + id,
+                    method: 'GET',
+                    dataType: 'JSON',
+                    success: function (result) {
+                        console.log(result);
+                    }
+                })
+            }
+        </script>
+
+        <!--        Отправка формы целого блока-->
+        <script>
+
+            let formSection = $('#MainBannerForm');
+            let formBlockMultiple = $('#saveButtonBanner');
+
+            $(document).ready(function () {
+                $('#MainBannerForm').submit(function (event) {
+                    event.preventDefault();
+
+                    let entities = [];
+
+                    $('input[name="id[]"]').each(function (index) {
+                        let id = $(this).val();
+                        let url = $('input[name="url[]"]').eq(index).val();
+                        let text = $('input[name="text[]"]').eq(index).val();
+
+                        let entityText = {
+                            id: id,
+                            url: url,
+                            text: text
+                        };
+                        entities.push(entityText);
+                    });
+
+                    let entity = {
+                        status: $('input[name="status"]').prop('checked'),
+                        timeChange: $('select[name="timeChange"]').val(),
+                        mainBannersItemDto: entities
+                    };
+
+                    let jsonData = JSON.stringify(entity);
+
+                    $.ajax({
+                        url: '/admin/banners/editAllMainBanners/',
+                        type: 'POST',
+                        data: jsonData,
+                        contentType: 'application/json',
+                        success: function (response) {
+                            console.log(response);
+                            window.response = "Успех";
+                            window.statusResponse = "success";
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                            window.response = "Перезагрузите страницу и повторите попытку";
+                            window.statusResponse = "danger";
+                        }
+                    });
+                });
+            });
+
+            if (formBlockMultiple.length && formSection.length) {
+                formBlockMultiple.on('click', function () {
+                    formSection.block({
+                        message:
+                            '<div class="d-flex justify-content-center"><p class="mb-0">Please wait...</p> <div class="sk-wave m-0"><div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div></div> </div>',
+                        css: {
+                            backgroundColor: 'transparent',
+                            color: '#fff',
+                            border: '0'
+                        },
+                        overlayCSS: {
+                            opacity: 0.5
+                        },
+                        timeout: 1000,
+                        onUnblock: function () {
+                            formSection.block({
+                                message: '<p class="mb-0">Almost Done...</p>',
+                                timeout: 1000,
+                                css: {
+                                    backgroundColor: 'transparent',
+                                    border: '0'
+                                },
+                                overlayCSS: {
+                                    opacity: 0.25
+                                },
+                                onUnblock: function () {
+                                    formSection.block({
+                                        message: '<div class="p-3 bg-' + window.statusResponse + '">' + window.response + '</div>',
+                                        timeout: 500,
+                                        css: {
+                                            backgroundColor: 'transparent',
+                                            border: '0'
+                                        },
+                                        overlayCSS: {
+                                            opacity: 0.25
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+        </script>
 
 
-<!--            // Удаляем картинку-->
-<!--            function removeBlock(element, id) {-->
-<!--                let block = element.closest('.col-3');-->
-<!--                block.remove();-->
-<!--                $.ajax({-->
-<!--                    url: '/admin/pages/editPage/deleteImage/' + id,-->
-<!--                    method: 'GET',-->
-<!--                    dataType: 'JSON',-->
-<!--                    success: function (result) {-->
-<!--                        console.log(result);-->
-<!--                    }-->
-<!--                })-->
-<!--            }-->
-<!--        </script>-->
+        <script>
+            $(document).ready(function () {
+                drawBackgroundBanner()
+            });
+
+            function drawBackgroundBanner() {
+                $.ajax({
+                    url: '/admin/banners/getBackgroundBanner/',
+                    method: 'GET',
+                    dataType: 'JSON',
+                    success: function (result) {
+                        $('<img ' +
+                            'src="' + (result.url != null ? result.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
+                            ' class="img-fluid"\n' +
+                            ' id="background-image"\n' +
+                            ' style="max-width: 250px; max-height: 200px;">').appendTo('#backgroundImageBlock');
+                    },
+                    error: function (error) {
+                        console.log(error)
+                        console.log("Проблемма в отрисовке всех баннера");
+                    }
+                })
+
+
+            }
+
+            function editBackgroundBanner(element) {
+                let file = element.files[0];
+                let formData = new FormData();
+                formData.append("file", file);
+
+                $.ajax({
+                    url: '/admin/banners/editBackgroundBanner/',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        $.ajax({
+                            url: '/admin/banners/getBackgroundBanner/',
+                            method: 'GET',
+                            success: function (result) {
+                                console.log("Загружено", result);
+                                let imageBlock = $('#background-image');
+                                imageBlock.remove();
+                                drawBackgroundBanner();
+                            },
+                            error: function (error) {
+                                console.error("Ошибка при загрузке файла:", error);
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        console.error("Ошибка при загрузке файла:", error);
+                    }
+                });
+
+            }
+
+            function removeBackgroundBanner() {
+                let block = $('#background-image');
+                block.remove();
+
+                $.ajax({
+                    url: '/admin/banners/deleteBackgroundBanner/',
+                    method: 'POST',
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        drawBackgroundBanner();
+                    },
+                    error: function (error) {
+                        console.error("Ошибка при загрузке файла:", error);
+                    }
+                });
+            }
+
+            $(document).ready(function () {
+                $('input[name="backgroundImage"]').change(function () {
+
+                    let radioButtonValue = $(this).val();
+                    $.ajax({
+                        url: '/admin/banners/changeBackgroundBannerBlock/',
+                        type: 'POST',
+                        data: {radioButton: radioButtonValue},
+                        success: function (response) {
+                            console.log(response);
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(error);
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                showAllBannerForNewsAndStocks()
+            });
+
+            function showAllBannerForNewsAndStocks() {
+                $.ajax({
+                    url: '/admin/banners/showAllBannerForNewsAndStocks/',
+                    method: 'GET',
+                    dataType: 'JSON',
+                    success: function (result) {
+                        console.log(result);
+                        drawBannerForNewsAndStocks(result)
+                    },
+                    error: function (error) {
+                        console.log(error)
+                        console.log("Проблемма в отрисовке всех баннеров");
+                    }
+                })
+            }
+
+            function drawBannerForNewsAndStocks(result) {
+                for (const data of result) {
+                    $('<div class="col" id="BannerForNewsAndStocksBlock' + data.id + '">\n' +
+                        '    <div class="card text-center mb-2">\n' +
+                        '        <div class="card-header" id="BannerForNewsAndStocksImageBlock' + data.id + '">\n' +
+                        '            <a type="button" onclick="removeBlockBannerForNewsAndStocks(this, ' + data.id + ')" \n' +
+                        '               class="btn rounded-pill btn-icon btn-label-danger position-absolute top-0 end-0">\n' +
+                        '            <span class="fa-solid fa-x">\n' +
+                        '            </span>\n' +
+                        '            </a>\n' +
+                        '            <img class="card-img-top"\n' +
+                        '                 id="imageBannerForNewsAndStocks' + data.id + '"\n' +
+                        '                 src="' + (data.fileName != null ? data.fileName : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
+                        '                 alt="Card image cap"/>\n' +
+                        '        </div>\n' +
+                        '        <div class="card-body">\n' +
+                        '            <input type="file"\n' +
+                        '                   class="form-control"  \n' +
+                        '                   onchange="editBannerForNewsAndStocks(this, ' + data.id + ')" ' +
+                        '                   accept="image/png, image/jpeg"\n' +
+                        '            <div class="form-group mb-1">\n' +
+                        '                <input type="hidden" name="idBannerForNewsAndStocks[]" class="form-control" value="' + data.id + '" placeholder="URL">\n' +
+                        '                <input type="text" name="urlBannerForNewsAndStocks[]" class="form-control" value="' + data.url + '" placeholder="URL">\n' +
+                        '                <input type="text" name="textBannerForNewsAndStocks[]" class="form-control" value="' + data.title + '" placeholder="Текст">\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '    </div>\n' +
+                        '</div>').appendTo('#BannerForNewsAndStocksBlock');
+                }
+            }
+
+            function editBannerForNewsAndStocks(element, id) {
+                let file = element.files[0];
+                let formData = new FormData();
+                formData.append("file", file);
+
+                $.ajax({
+                    url: '/admin/banners/editBannerForNewsAndStocks/' + id,
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        $.ajax({
+                            url: '/admin/banners/getBannerForNewsAndStocks/' + id,
+                            method: 'GET',
+                            success: function (result) {
+                                console.log("Загружено", result);
+                                let imageBlock = $('#imageBannerForNewsAndStocks' + id);
+
+                                $('<img class="card-img-top"\n' +
+                                    'id="imageBannerForNewsAndStocks' + result.id + '" ' +
+                                    'src="' + (result.fileName != null ? result.fileName : 'https://via.placeholder.com/250x200&text=Empty') + '" ' +
+                                    'alt="Card image cap"/>').appendTo("#BannerForNewsAndStocksImageBlock" + result.id);
+                                imageBlock.remove();
+                            },
+                            error: function (error) {
+                                console.error("Ошибка при загрузке файла:", error);
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        console.error("Ошибка при загрузке файла:", error);
+                    }
+                });
+
+            }
+
+            function addBlockBannerForNewsAndStocks() {
+                let index;
+                $.ajax({
+                    url: '/admin/banners/createBannerForNewsAndStocks/',
+                    method: 'GET',
+                    dataType: 'JSON',
+                    success: function (result) {
+                        console.log("Download", result);
+                        drawBannerForNewsAndStocks(result)
+                    }
+                })
+            }
+
+            function removeBlockBannerForNewsAndStocks(element, id) {
+                let block = $('#BannerForNewsAndStocksBlock' + id);
+                block.remove();
+                $.ajax({
+                    url: '/admin/banners/deleteBannerForNewsAndStocks/' + id,
+                    method: 'GET',
+                    dataType: 'JSON',
+                    success: function (result) {
+                        console.log(result);
+                    }
+                })
+            }
+        </script>
+
+        <!--        Отправка формы целого блока-->
+        <script>
+            $(document).ready(function () {
+                $('#BannerForNewsAndStocksForm').submit(function (event) {
+                    event.preventDefault();
+
+                    let entities = [];
+
+                    $('input[name="idBannerForNewsAndStocks[]"]').each(function (index) {
+                        let id = $(this).val();
+                        let url = $('input[name="urlBannerForNewsAndStocks[]"]').eq(index).val();
+                        let text = $('input[name="textBannerForNewsAndStocks[]"]').eq(index).val();
+
+                        let entityText = {
+                            id: id,
+                            url: url,
+                            text: text
+                        };
+                        entities.push(entityText);
+                    });
+
+                    let entity = {
+                        status: $('input[name="statusBlockBannerForNewsAndStocks"]').prop('checked'),
+                        timeChange: $('select[name="timeChangeBlockBannerForNewsAndStocks"]').val(),
+                        mainBannersItemDto: entities
+                    };
+
+                    let jsonData = JSON.stringify(entity);
+
+                    $.ajax({
+                        url: '/admin/banners/editAllBannerForNewsAndStocks/',
+                        type: 'POST',
+                        data: jsonData,
+                        contentType: 'application/json',
+                        success: function (response) {
+                            console.log(response);
+                            window.response = "Успех";
+                            window.statusResponse = "success";
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                            window.response = "Перезагрузите страницу и повторите попытку";
+                            window.statusResponse = "danger";
+                        }
+                    });
+                });
+            });
+
+            let formSectionBannerForNewsAndStocks = $('#BannerForNewsAndStocksForm');
+            let formBlockMultipleBannerForNewsAndStocks = $('#saveButtonBannerForNewsAndStocks');
+
+            if (formBlockMultipleBannerForNewsAndStocks.length && formSectionBannerForNewsAndStocks.length) {
+                formBlockMultipleBannerForNewsAndStocks.on('click', function () {
+                    formSectionBannerForNewsAndStocks.block({
+                        message:
+                            '<div class="d-flex justify-content-center"><p class="mb-0">Please wait...</p> <div class="sk-wave m-0"><div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div></div> </div>',
+                        css: {
+                            backgroundColor: 'transparent',
+                            color: '#fff',
+                            border: '0'
+                        },
+                        overlayCSS: {
+                            opacity: 0.5
+                        },
+                        timeout: 1000,
+                        onUnblock: function () {
+                            formSectionBannerForNewsAndStocks.block({
+                                message: '<p class="mb-0">Almost Done...</p>',
+                                timeout: 1000,
+                                css: {
+                                    backgroundColor: 'transparent',
+                                    border: '0'
+                                },
+                                overlayCSS: {
+                                    opacity: 0.25
+                                },
+                                onUnblock: function () {
+                                    formSectionBannerForNewsAndStocks.block({
+                                        message: '<div class="p-3 bg-' + window.statusResponse + '">' + window.response + '</div>',
+                                        timeout: 500,
+                                        css: {
+                                            backgroundColor: 'transparent',
+                                            border: '0'
+                                        },
+                                        overlayCSS: {
+                                            opacity: 0.25
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+        </script>
+
+
     </div>
 </div>
 </body>

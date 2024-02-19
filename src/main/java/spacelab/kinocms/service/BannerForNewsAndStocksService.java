@@ -15,4 +15,6 @@ public interface BannerForNewsAndStocksService {
     public void deleteBannerForNewsAndStocks(Long id);
     public void updateBannerForNewsAndStocks(BannerForNewsAndStocks bannerForNewsAndStocks);
     public List<BannerForNewsAndStocks> getAllBannerForNewsAndStocks();
+
+    public BannerForNewsAndStocks getLastBannerForNewsAndStocks();
 }

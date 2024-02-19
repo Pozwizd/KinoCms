@@ -1,12 +1,79 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="admin/template/layout.html">>
+      layout:decorate="user/template/layout.html">>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<div layout:fragment="content">
+    <div class="container">
+        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="1000">
+                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: First slide" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"></rect><text x="50%" y="50%" fill="#555" dy=".3em">First slide</text></svg>
+                </div>
+                <div class="carousel-item" data-bs-interval="1000">
+                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Second slide" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#666"></rect><text x="50%" y="50%" fill="#444" dy=".3em">Second slide</text></svg>
+                </div>
+                <div class="carousel-item">
+                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Third slide" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#555"></rect><text x="50%" y="50%" fill="#333" dy=".3em">Third slide</text></svg>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        <div th:if="${currentFilm.size()} > 0" class="d-flex flex-row justify-content-center align-items-center">
+            <h4 class="fw-bold pt-3">Смотрите сегодня
+                <span id="date"></span>
+            </h4>
 
+            <script>
+                var options = { day: 'numeric', month: 'long' };
+                var russianDate = new Date().toLocaleDateString('ru-RU', options);
+                document.getElementById('date').textContent = russianDate;
+            </script>
+        </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            <div class="col" th:each="film, i : ${currentFilm}">
+                <div class="card h-100 text-center mb-3">
+                    <a th:href="@{films/editFilm/{id}(id=*{film.id})}">
+                        <img class="card-img-top"
+                             th:src="${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}"
+                             alt="Card image cap"/>
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${film.name}">Card title</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${futureFilm.size()} > 0" class="d-flex flex-row justify-content-center align-items-center">
+            <h4 class="fw-bold pt-3">Смотрите скоро</h4>
+        </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            <div class="col" th:each="film, i : ${filmsFutureList}">
+                <div class="card h-100 text-center mb-3">
+                    <a th:href="@{films/editFilm/{id}(id=*{film.id})}">
+                        <img class="card-img-top"
+                             th:src="${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}"
+                             alt="Card image cap"/>
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${film.name}">Card title</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 </body>
 </html>

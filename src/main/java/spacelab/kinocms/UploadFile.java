@@ -13,6 +13,8 @@ public class UploadFile {
 
     private static final String UPLOAD_FOLDER = Paths.get("images").toFile().getAbsolutePath() + "/";
 
+    private static final String UPLOAD_HTML_TEMPLATE = Paths.get("htmlTemplate").toFile().getAbsolutePath() + "/";
+
     public String uploadFile(MultipartFile file, String OldPath) {
 
         if (OldPath != null){
@@ -30,6 +32,23 @@ public class UploadFile {
         return "/images/" + fileName;
     }
 
+    public String uploadMailTemplate(MultipartFile file, String OldPath) {
+
+        if (OldPath != null){
+            String filePath = Paths.get("").toFile().getAbsolutePath() + OldPath;
+            File oldFile = new File(filePath);
+            oldFile.delete();
+        }
+
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        try {
+            file.transferTo(new File(UPLOAD_HTML_TEMPLATE + fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "htmlTemplate/" + fileName;
+    }
+
 
     public Boolean deleteFile(String deletingFilePath) {
         if (deletingFilePath != null){
@@ -40,4 +59,5 @@ public class UploadFile {
         }
         return false;
     }
+
 }

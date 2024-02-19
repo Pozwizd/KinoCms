@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+
+<body>
+<div layout:fragment="content">
+    <div>
+        <form method="get"
+              th:action="@{/admin/distribution/getPageSearch}">
+            <div class="card-header py-2 d-flex justify-content-end">
+                <div class="search-input-wrapper col-md-4">
+                    <label class="d-flex align-items-center gap-1 w-100">
+                        Search:
+                        <input type="search" name="search" class="form-control">
+                        <button type="submit" class="btn btn-primary">
+                            Search
+                        </button>
+                    </label>
+                </div>
+            </div>
+        </form>
+
+
+        <form method="post"
+              th:action="@{/admin/distribution/userMailing}">
+            <div class="d-grid d-sm-flex p-3 border">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>ID</th>
+                        <th>Дата регистрации</th>
+                        <th>День рождения</th>
+                        <th>Email</th>
+                        <th>Телефон</th>
+                        <th>ФИО</th>
+                        <th>Псевдоним</th>
+                        <th>Город</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                    <tr th:each="user : ${userList}">
+                        <td>
+                            <input type="checkbox"
+                                   th:value="${user.id}"
+                                   name="user">
+                        </td>
+                        <td th:text="${user.id}">2</td>
+                        <td th:text="${user.dateOfRegistration}">3</td>
+                        <td th:text="${user.dateOfBirth}">4</td>
+                        <td th:text="${user.email}">5</td>
+                        <td th:text="${user.phoneNumber}">6</td>
+                        <td th:text="${user.name + user.surname}">7</td>
+                        <td th:text="${user.nickname}">8</td>
+                        <td th:text="${user.city}">9</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row d-flex justify-content-center mt-4">
+                <button
+                        type="submit"
+                        class="btn btn-outline-primary col-3">
+                    Отправить выбранным
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+</body>
+</html>

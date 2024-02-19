@@ -44,7 +44,7 @@ public class FilmController {
     @GetMapping({"/", ""})
     public ModelAndView index(Model model) {
         model.addAttribute("title", "Фильмы");
-        model.addAttribute("pageActive", "films");
+        model.addAttribute("pageActive", "film");
 
         model.addAttribute("filmsList", filmService.getAllCurrentFilm());
         model.addAttribute("filmsFutureList", filmService.getAllFutureFilm());
@@ -56,7 +56,7 @@ public class FilmController {
     public ModelAndView editFilm(Model model, @PathVariable String id) {
         Film film = filmService.getFilm(Long.parseLong(id));
         model.addAttribute("title", "Редактирование фильма " + film.getName());
-        model.addAttribute("pageActive", "Films");
+        model.addAttribute("pageActive", "film");
         model.addAttribute("film", film);
         List<TypeFilm> filmType = List.of(TypeFilm.Twodimensional, TypeFilm.Threedimensional, TypeFilm.IMAX);
         model.addAttribute("typeFilm", filmType);

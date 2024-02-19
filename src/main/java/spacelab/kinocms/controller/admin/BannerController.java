@@ -8,12 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.Banner;
-import spacelab.kinocms.model.BannerBlockForNewsAndStocks;
-import spacelab.kinocms.model.BannerForNewsAndStocks;
-import spacelab.kinocms.model.Film;
-import spacelab.kinocms.model.ImagesEntity.ImageFilm;
-import spacelab.kinocms.repository.BannerBlockForNewsAndStocksRepository;
+import spacelab.kinocms.model.*;
+import spacelab.kinocms.model.Dto.BannerForNewsAndStockBlockDto;
+import spacelab.kinocms.model.Dto.BannerForNewsAndStocksItemDto;
+import spacelab.kinocms.model.Dto.MainBannersBlockDto;
+import spacelab.kinocms.model.Dto.MainBannersItemDto;
 import spacelab.kinocms.service.*;
 
 import java.util.List;
@@ -30,6 +29,7 @@ public class BannerController {
     private final BannerForNewsAndStocksService bannerForNewsAndStocksService;
     private final UploadFile uploadFile;
     private final BannerBlockForNewsAndStocksService bannerBlockForNewsAndStocksService;
+
 
     @GetMapping({"/", ""})
     public ModelAndView index(Model model) {
@@ -64,14 +64,13 @@ public class BannerController {
         return ResponseEntity.ok("Image deleted successfully");
     }
 
-    @GetMapping("/createMainBanner/{id}")
+    @GetMapping("/createMainBanner/")
     @ResponseBody
-    public Banner createMainBanner(@PathVariable Long id) {
+    public List<Banner> createMainBanner() {
         Banner banner = new Banner();
-        banner.setBannerBlock(bannerBlockService.getBannerBlock(id));
+        banner.setBannerBlock(bannerBlockService.getBannerBlock(1L));
         bannerService.saveBanner(banner);
-
-        return bannerService.getLastBannerByBannerBlock(bannerBlockService.getBannerBlock(id));
+        return List.of(bannerService.getLastBannerByBannerBlock(bannerBlockService.getBannerBlock(1L)));
     }
 
     @PostMapping("/editMainBanner/{id}")
@@ -80,14 +79,68 @@ public class BannerController {
                                                  @PathVariable Long id) {
 
         Banner banner = bannerService.getBanner(id);
-        banner.setUrl(uploadFile.uploadFile(file, banner.getUrl()));
+        banner.setPathImage(uploadFile.uploadFile(file, banner.getUrl()));
         bannerService.saveBanner(banner);
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
+    @PostMapping("/editAllMainBanners/")
+    @ResponseBody
+    public ResponseEntity<String> editMainBannerBlock(@RequestBody MainBannersBlockDto mainBannersBlockDto) {
+        BannerBlock bannerBlock = bannerBlockService.getBannerBlock(1L);
+        bannerBlock.setTimeChange(mainBannersBlockDto.getTimeChange());
+        bannerBlock.setStatus(mainBannersBlockDto.getStatus());
+        bannerBlockService.saveBannerBlock(bannerBlock);
+        for(MainBannersItemDto mainBannersItemDto : mainBannersBlockDto.getMainBannersItemDto()) {
+            Banner banner = bannerService.getBanner(mainBannersItemDto.getId());
+            banner.setUrl(mainBannersItemDto.getUrl());
+            banner.setTitle(mainBannersItemDto.getText());
+            bannerService.saveBanner(banner);
+        }
+
+        return ResponseEntity.ok("Файл успешно загружен");
+    }
+
+    //  Background banner
+
+    @GetMapping("/getBackgroundBanner/")
+    @ResponseBody
+    public BannerBackground getBackgroundBanner() {
+        return bannerBackgroundService.getBannerBackground(1L);
+    }
+
+
+    @PostMapping("/editBackgroundBanner/")
+    @ResponseBody
+    public ResponseEntity<String> editBackgroundBanner(@RequestPart("file") MultipartFile file) {
+        BannerBackground bannerBackground = bannerBackgroundService.getBannerBackground(1L);
+        bannerBackground.setUrl(uploadFile.uploadFile(file, bannerBackground.getUrl()));
+        bannerBackgroundService.saveBannerBackground(bannerBackground);
+        return ResponseEntity.ok("Файл успешно загружен");
+    }
+
+    @PostMapping("/deleteBackgroundBanner/")
+    @ResponseBody
+    public ResponseEntity<String> deleteBackgroundBanner() {
+        BannerBackground bannerBackground = bannerBackgroundService.getBannerBackground(1L);
+        bannerBackground.setUrl(null);
+        bannerBackgroundService.saveBannerBackground(bannerBackground);
+        return ResponseEntity.ok("Image deleted successfully");
+    }
+
+    @PostMapping("/changeBackgroundBannerBlock/")
+    @ResponseBody
+    public ResponseEntity<String> changeBackgroundBanner(@RequestParam("radioButton") Boolean radioButtonValue) {
+        BannerBackground  bannerBackground = bannerBackgroundService.getBannerBackground(1L);
+        bannerBackground.setIsDefault(radioButtonValue);
+        bannerBackgroundService.saveBannerBackground(bannerBackground);
+        return ResponseEntity.ok("Файл успешно загружен");
+    }
+
+
     //  Stock and News banner
 
-    @GetMapping("/showAllBannerForNewsAndStocks")
+    @GetMapping("/showAllBannerForNewsAndStocks/")
     @ResponseBody
     public List<BannerForNewsAndStocks> showAllBannerForNewsAndStocks() {
         return bannerForNewsAndStocksService.getAllBannerForNewsAndStocks();
@@ -106,13 +159,14 @@ public class BannerController {
         return ResponseEntity.ok("Image deleted successfully");
     }
 
-    @GetMapping("/createBannerForNewsAndStocks/{id}")
+    @GetMapping("/createBannerForNewsAndStocks/")
     @ResponseBody
-    public BannerForNewsAndStocks createBannerForNewsAndStocks(@PathVariable Long id) {
+    public List<BannerForNewsAndStocks> createBannerForNewsAndStocks() {
         BannerForNewsAndStocks bannerForNewsAndStocks = new BannerForNewsAndStocks();
-        bannerForNewsAndStocks.setBannerBlockForNewsAndStocks(bannerBlockForNewsAndStocksService.getBannerBlockForNewsAndStocks(id));
+        bannerForNewsAndStocks.setBannerBlockForNewsAndStocks(bannerBlockForNewsAndStocksService.getBannerBlockForNewsAndStocks(1L));
         bannerForNewsAndStocksService.saveBannerForNewsAndStocks(bannerForNewsAndStocks);
-        return null;
+        BannerForNewsAndStocks bannerForNewsAndStocksDB = bannerForNewsAndStocksService.getLastBannerForNewsAndStocks();
+        return List.of(bannerForNewsAndStocksDB);
     }
 
     @PostMapping("/editBannerForNewsAndStocks/{id}")
@@ -121,8 +175,27 @@ public class BannerController {
                                                              @PathVariable Long id) {
 
         BannerForNewsAndStocks bannerForNewsAndStocks = bannerForNewsAndStocksService.getBannerForNewsAndStocksById(id);
-        bannerForNewsAndStocks.setUrl(uploadFile.uploadFile(file, bannerForNewsAndStocks.getUrl()));
+        bannerForNewsAndStocks.setFileName(uploadFile.uploadFile(file, bannerForNewsAndStocks.getFileName()));
         bannerForNewsAndStocksService.saveBannerForNewsAndStocks(bannerForNewsAndStocks);
+        return ResponseEntity.ok("Файл успешно загружен");
+    }
+
+    @PostMapping("/editAllBannerForNewsAndStocks/")
+    @ResponseBody
+    public ResponseEntity<String> editBannerForNewsAndStocksBlock(@RequestBody BannerForNewsAndStockBlockDto bannerForNewsAndStockBlockDto) {
+        BannerBlockForNewsAndStocks bannerBlockForNewsAndStocks
+                = bannerBlockForNewsAndStocksService.getBannerBlockForNewsAndStocks(1L);
+        bannerBlockForNewsAndStocks.setTimeChange(bannerForNewsAndStockBlockDto.getTimeChange());
+        bannerBlockForNewsAndStocks.setStatus(bannerForNewsAndStockBlockDto.getStatus());
+        bannerBlockForNewsAndStocksService.saveBannerBlockForNewsAndStocks(bannerBlockForNewsAndStocks);
+        for(BannerForNewsAndStocksItemDto bannerForNewsAndStocksItemDto : bannerForNewsAndStockBlockDto.getMainBannersItemDto()) {
+            BannerForNewsAndStocks bannerForNewsAndStocks = bannerForNewsAndStocksService.getBannerForNewsAndStocksById(bannerForNewsAndStocksItemDto.getId());
+            bannerForNewsAndStocks.setUrl(bannerForNewsAndStocksItemDto.getUrl());
+            bannerForNewsAndStocks.setTitle(bannerForNewsAndStocksItemDto.getText());
+            bannerForNewsAndStocksService.saveBannerForNewsAndStocks(bannerForNewsAndStocks);
+        }
+
+
         return ResponseEntity.ok("Файл успешно загружен");
     }
 

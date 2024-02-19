@@ -51,4 +51,23 @@ public class FilmServiceImp implements FilmService {
     public void updateFilm(Film film) {
         filmRepository.save(film);
     }
+
+    @Override
+    public int[] countFilmsMonth() {
+        int[] countFilms = new int[8];
+        LocalDate today = LocalDate.now();
+        LocalDate endDate = today.withDayOfMonth(1); // Установка даты окончания как первое число текущего месяца
+
+        for (int i = 7; i >= 0; i--) {
+            LocalDate month = endDate.minusMonths(i);
+            Date startDate = Date.valueOf(month.withDayOfMonth(1));
+            int year = month.getYear();
+            int monthValue = month.getMonthValue();
+
+            int filmCount = filmRepository.countFilmsInMonth(year, monthValue);
+            countFilms[7 - i] = filmCount;
+        }
+
+        return countFilms;
+    }
 }

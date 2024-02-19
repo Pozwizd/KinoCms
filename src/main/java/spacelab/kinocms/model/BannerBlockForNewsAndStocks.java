@@ -23,13 +23,13 @@ public class BannerBlockForNewsAndStocks {
     private Long id;
 
     @Column(name = "status")
-    private Status status;
+    private Boolean status;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bannerBlockForNewsAndStocks")
     private List<BannerForNewsAndStocks> banners;
 
 
-    @Column(name = "timeChange")
+    @Column
     private Integer timeChange;
 
 }

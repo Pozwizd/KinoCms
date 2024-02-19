@@ -1,3 +1,4 @@
+
 use kino_cms;
 INSERT INTO User (name, surname, nickname, email, address, password, card_number, language, gender, phone_number,
                   date_of_birth, city)
@@ -237,30 +238,137 @@ VALUES (1,
         'This is the url scheme image of the second hall.',
         1);
 
-insert into film (id, description, end_premiere_date, link_trailer, main_image, name,
-                  seo_description, seo_keywords, seo_title, seo_url, start_premiere_date)
-VALUES (1,
-        'This is the description of the first film.',
-        '2020-01-01',
-        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-        'This is the main image of the first film.',
-        'First Film',
-        'This is the SEO description of the first film.',
-        'This is the SEO keywords of the first film.',
-        'This is the SEO title of the first film.',
-        'first-film',
-        '2020-01-01'),
-       (2,
-        'This is the description of the second film.',
-        '2020-01-01',
-        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-        'This is the main image of the second film.',
-        'Second Film',
-        'This is the SEO description of the second film.',
-        'This is the SEO keywords of the second film.',
-        'This is the SEO title of the second film.',
-        'second-film',
-        '2020-01-01');
+insert into film (id,name,
+                  description,
+                  start_premiere_date,
+                  end_premiere_date,
+                  link_trailer,
+                  main_image,
+                  seo_description,
+                  seo_keywords,
+                  seo_title,
+                  seo_url)
+VALUES (1
+       ,'Фильм 1'
+       ,'Описание фильма 1'
+       ,'2023-08-01'
+       ,'2023-08-28'
+       ,'http/'
+       ,'Описание фильма 1'
+       ,'Ключевые слова фильма 1'
+       ,'Заголовок фильма 1'
+       ,'film-1',
+        'url'
+       ),
+
+       (2
+       ,'Фильм 2'
+       ,'Описание фильма 2'
+       ,'2023-09-01'
+       ,'2023-09-28'
+       ,'http/'
+       ,'Описание фильма 2'
+       ,'Ключевые слова фильма 2'
+       ,'Заголовок фильма 2'
+       ,'film-2',
+        'url'
+       ),
+       (3
+       ,'Фильм 3'
+       ,'Описание фильма 3'
+       ,'2023-10-01'
+       ,'2023-10-28'
+       ,'http/'
+       ,'Описание фильма 3'
+       ,'Ключевые слова фильма 3'
+       ,'Заголовок фильма 3'
+       ,'film-3',
+        'url'
+       ),
+       (4
+       ,'Фильм 4'
+       ,'Описание фильма 4'
+       ,'2023-11-01'
+       ,'2023-11-28'
+       ,'http/'
+       ,'Описание фильма 4'
+       ,'Ключевые слова фильма 4'
+       ,'Заголовок фильма 4'
+       ,'film-4',
+        'url'
+       ),
+       (5
+       ,'Фильм 5'
+       ,'Описание фильма 5'
+       ,'2023-12-01'
+       ,'2023-12-28'
+       ,'http/'
+       ,'Описание фильма 5'
+       ,'Ключевые слова фильма 5'
+       ,'Заголовок фильма 5'
+       ,'film-5',
+        'url'
+       ),
+       (6
+       ,'Фильм 6'
+       ,'Описание фильма 6'
+       ,'2024-01-01'
+       ,'2024-01-28'
+       ,'http/'
+       ,'Описание фильма 6'
+       ,'Ключевые слова фильма 6'
+       ,'Заголовок фильма 6'
+       ,'film-6',
+        'url'
+       ),
+       (7
+       ,'Фильм 7'
+       ,'Описание фильма 7'
+       ,'2024-02-01'
+       ,'2024-02-28'
+       ,'http/'
+       ,'Описание фильма 7'
+       ,'Ключевые слова фильма 7'
+       ,'Заголовок фильма 7'
+       ,'film-7',
+        'url'
+       ),
+       (8
+       ,'Фильм 8'
+       ,'Описание фильма 8'
+       ,'2024-03-01'
+       ,'2024-03-28'
+       ,'http/'
+       ,'Описание фильма 8'
+       ,'Ключевые слова фильма 8'
+       ,'Заголовок фильма 8'
+       ,'film-8',
+        'url'
+       ),
+       (9
+       ,'Фильм 9'
+       ,'Описание фильма 9'
+       ,'2024-04-01'
+       ,'2024-04-28'
+       ,'http/'
+       ,'Описание фильма 9'
+       ,'Ключевые слова фильма 9'
+       ,'Заголовок фильма 9'
+       ,'film-9',
+        'url'
+       ),
+       (10
+           ,'Фильм 10'
+           ,'Описание фильма 10'
+           ,'2024-05-01'
+           ,'2024-05-28'
+           ,'http/'
+           ,'Описание фильма 10'
+               ,'Ключевые слова фильма 10'
+               ,'Заголовок фильма 10'
+               ,'film-10',
+                'url'
+           );
 
 insert into film_type (film_id, type)
 VALUES (1, 'Threedimensional'),

@@ -18,5 +18,9 @@ public interface FilmRepository extends JpaRepository<Film, Long> {
 
     List<Film> findByStartPremiereDateAfter(Date currentDate);
 
+    @Query("SELECT COUNT(f) FROM Film f " +
+            "WHERE FUNCTION('YEAR', f.startPremiereDate) = :year " +
+            "AND FUNCTION('MONTH', f.startPremiereDate) = :month")
+    int countFilmsInMonth(int year, int month);
 
 }

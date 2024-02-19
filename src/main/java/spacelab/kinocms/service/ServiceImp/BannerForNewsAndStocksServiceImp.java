@@ -39,5 +39,10 @@ public class BannerForNewsAndStocksServiceImp implements BannerForNewsAndStocksS
         return bannerForNewsAndStocksRepository.findAll();
     }
 
+    @Override
+    public BannerForNewsAndStocks getLastBannerForNewsAndStocks() {
+        return bannerForNewsAndStocksRepository
+                .findLastBannerForNewsAndStocks();
+    }
 
 }

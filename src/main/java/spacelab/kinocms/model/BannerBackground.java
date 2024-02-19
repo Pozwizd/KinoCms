@@ -12,16 +12,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "banner")
 public class BannerBackground {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private String fileName;
+    private Boolean isDefault;
 
     private String url;
 
-    private String title;
 }
