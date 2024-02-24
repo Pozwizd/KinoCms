@@ -22,14 +22,14 @@ public class BannerBlockForNewsAndStocks {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "status")
-    private Boolean status;
+
+    private Boolean statusBlockBannerForNewsAndStocks;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bannerBlockForNewsAndStocks")
     private List<BannerForNewsAndStocks> banners;
 
 
     @Column
-    private Integer timeChange;
+    private Integer timeChangeBlockBannerForNewsAndStocks;
 
 }

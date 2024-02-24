@@ -89,6 +89,12 @@
                         <div>Кинотеатры</div>
                     </a>
                 </li>
+                <li class="menu-item" th:classappend="${pageActive == 'schedule' ? 'active' : ''}">
+                    <a href="/admin/schedule" class="menu-link">
+                        <i class="menu-icon tf-icons ti ti-app-window"></i>
+                        <div>Расписание</div>
+                    </a>
+                </li>
                 <li class="menu-item" th:classappend="${pageActive == 'news' ? 'active' : ''}">
                     <a href="/admin/news" class="menu-link">
                         <i class="menu-icon tf-icons ti ti-app-window"></i>

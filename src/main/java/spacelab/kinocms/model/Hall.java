@@ -1,5 +1,6 @@
 package spacelab.kinocms.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +33,7 @@ public class Hall {
     private String topBanner;
     @Column
     String logoPath;
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "hall")
     private List<ImageHall> imagesHall = new ArrayList<>();
     @Column
@@ -46,6 +48,7 @@ public class Hall {
     private String seoDescription;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "cinema_id")
     private Cinema cinema;
 

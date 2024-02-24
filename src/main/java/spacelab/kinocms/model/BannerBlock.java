@@ -28,6 +28,6 @@ public class BannerBlock {
     private List<Banner> banners;
 
     @Column
-    private Integer timeChange;
+    private String timeChange;
 
 }

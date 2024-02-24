@@ -37,7 +37,8 @@ public class BannerController {
         model.addAttribute("pageActive", "banners");
 
         model.addAttribute("bannerBlock", bannerBlockService.getBannerBlock(1L));
-
+        model.addAttribute("bannerBlockForNewsAndStocks", bannerBlockForNewsAndStocksService
+                .getBannerBlockForNewsAndStocks(1L));
 
         return new ModelAndView("admin/banners");
     }
@@ -79,7 +80,7 @@ public class BannerController {
                                                  @PathVariable Long id) {
 
         Banner banner = bannerService.getBanner(id);
-        banner.setPathImage(uploadFile.uploadFile(file, banner.getUrl()));
+        banner.setPathImage(uploadFile.uploadFile(file, banner.getPathImage()));
         bannerService.saveBanner(banner);
         return ResponseEntity.ok("Файл успешно загружен");
     }
@@ -88,7 +89,7 @@ public class BannerController {
     @ResponseBody
     public ResponseEntity<String> editMainBannerBlock(@RequestBody MainBannersBlockDto mainBannersBlockDto) {
         BannerBlock bannerBlock = bannerBlockService.getBannerBlock(1L);
-        bannerBlock.setTimeChange(mainBannersBlockDto.getTimeChange());
+        bannerBlock.setTimeChange(mainBannersBlockDto.getTimeChange().toString());
         bannerBlock.setStatus(mainBannersBlockDto.getStatus());
         bannerBlockService.saveBannerBlock(bannerBlock);
         for(MainBannersItemDto mainBannersItemDto : mainBannersBlockDto.getMainBannersItemDto()) {
@@ -175,7 +176,7 @@ public class BannerController {
                                                              @PathVariable Long id) {
 
         BannerForNewsAndStocks bannerForNewsAndStocks = bannerForNewsAndStocksService.getBannerForNewsAndStocksById(id);
-        bannerForNewsAndStocks.setFileName(uploadFile.uploadFile(file, bannerForNewsAndStocks.getFileName()));
+        bannerForNewsAndStocks.setPathImage(uploadFile.uploadFile(file, bannerForNewsAndStocks.getPathImage()));
         bannerForNewsAndStocksService.saveBannerForNewsAndStocks(bannerForNewsAndStocks);
         return ResponseEntity.ok("Файл успешно загружен");
     }
@@ -185,8 +186,8 @@ public class BannerController {
     public ResponseEntity<String> editBannerForNewsAndStocksBlock(@RequestBody BannerForNewsAndStockBlockDto bannerForNewsAndStockBlockDto) {
         BannerBlockForNewsAndStocks bannerBlockForNewsAndStocks
                 = bannerBlockForNewsAndStocksService.getBannerBlockForNewsAndStocks(1L);
-        bannerBlockForNewsAndStocks.setTimeChange(bannerForNewsAndStockBlockDto.getTimeChange());
-        bannerBlockForNewsAndStocks.setStatus(bannerForNewsAndStockBlockDto.getStatus());
+        bannerBlockForNewsAndStocks.setTimeChangeBlockBannerForNewsAndStocks(bannerForNewsAndStockBlockDto.getTimeChangeBlockBannerForNewsAndStocks());
+        bannerBlockForNewsAndStocks.setStatusBlockBannerForNewsAndStocks(bannerForNewsAndStockBlockDto.getStatusBlockBannerForNewsAndStocks());
         bannerBlockForNewsAndStocksService.saveBannerBlockForNewsAndStocks(bannerBlockForNewsAndStocks);
         for(BannerForNewsAndStocksItemDto bannerForNewsAndStocksItemDto : bannerForNewsAndStockBlockDto.getMainBannersItemDto()) {
             BannerForNewsAndStocks bannerForNewsAndStocks = bannerForNewsAndStocksService.getBannerForNewsAndStocksById(bannerForNewsAndStocksItemDto.getId());

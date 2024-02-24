@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="user/template/layout.html">>
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="container">
+
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div th:each="cinema, i : ${cinemas}" th:classappend="${i.first ? 'active' : ''}" class="carousel-item"
+             th:data-bs-interval="5000"
+             style="height: 50vh;">
+          <a th:href="@{films/editFilm/{id}(id=*{cinema.topBanner})}" class="position-relative d-flex justify-content-center align-items-center">
+            <img class="d-block justify-content-center align-items-center" alt="" style="height: 50vh;" th:src="${cinema.topBanner}"/>
+            <h4 class="fw-bold text-center text-white position-absolute start-50 translate-middle-x" style="top: 75vh;" th:text="${cinema.name}"></h4>
+          </a>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+
+    <div class="container">
+      <div class="col-lg-12 mb-4 mb-xl-0">
+        <div class="mt-3">
+          <div class="row">
+            <div class="col-md-10 col-12">
+              <div class="tab-content p-0">
+                <div class="tab-pane fade show active" id="list-home">
+                  <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                    <div class="col" th:each="cinema, i : ${cinemas}">
+                      <div class="card h-100 text-center mb-3">
+                        <a th:href="@{/cinema/{id}(id=*{cinema.id})}">
+                          <img class="card-img-top"
+                               th:src="${cinema.logoPath == null || cinema.logoPath.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : cinema.logoPath}"
+                               alt="Card image cap"/>
+                        </a>
+                        <div class="card-body">
+                          <h5 class="card-title" th:text="${cinema.name}">Card title</h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 col-12 mb-3 mb-md-0">
+              <div class="d-flex justify-content-center align-items-center h-100 border rounded mt-5"
+                   style="max-height: 150px">
+                <p>Реклама</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+</div>
+</body>
+</html>

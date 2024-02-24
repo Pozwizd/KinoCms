@@ -1,5 +1,6 @@
 package spacelab.kinocms.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,16 +19,14 @@ public class BannerForNewsAndStocks {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "file_name")
-    private String fileName;
+    private String pathImage;
 
-    @Column(name = "url")
-    private String url;
+    private String url = "";
 
-    @Column(name = "title")
-    private String title;
+    private String title = "";
 
     @ManyToOne
     @JoinColumn(name = "banner_block_for_news_and_stocks_id")
+    @JsonIgnore
     private BannerBlockForNewsAndStocks bannerBlockForNewsAndStocks;
 }

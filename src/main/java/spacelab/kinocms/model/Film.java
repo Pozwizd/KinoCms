@@ -1,5 +1,6 @@
 package spacelab.kinocms.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import spacelab.kinocms.enums.TypeFilm;
@@ -31,6 +32,7 @@ public class Film {
     String mainImage;
 
     @OneToMany(mappedBy = "film", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<ImageFilm> imagesFilm = new ArrayList<>();
 
     @Column

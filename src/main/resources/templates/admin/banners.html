@@ -16,7 +16,8 @@
                     <div class="d-flex flex-row justify-content-end">
                         <div class="form-check form-switch form-check-inline col-1 my-auto">
                             <label>
-                                <input class="form-check-input" type="checkbox"
+                                <input th:field="${bannerBlock.status}"
+                                       class="form-check-input" type="checkbox"
                                        name="status"/>
                             </label>
                         </div>
@@ -29,11 +30,12 @@
                 <div class="col-12 d-flex justify-content-around">
                     <div class="col-1">
                         <select class="form-select form-select-sm"
-                                name="timeChange">
+                                name="timeChange" th:field="${bannerBlock.timeChange}">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
                         </select>
+
                     </div>
                     <div class="col-1">
                         <button type="button"
@@ -125,7 +127,8 @@
                         <div class="form-check form-switch form-check-inline col-1 my-auto">
                             <label>
                                 <input class="form-check-input" type="checkbox"
-                                       name="statusBlockBannerForNewsAndStocks"/>
+                                       name="statusBlockBannerForNewsAndStocks"
+                                       th:field="${bannerBlockForNewsAndStocks.statusBlockBannerForNewsAndStocks}"/>
                             </label>
                         </div>
                     </div>
@@ -137,6 +140,7 @@
                 <div class="col-12 d-flex justify-content-around">
                     <div class="col-1">
                         <select class="form-select form-select-sm"
+                                th:field="${bannerBlockForNewsAndStocks.timeChangeBlockBannerForNewsAndStocks}"
                                 name="timeChangeBlockBannerForNewsAndStocks">
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -152,7 +156,7 @@
                     </div>
                     <div class="col-1">
                         <button type="submit" class="btn btn-primary btn-form-block-multiple"
-                        id="saveButtonBannerForNewsAndStocks">
+                                id="saveButtonBannerForNewsAndStocks">
                             Сохранить
                         </button>
                     </div>
@@ -506,7 +510,7 @@
                         '            </a>\n' +
                         '            <img class="card-img-top"\n' +
                         '                 id="imageBannerForNewsAndStocks' + data.id + '"\n' +
-                        '                 src="' + (data.fileName != null ? data.fileName : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
+                        '                 src="' + (data.pathImage != null ? data.pathImage : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
                         '                 alt="Card image cap"/>\n' +
                         '        </div>\n' +
                         '        <div class="card-body">\n' +
@@ -546,7 +550,7 @@
 
                                 $('<img class="card-img-top"\n' +
                                     'id="imageBannerForNewsAndStocks' + result.id + '" ' +
-                                    'src="' + (result.fileName != null ? result.fileName : 'https://via.placeholder.com/250x200&text=Empty') + '" ' +
+                                    'src="' + (result.pathImage != null || result.pathImage != "" ? result.pathImage : 'https://via.placeholder.com/250x200&text=Empty') + '" ' +
                                     'alt="Card image cap"/>').appendTo("#BannerForNewsAndStocksImageBlock" + result.id);
                                 imageBlock.remove();
                             },
@@ -611,8 +615,8 @@
                     });
 
                     let entity = {
-                        status: $('input[name="statusBlockBannerForNewsAndStocks"]').prop('checked'),
-                        timeChange: $('select[name="timeChangeBlockBannerForNewsAndStocks"]').val(),
+                        statusBlockBannerForNewsAndStocks: $('input[name="statusBlockBannerForNewsAndStocks"]').prop('checked'),
+                        timeChangeBlockBannerForNewsAndStocks: $('select[name="timeChangeBlockBannerForNewsAndStocks"]').val(),
                         mainBannersItemDto: entities
                     };
 

@@ -1,4 +1,3 @@
-
 use kino_cms;
 INSERT INTO User (name, surname, nickname, email, address, password, card_number, language, gender, phone_number,
                   date_of_birth, city)
@@ -93,6 +92,13 @@ VALUES (1,
         'This is the SEO title of the contact page.',
         'contact-page',
         true);
+
+insert into banner_block(id, status, time_change)
+values (1, true, 3);
+
+insert into banner_block_for_news_and_stocks(id, status_block_banner_for_news_and_stocks,
+                                             time_change_block_banner_for_news_and_stocks)
+values (1, true, 3);
 
 
 
@@ -374,5 +380,28 @@ insert into film_type (film_id, type)
 VALUES (1, 'Threedimensional'),
        (1, 'Twodimensional'),
        (2, 'IMAX');
+
+insert into banner_background(id, is_default, url)
+VALUES (1, true, null);
+
+insert into banner(id, path_image, title, url, banner_block_id)
+VALUES (1, 'url', 'title', 'url', 1),
+       (2, 'url', 'title', 'url', 1),
+       (3, 'url', 'title', 'url', 1);
+
+insert into banner_for_news_and_stocks(id, path_image, title, url, banner_block_for_news_and_stocks_id)
+VALUES (1, 'url', 'title', 'url', 1),
+       (2, 'url', 'title', 'url', 1),
+       (3, 'url', 'title', 'url', 1);
+
+insert into contact_cinema(id, address, location, logo, name, status, contact_page_id)
+VALUES (1, 'address', 'location', 'logo', 'name', true, 1),
+       (2, 'address', 'location', 'logo', 'name', true, 1);
+
+insert into schedule(id, price, price_vip, time_session, cinema_id, film_id, hall_id)
+VALUES (1, 100, 200, '2020-01-01 10:00:00', 1, 1, 1),
+       (2, 100, 200, '2020-01-01 11:00:00', 1, 1, 1);
+
+
 
 

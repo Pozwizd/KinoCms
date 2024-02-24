@@ -21,9 +21,9 @@ public class Banner {
 
     private String pathImage;
 
-    private String url;
+    private String url = "";
 
-    private String title;
+    private String title = "";
 
     @ManyToOne
     @JsonIgnore

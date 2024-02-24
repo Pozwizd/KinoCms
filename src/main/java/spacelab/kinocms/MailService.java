@@ -36,7 +36,6 @@ public class MailService {
         this.mailSender = mailSender;
     }
 
-
     public void sendHtmlEmail(String recipient, String templatePath) throws MessagingException, IOException {
         File template = new File(templatePath);
 

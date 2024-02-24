@@ -141,7 +141,7 @@
                                         success: function (result) {
                                             console.log(result)
                                             $('<img src="' +
-                                                (result == null ? 'https://via.placeholder.com/250x200&text=Empty' : result)
+                                                (result == null || result === '' ? 'https://via.placeholder.com/250x200&text=Empty' : result)
                                                 + '"' +
                                                 ' class="img-fluid"\n' +
                                                 ' id="mainImage" \n' +

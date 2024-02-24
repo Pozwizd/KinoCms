@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-xxl flex-grow-1 container-p-y">
+
+        <div class="d-flex flex-row justify-content-center align-items-center">
+            <h4 class="fw-bold pt-3">Список Страниц</h4>
+        </div>
+        <div class="d-flex flex-row justify-content-end align-items-center">
+            <a class="btn btn-primary">Добавить страницу</a>
+        </div>
+        <br/>
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <form class="d-flex flex-column justify-content-center align-items-center"
+                          id="scheduleForm" enctype="multipart/form-data" action="/admin/schedule/save" method="POST">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Дата сеанса</th>
+                                    <th>Фильм(Название)</th>
+                                    <th>Кинотеатр</th>
+                                    <th>Номер зала</th>
+                                    <th>Цена</th>
+                                    <th>Цена VIP</th>
+                                    <th>Удалить</th>
+                                </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0" id="scheduleTableBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-primary text-center" type="submit">Сохранить</button>
+                    </form>
+                    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+                    <script>
+                        $(document).ready(function () {
+                            loadTable();
+
+                        });
+
+                        function loadTable() {
+                            $.ajax({
+                                url: '/admin/schedule/getSchedulePageDto',
+                                type: 'GET',
+                                success: function (response) {
+                                    $('#scheduleTableBody').empty();
+
+                                    function cinemas(id) {
+                                        let cinemasOptions;
+                                        response.cinemas.forEach(function (cinema) {
+                                            if (cinema.id === id){
+                                                cinemasOptions = cinemasOptions + '<option value="' + cinema.id + '" selected>' + cinema.name + '</option> ';
+                                            } else {
+                                                cinemasOptions = cinemasOptions +  '<option value="' + cinema.id + '">' + cinema.name + '</option>'
+                                            }
+                                        });
+                                        return cinemasOptions
+                                    }
+
+                                    function films(id) {
+                                        let filmsOptions;
+                                        response.films.forEach(function (film) {
+                                            if (film.id === id){
+                                                filmsOptions = filmsOptions + '<option value="' + film.id + '" selected>' + film.name + '</option> ';
+                                            } else {
+                                                filmsOptions = filmsOptions +  '<option value="' + film.id + '">' + film.name + '</option>'
+                                            }
+                                        });
+                                        return filmsOptions
+                                    }
+
+                                    function halls(id) {
+                                        let hallsOptions;
+                                        response.halls.forEach(function (hall) {
+                                            if (hall.id === id){
+                                                hallsOptions = hallsOptions + '<option value="' + hall.id + '" selected>' + hall.hallNumber + '</option> ';
+                                            } else {
+                                                hallsOptions = hallsOptions +  '<option value="' + hall.id + '">' + hall.hallNumber + '</option>'
+                                            }
+                                        });
+                                        return hallsOptions
+                                    }
+
+
+                                    response.schedules.forEach(function (schedule) {
+                                        let row = '<tr>' +
+                                            '<input type="hidden" value="' + schedule.id + '" name="id[]" />' +
+                                            '<td>' +
+                                            '<input class="form-control"' +
+                                            ' type="datetime-local"' +
+                                            ' value="' + schedule.timeSession + '" name="timeSession[]"/>' +
+                                            '</td>' +
+                                            '<td>' +
+                                            '<select class="form-select" value="' + schedule.filmId.id + '" name="filmId[]">' +
+                                            films(schedule.filmId.id) +
+                                            '</select>' +
+                                            '</td>' +
+                                            '<td>' +
+                                            '<select class="form-select" name="cinemaId[]"'  +
+                                            ' value="' + schedule.cinemaId.id + '">' +
+                                            cinemas(schedule.cinemaId.id) +
+                                            '</select>' +
+                                            '</td>' +
+                                            '<td>' +
+                                            '<select class="form-select" name="hallId[]"' +
+                                            ' value="' + schedule.hallId.id + '">' +
+                                            halls(schedule.hallId.id) +
+                                            '</select>' +
+                                            '</td>' +
+                                            '<td>' +
+                                            '<input class="form-control" type="text" name="price[]" value="' + schedule.price + '" />' +
+                                            '</td>' +
+                                            '<td>' +
+                                            '<input class="form-control" type="text" name="priceVip[]" value="' + schedule.priceVip + '" />' +
+                                            '</td>' +
+                                            '</tr>';
+                                        $('#scheduleTableBody').append(row);
+                                    });
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log('Рома, все херня давай по новой');
+                                }
+                            });
+                        }
+                    </script>
+<!--                    <script>-->
+<!--                        $(document).ready(function () {-->
+<!--                            $('#scheduleForm').submit(function (event) {-->
+<!--                                event.preventDefault();-->
+
+<!--                                let schedulesDto = [];-->
+
+<!--                                $('input[name="id[]"]').each(function (index) {-->
+<!--                                    let id = $(this).val();-->
+<!--                                    let timeSession = $('input[name="timeSession[]"]').eq(index).val();-->
+<!--                                    console.log(timeSession)-->
+<!--                                    let filmId = $('select[name="filmId[]"]').eq(index).val();-->
+<!--                                    console.log(filmId)-->
+<!--                                    let cinemaId = $('select[name="cinemaId[]"]').eq(index).val();-->
+<!--                                    console.log(cinemaId)-->
+<!--                                    let hallId = $('select[name="hallId[]"]').eq(index).val();-->
+<!--                                    console.log(hallId)-->
+<!--                                    let price = $('input[name="price[]"]').eq(index).val();-->
+<!--                                    console.log(price)-->
+<!--                                    let priceVip = $('input[name="priceVip[]"]').eq(index).val();-->
+<!--                                    console.log(priceVip)-->
+
+<!--                                    let entityText = {-->
+<!--                                        id: id,-->
+<!--                                        timeSession: timeSession,-->
+<!--                                        filmId: filmId,-->
+<!--                                        cinemaId: cinemaId,-->
+<!--                                        hallId: hallId,-->
+<!--                                        price: price,-->
+<!--                                        priceVip: priceVip-->
+<!--                                    };-->
+<!--                                    schedulesDto.push(entityText);-->
+<!--                                });-->
+
+
+<!--                                let entity = {-->
+<!--                                    schedules: schedulesDto-->
+<!--                                };-->
+
+<!--                                let jsonData = JSON.stringify(entity);-->
+
+<!--                                $.ajax({-->
+<!--                                    url: '/admin/schedule/save',-->
+<!--                                    type: 'POST',-->
+<!--                                    data: jsonData,-->
+<!--                                    contentType: 'application/json',-->
+<!--                                    success: function (response) {-->
+<!--                                        console.log(response);-->
+<!--                                        window.response = "Успех";-->
+<!--                                        window.statusResponse = "success";-->
+<!--                                    },-->
+<!--                                    error: function (xhr, status, error) {-->
+<!--                                        console.error(error);-->
+<!--                                        window.response = "Перезагрузите страницу и повторите попытку";-->
+<!--                                        window.statusResponse = "danger";-->
+<!--                                    }-->
+<!--                                });-->
+<!--                            });-->
+<!--                        });-->
+<!--                    </script>-->
+
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-center pb-0"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

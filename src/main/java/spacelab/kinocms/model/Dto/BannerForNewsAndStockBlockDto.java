@@ -7,8 +7,8 @@ import java.util.List;
 
 @Data
 public class BannerForNewsAndStockBlockDto {
-    private Boolean status;
-    private Integer timeChange;
+    private Boolean statusBlockBannerForNewsAndStocks;
+    private Integer timeChangeBlockBannerForNewsAndStocks;
     private List<BannerForNewsAndStocksItemDto> mainBannersItemDto;
 
 }
