@@ -2,7 +2,7 @@ package spacelab.kinocms.service.ServiceImp;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.BannerBlockForNewsAndStocks;
+import spacelab.kinocms.model.banners.BannerBlockForNewsAndStocks;
 import spacelab.kinocms.repository.BannerBlockForNewsAndStocksRepository;
 import spacelab.kinocms.service.BannerBlockForNewsAndStocksService;
 

@@ -398,7 +398,7 @@ insert into contact_cinema(id, address, location, logo, name, status, contact_pa
 VALUES (1, 'address', 'location', 'logo', 'name', true, 1),
        (2, 'address', 'location', 'logo', 'name', true, 1);
 
-insert into schedule(id, price, price_vip, time_session, cinema_id, film_id, hall_id)
+insert into session(id, price, price_vip, time_session, cinema_id, film_id, hall_id)
 VALUES (1, 100, 200, '2020-01-01 10:00:00', 1, 1, 1),
        (2, 100, 200, '2020-01-01 11:00:00', 1, 1, 1);
 

@@ -1,7 +1,7 @@
 package spacelab.kinocms.Mapper;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.Dto.FilmDto;
+import spacelab.kinocms.Dto.FilmDto;
 import spacelab.kinocms.model.Film;
 import spacelab.kinocms.service.FilmService;
 

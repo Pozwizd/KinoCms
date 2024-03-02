@@ -9,16 +9,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.Mapper.MainPageMapper;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.Dto.Page.MainPageDto;
+import spacelab.kinocms.Dto.Page.MainPageDto;
 import spacelab.kinocms.model.page.ImagePage;
-import spacelab.kinocms.model.page.MainPage;
 import spacelab.kinocms.model.page.Page;
 import spacelab.kinocms.service.ContactService;
 import spacelab.kinocms.service.ImagePageService;
 import spacelab.kinocms.service.MainPageService;
 import spacelab.kinocms.service.PageService;
 
-import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;

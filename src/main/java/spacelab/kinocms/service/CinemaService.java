@@ -11,7 +11,7 @@ public interface CinemaService {
     public void saveCinema(Cinema cinema);
 
     public void saveCinemaDto(Cinema cinema);
-    public Cinema getCinema(long id);
+    public Cinema getCinema(Long id);
 
     public Cinema getLastCinema();
 

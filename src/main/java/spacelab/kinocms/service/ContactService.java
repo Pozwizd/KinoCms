@@ -2,7 +2,7 @@ package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.page.ContactPage;
-import spacelab.kinocms.model.Dto.Page.ContactPageDto;
+import spacelab.kinocms.Dto.Page.ContactPageDto;
 
 @Service
 public interface ContactService {

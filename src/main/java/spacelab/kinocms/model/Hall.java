@@ -48,7 +48,6 @@ public class Hall {
     private String seoDescription;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "cinema_id")
     private Cinema cinema;
 

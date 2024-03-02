@@ -1,7 +1,7 @@
 package spacelab.kinocms.Mapper;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.Dto.Page.MainPageDto;
+import spacelab.kinocms.Dto.Page.MainPageDto;
 import spacelab.kinocms.model.page.MainPage;
 import spacelab.kinocms.repository.MainPageRepository;
 

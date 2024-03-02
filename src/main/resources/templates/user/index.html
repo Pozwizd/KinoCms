@@ -59,7 +59,7 @@
             <h4 class="fw-bold pt-3">Смотрите скоро</h4>
         </div>
         <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-            <div class="col" th:each="film, i : ${filmsFutureList}">
+            <div class="col" th:each="film, i : ${futureFilm}">
                 <div class="card h-100 text-center mb-3">
                     <a th:href="@{films/editFilm/{id}(id=*{film.id})}">
                         <img class="card-img-top"

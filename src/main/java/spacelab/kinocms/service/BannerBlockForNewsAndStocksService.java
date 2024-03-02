@@ -1,8 +1,6 @@
 package spacelab.kinocms.service;
 
-import spacelab.kinocms.model.BannerBlock;
-import spacelab.kinocms.model.BannerBlockForNewsAndStocks;
-import spacelab.kinocms.repository.BannerBlockForNewsAndStocksRepository;
+import spacelab.kinocms.model.banners.BannerBlockForNewsAndStocks;
 
 import java.util.List;
 

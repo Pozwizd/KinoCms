@@ -2,7 +2,7 @@ package spacelab.kinocms.service.ServiceImp;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.BannerBackground;
+import spacelab.kinocms.model.banners.BannerBackground;
 import spacelab.kinocms.repository.BannerBackgroundRepository;
 import spacelab.kinocms.service.BannerBackgroundService;
 

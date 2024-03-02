@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.*;
-import spacelab.kinocms.model.Dto.BannerForNewsAndStockBlockDto;
-import spacelab.kinocms.model.Dto.BannerForNewsAndStocksItemDto;
-import spacelab.kinocms.model.Dto.MainBannersBlockDto;
-import spacelab.kinocms.model.Dto.MainBannersItemDto;
+import spacelab.kinocms.Dto.BannerForNewsAndStockBlockDto;
+import spacelab.kinocms.Dto.BannerForNewsAndStocksItemDto;
+import spacelab.kinocms.Dto.MainBannersBlockDto;
+import spacelab.kinocms.Dto.MainBannersItemDto;
+import spacelab.kinocms.model.banners.*;
 import spacelab.kinocms.service.*;
 
 import java.util.List;

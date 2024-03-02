@@ -11,23 +11,13 @@ import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.Mapper.FilmMapper;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.enums.TypeFilm;
-import spacelab.kinocms.model.Dto.FilmDto;
+import spacelab.kinocms.Dto.FilmDto;
 import spacelab.kinocms.model.Film;
 import spacelab.kinocms.model.ImagesEntity.ImageFilm;
-import spacelab.kinocms.model.ImagesEntity.ImageNews;
-import spacelab.kinocms.model.News;
 import spacelab.kinocms.service.FilmService;
 import spacelab.kinocms.service.ImageFilmService;
-import spacelab.kinocms.service.ImageNewsService;
-import spacelab.kinocms.service.NewsService;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("admin/films")

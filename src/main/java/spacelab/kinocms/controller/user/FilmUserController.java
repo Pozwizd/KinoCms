@@ -27,6 +27,7 @@ public class FilmUserController {
     public ModelAndView index(Model model, @PathVariable String id) {
         model.addAttribute("banners", bannerService.getAllBanners());
         Film film = filmService.getFilm(Long.parseLong(id));
+        model.addAttribute("film", film);
 
         return new ModelAndView("user/cardFilm");
     }
