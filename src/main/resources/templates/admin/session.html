@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-xxl flex-grow-1 container-p-y">
+
+
+
+        <div class="d-flex flex-row justify-content-center align-items-center">
+            <h4 class="fw-bold pt-3">Список сеансов</h4>
+        </div>
+
+        <div class="d-flex flex-row justify-content-end align-items-center">
+            <a class="btn btn-primary" href="/admin/session/add">Добавить страницу</a>
+        </div>
+        <br/>
+        <div class="d-flex flex-row justify-content-end align-items-center" >
+            <div
+                    class="bs-toast toast toast-ex-success animate__animated my-2"
+                    role="alert"
+                    aria-live="assertive"
+                    aria-atomic="true"
+                    data-bs-delay="2000"
+            >
+                <div class="toast-header">
+                    <i class="ti ti-bell ti-xs me-2"></i>
+                    <div class="me-auto fw-semibold">Успех</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">Сеансы успешно сохранены</div>
+            </div>
+            <div
+                    class="bs-toast toast toast-ex-error animate__animated my-2"
+                    role="alert"
+                    aria-live="assertive"
+                    aria-atomic="true"
+                    data-bs-delay="2000"
+            >
+                <div class="toast-header">
+                    <i class="ti ti-bell ti-xs me-2"></i>
+                    <div class="me-auto fw-semibold">Ошибка</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">Произошла ошибка, перезагрузите страницу и повторите попытку</div>
+            </div>
+        </div>
+        <br/>
+        <div class="card">
+
+            <div class="card-body">
+                <div>
+                    <form class="d-flex flex-column justify-content-center align-items-center"
+                          id="sessionForm">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Дата сеанса</th>
+                                    <th>Фильм(Название)</th>
+                                    <th>Кинотеатр</th>
+                                    <th>Номер зала</th>
+                                    <th>Цена</th>
+                                    <th>Цена VIP</th>
+                                    <th>Удалить</th>
+                                </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0" id="sessionTableBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-primary text-center" type="submit">Сохранить</button>
+                    </form>
+                    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+                    <script src="/assets/vendor/libs/select2/select2.js"></script>
+
+
+                    <script src="/assets/vendor/libs/toastr/toastr.js"></script>
+                    <script>
+
+                        $(document).ready(function () {
+                            loadTable();
+                        });
+
+                        function loadTable() {
+                            $.ajax({
+                                url: '/admin/session/getSessionPageDto',
+                                type: 'GET',
+                                success: function (response) {
+                                    $('#sessionTableBody').empty();
+
+
+                                    function cinemas(id) {
+                                        let cinemasOptions;
+                                        if (id === -1) {
+                                            cinemasOptions = cinemasOptions + '<option value=""></option> ';
+                                        }
+                                        response.cinemas.forEach(function (cinema) {
+                                            if (cinema.id === id) {
+                                                cinemasOptions = cinemasOptions + '<option value="' + cinema.id + '" selected>' + cinema.name + '</option> ';
+                                            } else {
+                                                cinemasOptions = cinemasOptions + '<option value="' + cinema.id + '">' + cinema.name + '</option>'
+                                            }
+                                        });
+                                        return cinemasOptions
+                                    }
+
+                                    function films(id) {
+                                        let filmsOptions;
+                                        if (id === -1) {
+                                            filmsOptions = filmsOptions + '<option value=""></option> ';
+                                        }
+                                        response.films.forEach(function (film) {
+                                            if (film.id === id) {
+                                                filmsOptions = filmsOptions + '<option value="' + film.id + '" selected>' + film.name + '</option> ';
+                                            } else {
+                                                filmsOptions = filmsOptions + '<option value="' + film.id + '">' + film.name + '</option>'
+                                            }
+                                        });
+                                        return filmsOptions
+                                    }
+
+                                    function halls(id, cinemaId) {
+                                        let hallsOptions;
+                                        for (let i = 0; i < response.halls.length; i++) {
+                                            if (response.halls[i].cinema.id === cinemaId) {
+
+                                                if (response.halls[i].id === id) {
+                                                    hallsOptions = hallsOptions + '<option value="' + response.halls[i].id + '" selected>' + response.halls[i].hallNumber + '</option> '
+                                                } else {
+                                                    hallsOptions = hallsOptions + '<option value="' + response.halls[i].id + '">' + response.halls[i].hallNumber + '</option>'
+                                                }
+                                            }
+                                        }
+                                        return hallsOptions
+                                    }
+
+                                    for (let i = 0; i < response.sessions.length; i++) {
+                                        let dateArray = response.sessions[i].timeSession;
+                                        let formattedDate = moment(dateArray).format("YYYY-MM-DDTHH:mm");
+                                        let row = '<tr>' +
+                                            '<input type="hidden" value="' + response.sessions[i].id + '" name="id" />' +
+                                            '<td>' +
+                                            '<input class="form-control"' +
+                                            ' type="datetime-local"' +
+                                            ' value="'+formattedDate+'" name="timeSession"/>' +
+                                            '</td>' +
+                                            '<td>' +
+                                            '<select class="select2 form-select form-select-lg" name="filmId" data-allow-clear="true">' +
+                                            films(response.sessions[i].filmId === null || response.sessions[i].filmId === undefined ? -1 : response.sessions[i].filmId.id) +
+                                            '</select>' +
+                                            '</td>' +
+                                            '<td>' +
+                                            '<select class="select2 form-select form-select-lg" onchange="changeCinema(this)" data-index="' + i + '" name="cinemaId" data-allow-clear="true" >' +
+                                            cinemas(response.sessions[i].cinemaId === null || response.sessions[i].cinemaId === undefined ? -1 : response.sessions[i].cinemaId.id) +
+                                            '</select>' +
+                                            '</td>' +
+                                            '<td>' +
+                                            '<select class="select2 form-select form-select-lg" id="hallId' + i + '" name="hallId" data-allow-clear="true">' +
+                                            halls(response.sessions[i].hallId === null || response.sessions[i].hallId === undefined ? -1 : response.sessions[i].hallId.id, response.sessions[i].cinemaId === null || response.sessions[i].cinemaId === undefined ? -2 : response.sessions[i].cinemaId.id) +
+                                            '</select>' +
+                                            '</td>' +
+                                            '<td>' +
+                                            '<input class="form-control" type="text" name="price" value="'
+                                            + response.sessions[i].price + '" />' +
+                                            '</td>' +
+                                            '<td>' +
+                                            '<input class="form-control" type="text" name="priceVip" value="' + response.sessions[i].priceVip + '" />' +
+                                            '</td>' +
+                                            '<td>' +
+                                            '<a style="max-width: 24px;" href="/admin/session/delete/' + response.sessions[i].id + '" class="btn btn-danger">\n' +
+                                            '<i class="ti ti-trash"></i>\n' +
+                                            '</a>' +
+                                            '</td>' +
+                                            '</tr>';
+                                        $('#sessionTableBody').append(row);
+                                        let select2 = $('.select2');
+                                        if (select2.length) {
+                                            select2.each(function () {
+                                                var $this = $(this);
+                                                $this.wrap('<div class="position-relative dark-style"></div>').select2({
+                                                    placeholder: 'Select value',
+                                                    dropdownParent: $this.parent()
+                                                });
+                                            });
+                                        }
+                                    }
+
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log('Рома, все херня давай по новой');
+                                }
+                            });
+                        }
+
+                        function changeCinema(thisElement) {
+                            let valueId = $(thisElement).val();
+                            let i = $(thisElement).data('index');
+                            $('#hallId' + i).empty();
+                            $.ajax({
+                                url: '/admin/session/getHallsByCinema/' + valueId,
+                                type: 'GET',
+                                success: function (response) {
+                                    let select = '';
+                                    for (let j = 0; j < response.length; j++) {
+                                        let selectOption = '<option value="' + response[j].id + '">' + response[j].hallNumber + '</option>';
+                                        select += selectOption;
+                                    }
+                                    $('#hallId' + i).append(select);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log('Ошибка при получении информации о залах');
+                                }
+                            });
+                        }
+
+                    </script>
+                    <script>
+                        $('#sessionForm').submit(function (event) {
+                            event.preventDefault();
+
+                            let entities = [];
+                            $('input[name="id"]').each(function (index) {
+                                let id = $(this).val();
+                                let timeSession = $('input[name="timeSession"]').eq(index).val();
+                                let cinemaId = $('select[name="cinemaId"]').eq(index).val();
+                                let filmId = $('select[name="filmId"]').eq(index).val();
+                                let hallId = $('select[name="hallId"]').eq(index).val();
+                                let price = $('input[name="price"]').eq(index).val();
+                                let priceVip = $('input[name="priceVip"]').eq(index).val();
+
+                                let formData = {
+                                    id: id,
+                                    timeSession: timeSession,
+                                    filmId: filmId,
+                                    cinemaId: cinemaId,
+                                    hallId: hallId,
+                                    price: price,
+                                    priceVip: priceVip
+                                };
+
+                                entities.push(formData);
+                            });
+                            let jsonData = JSON.stringify(entities);
+                            $.ajax({
+                                url: '/admin/session/saveSessions',
+                                type: 'POST',
+                                data: jsonData,
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    console.log('Форма успешно отправлена');
+                                    let toastAnimationExample = document.querySelector('.toast-ex-success')
+                                    let toastAnimation, selectedType, selectedAnimation;
+                                    selectedType = 'text-success';
+                                    selectedAnimation = 'animate__zoomIn';
+                                    toastAnimationExample.classList.add(selectedAnimation);
+                                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                                    toastAnimation.show();
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log('Ошибка при отправке формы');
+
+                                    let toastAnimationExample = document.querySelector('.toast-ex-error')
+                                    let toastAnimation, selectedType, selectedAnimation;
+                                    selectedType = 'text-danger';
+                                    selectedAnimation = 'animate__zoomIn';
+                                    toastAnimationExample.classList.add(selectedAnimation);
+                                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                                    toastAnimation.show();
+                                }
+                            });
+                        });
+                    </script>
+
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-center pb-0"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
