@@ -35,7 +35,8 @@ public class MainPage{
     @Column
     private String phoneNumber2;
 
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String seoText;
 
     @Column

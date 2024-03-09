@@ -24,13 +24,29 @@ public class PosterController {
     @GetMapping({"/", ""})
     public ModelAndView index(Model model) {
         model.addAttribute("bannerBackground", bannerBackgroundService.getBannerBackground(1L));
-        model.addAttribute("title", "Главная");
+        model.addAttribute("title", "Афиша");
 
         model.addAttribute("banners", bannerService.getAllBanners());
         model.addAttribute("bannerBlocks", bannerBlockService.getBannerBlock(1L));
         model.addAttribute("bannerBackground", bannerBackgroundService.getBannerBackground(1L));
         model.addAttribute("currentFilm", filmService.getAllCurrentFilm());
         model.addAttribute("futureFilm", filmService.getAllFutureFilm());
+
+
+        return new ModelAndView("user/posters");
+    }
+
+    @GetMapping({"/soon"})
+    public ModelAndView soon(Model model) {
+        model.addAttribute("bannerBackground", bannerBackgroundService.getBannerBackground(1L));
+        model.addAttribute("title", "Скоро");
+
+        model.addAttribute("banners", bannerService.getAllBanners());
+        model.addAttribute("bannerBlocks", bannerBlockService.getBannerBlock(1L));
+        model.addAttribute("bannerBackground", bannerBackgroundService.getBannerBackground(1L));
+        model.addAttribute("currentFilm", filmService.getAllCurrentFilm());
+        model.addAttribute("futureFilm", filmService.getAllFutureFilm());
+        model.addAttribute("tabpane", "soon");
 
         return new ModelAndView("user/posters");
     }

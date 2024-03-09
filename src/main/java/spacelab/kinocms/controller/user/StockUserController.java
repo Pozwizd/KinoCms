@@ -26,8 +26,6 @@ public class StockUserController {
 
     @GetMapping({"/", ""})
     public ModelAndView index(Model model) {
-        model.addAttribute("title", "Главная");
-        model.addAttribute("mainPage", mainPageService.getMainPage());
 
         model.addAttribute("stocks", stockService.listAllStocks());
 
@@ -36,8 +34,7 @@ public class StockUserController {
 
     @GetMapping("/{id}")
     public ModelAndView getCinema(Model model, @PathVariable String id) {
-        model.addAttribute("title", "Кинотеатр");
-        model.addAttribute("cinema", cinemaService.getCinema(Long.parseLong(id)));
+        model.addAttribute("stock", stockService.getStock(Long.parseLong(id)));
 
         return new ModelAndView("user/stock/stockCard");
     }

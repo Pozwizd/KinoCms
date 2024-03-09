@@ -19,11 +19,13 @@ public class CinemaUserController {
     private final BannerBackgroundService bannerBackgroundService;
     private final MainPageService mainPageService;
     private final CinemaService cinemaService;
+    private final HallService hallService;
 
 
     @GetMapping({"/", ""})
     public ModelAndView index(Model model) {
-        model.addAttribute("title", "Главная");
+
+        model.addAttribute("title", "Кинотеатры");
         model.addAttribute("mainPage", mainPageService.getMainPage());
 
         model.addAttribute("banners", bannerService.getAllBanners());
@@ -39,10 +41,17 @@ public class CinemaUserController {
 
     @GetMapping("/{id}")
     public ModelAndView getCinema(Model model, @PathVariable String id) {
-        model.addAttribute("title", "Кинотеатр");
+        model.addAttribute("title", cinemaService.getCinema(Long.parseLong(id)).getName());
         model.addAttribute("cinema", cinemaService.getCinema(Long.parseLong(id)));
 
         return new ModelAndView("user/cinema/cinemaCard");
     }
 
+    @GetMapping({"/hall/{id}"})
+    public ModelAndView hall(@PathVariable String id, Model model) {
+
+        model.addAttribute("title", hallService.getHall(Long.parseLong(id)).getHallNumber());
+        model.addAttribute("hall", hallService.getHall(Long.parseLong(id)));
+        return new ModelAndView("user/cinema/hallCard");
+    }
 }

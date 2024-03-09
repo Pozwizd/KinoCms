@@ -25,7 +25,8 @@ public class Hall {
     private Long id;
     @Column
     private String hallNumber;
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
     @Column
     String urlSchemeImageHall;
@@ -44,7 +45,9 @@ public class Hall {
     private String seoTitle;
     @Column
     private String seoKeywords;
-    @Column
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String seoDescription;
 
     @ManyToOne

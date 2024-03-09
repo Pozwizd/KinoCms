@@ -17,16 +17,16 @@
                     <li data-bs-target="#carouselExample"
 
                         class="active"
-                        th:each="stock, i : ${stocks}"
+                        th:each="new, i : ${news}"
                         th:data-bs-slide-to="${i.index}"
                         th:classappend="${i.first ? 'active' : ''}"></li>
                 </ol>
                 <div class="carousel-inner">
                     <div class="carousel-item"
-                         th:each="stock, i : ${stocks}"
+                         th:each="newsItem, i : ${news}"
                          th:classappend="${i.first ? 'active' : ''}">
-                        <a th:href="@{stock/{id}(id=*{stock.id})}"  style="width: 1000px; height: 400px">
-                            <img class="d-block w-100" th:src="${stock.mainImage}" alt="First slide"
+                        <a th:href="@{news/{id}(id=*{newsItem.id})}"  style="width: 1000px; height: 400px">
+                            <img class="d-block w-100" th:src="${newsItem.mainImage}" alt="First slide"
                                  style="width: 1000px; height: 400px"/>
                         </a>
                     </div>
@@ -49,15 +49,15 @@
                             <div class="tab-content p-0">
                                 <div class="tab-pane fade show active" id="list-home">
                                     <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-                                        <div class="col" th:each="stock, i : ${stocks}">
+                                        <div class="col" th:each="newsItem, i : ${news}">
                                             <div class="card h-100 text-center mb-3">
-                                                <a th:href="@{/stock/{id}(id=*{stock.id})}">
+                                                <a th:href="@{/news/{id}(id=*{newsItem.id})}">
                                                     <img class="card-img-top"
-                                                         th:src="${stock.mainImage == null || stock.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : stock.mainImage}"
+                                                         th:src="${newsItem.mainImage == null || newsItem.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : newsItem.mainImage}"
                                                          alt="Card image cap"/>
                                                 </a>
                                                 <div class="card-body">
-                                                    <h5 class="card-title" th:text="${stock.name}">Card title</h5>
+                                                    <h5 class="card-title" th:text="${newsItem.name}">Card title</h5>
                                                 </div>
                                             </div>
                                         </div>

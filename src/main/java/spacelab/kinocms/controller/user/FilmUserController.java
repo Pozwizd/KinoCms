@@ -25,6 +25,8 @@ public class FilmUserController {
 
     @GetMapping("{id}")
     public ModelAndView index(Model model, @PathVariable String id) {
+
+        model.addAttribute("title", filmService.getFilm(Long.parseLong(id)).getName());
         model.addAttribute("banners", bannerService.getAllBanners());
         Film film = filmService.getFilm(Long.parseLong(id));
         model.addAttribute("film", film);

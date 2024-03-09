@@ -8,7 +8,69 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <div class="container d-flex flex-grow-1">
+        <div class="container d-flex flex-column min-vh-100">
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center align-items-center mb-5">
+                    <img class="img-fluid" alt="" style="max-height: 100%; max-width: 100%; object-fit: contain;"
+                         src="https://picsum.photos/300/300"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10 flex-row" style="max-width: 1000px; max-height: 400px">
+                    <h4 class="card-title text-center">Контакты</h4>
+                    <div class="container flex-grow-1">
+                        <div th:each="contact : ${contactsCinemas}">
+                            <div class="row w-100">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Text</h5>
+                                                    <p class="card-text">Content for the text section goes here.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <img src="https://picsum.photos/50/50" class="w-100 " alt="Photo">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card mb-3">
+                                        <img src="https://picsum.photos/300/150" class="card-img-top" alt="Photo">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Text</h5>
+                                            <p class="card-text">Content for the text section goes here.</p>
+                                        </div>
+                                    </div>
+                                    <div class="card mb-3">
+                                        <img src="https://picsum.photos/300/200" class="card-img-top" alt="Photo">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr/>
+                    </div>
 
+                </div>
+                <div class="col-md-2">
+                    <img class="w-100 m-1"
+                         src="https://picsum.photos/80/300"
+                         alt="https://picsum.photos/80/300">
+                </div>
+            </div>
+
+
+            <script src="/assets/vendor/libs/leaflet/leaflet.js"></script>
+            <script src="/assets/js/maps-leaflet.js"></script>
+        </div>
+    </div>
 </div>
 </body>
 </html>

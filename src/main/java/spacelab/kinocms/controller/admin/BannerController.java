@@ -36,6 +36,9 @@ public class BannerController {
         model.addAttribute("title", "Banners");
         model.addAttribute("pageActive", "banners");
 
+        model.addAttribute("bannerBackground",
+                bannerBackgroundService.getBannerBackground(1L));
+
         model.addAttribute("bannerBlock", bannerBlockService.getBannerBlock(1L));
         model.addAttribute("bannerBlockForNewsAndStocks", bannerBlockForNewsAndStocksService
                 .getBannerBlockForNewsAndStocks(1L));

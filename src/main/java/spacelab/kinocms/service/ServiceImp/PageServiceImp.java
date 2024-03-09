@@ -45,6 +45,11 @@ public class PageServiceImp implements PageService {
     }
 
     @Override
+    public List<Page> getAllPages() {
+        return pageRepository.findAll();
+    }
+
+    @Override
     public void deletePage(Page page) {
         pageRepository.delete(page);
     }

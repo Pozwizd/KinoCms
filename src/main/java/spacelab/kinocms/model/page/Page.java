@@ -34,7 +34,8 @@ public class Page{
     @Column
     private String name;
 
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column
@@ -52,6 +53,7 @@ public class Page{
     @Column
     private String seoKeywords;
 
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String seoDescription;
 }

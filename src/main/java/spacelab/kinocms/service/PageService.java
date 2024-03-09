@@ -18,6 +18,9 @@ public interface PageService {
 
     public List<Page> getNewPages();
 
+
+    public List<Page> getAllPages();
+
     public void deletePage(Page page);
     public void updatePage(Page page);
 

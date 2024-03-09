@@ -11,26 +11,19 @@
     <div class="container">
         <div class="col-lg-12 mb-4 mb-xl-0">
             <div class="mt-3">
+                <table class="table">
+                    <thead id="sessionTableHead">
+
+                    </thead>
+                </table>
                 <div class="row">
                     <div class="col-md-10 col-12">
 
                         <form class="d-flex flex-column justify-content-center align-items-center"
                               id="sessionForm">
-<!--                            <label for="2d">-->
-<!--                                2d-->
-<!--                                <input type="checkbox" onchange="changeSelections()" id="2d" value="true">-->
-<!--                            </label>-->
-<!--                            <label for="3d">-->
-<!--                                3d-->
-<!--                                <input type="checkbox" onchange="changeSelections()" id="3d" value="true">-->
-<!--                            </label>-->
-<!--                            <label for="imax">-->
-<!--                                imax-->
-<!--                                <input type="checkbox" onchange="changeSelections()" id="imax" value="">-->
-<!--                            </label>-->
                             <div class="table-responsive">
                                 <table class="table">
-                                    <thead id="sessionTableHead">
+                                    <thead>
                                     <tr>
                                         <th>Дата сеанса</th>
                                         <th>Фильм(Название)</th>
@@ -94,6 +87,9 @@
 
                         function appendSelects(response) {
                             let tableRow = $('<tr></tr>').appendTo('#sessionTableHead');
+                            tableRow.append('<th>2d<input type="checkbox" onchange="changeSelections()" id="2d" value="true"></th>');
+                            tableRow.append('<th>3d<input type="checkbox" onchange="changeSelections()" id="3d" value="true"></th>');
+                            tableRow.append('<th>imax<input type="checkbox" onchange="changeSelections()" id="imax" value="true"></th>');
                             tableRow.append('<th><input id="dateSession" name="dateSession" onchange="changeSelections()" type="date" class="form-control" placeholder="Дата сеанса"/></th>');
                             tableRow.append('<th><select id="films" name="films" onchange="changeSelections()" class="select2 form-select form-select-lg" data-allow-clear="true">' + films(response.films) + '</select></th>');
                             tableRow.append('<th><select id="cinemas" name="cinemas" onchange="changeCinema(this)" data-allow-clear="true"  class="select2 form-select form-select-lg">' + cinemas(response.cinemas) + '</select></th>');
@@ -155,7 +151,10 @@
                             searchArr.push($("#dateSession").val());
                             searchArr.push($("#films").val());
                             searchArr.push($("#cinemas").val());
-                            searchArr.push($("#halls").val());
+                            searchArr.push($("#halls").val())
+                            searchArr.push($("#3d").is(':checked'))
+                            searchArr.push($("#2d").is(':checked'))
+                            searchArr.push($("#imax").is(':checked'));
                             return searchArr;
                         }
 
@@ -163,7 +162,10 @@
                             if ($("#dateSession").val() ||
                                 $("#films").val() ||
                                 $("#cinemas").val() ||
-                                $("#halls").val()) {
+                                $("#halls").val() ||
+                                $("#3d").is(':checked') ||
+                                $("#2d").is(':checked') ||
+                                $("#imax").is(':checked')) {
                                 // getSessionsBySearch(searchText);
 
                                 console.log("С сортировкой")
@@ -184,9 +186,9 @@
                                 'films',
                                 'cinemas',
                                 'halls',
-                                'imax',
                                 '3d',
-                                '2d'
+                                '2d',
+                                'imax'
                             ]
 
                             for (let i = 0; i < search.length; i++) {
@@ -196,7 +198,7 @@
                                         url += '?' + searchField[i] + '=' + search[i];
                                         isFirstParam = false;
                                     } else {
-                                        url += '&'+ searchField[i] + '=' + search[i];
+                                        url += '&' + searchField[i] + '=' + search[i];
                                     }
                                 }
                             }
@@ -233,7 +235,9 @@
                             $("#sessionTableBody").empty();
                             console.log(response)
                             response.forEach(function (session) {
-                                let formattedDate = (moment(session.timeSession).locale('ru')).format("YYYY-MM-DD HH:mm");
+                                let clonedDate = moment(session.timeSession).clone();
+                                clonedDate.subtract(1, 'month');
+                                let formattedDate = clonedDate.locale('ru').format('DD.MM.YYYY HH:mm');
                                 let tableRow = $('<tr></tr>').appendTo('#sessionTableBody');
                                 tableRow.append('<td>' + formattedDate + '</td>');
                                 tableRow.append('<td>' + session.filmId.name + '</td>');

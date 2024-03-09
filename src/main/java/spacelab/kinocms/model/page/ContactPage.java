@@ -47,6 +47,7 @@ public class ContactPage{
     @Column
     private String seoKeywords;
 
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String seoDescription;
 }

@@ -25,17 +25,18 @@ public class Film {
     @Column
     private String name;
 
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "main_image")
     String mainImage;
 
     @OneToMany(mappedBy = "film", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<ImageFilm> imagesFilm = new ArrayList<>();
 
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String linkTrailer;
 
     @ElementCollection(targetClass = TypeFilm.class)
@@ -44,17 +45,22 @@ public class Film {
     @Column(name = "type")
     private List<TypeFilm> typeFilm = new ArrayList<>();
 
-
     @Column
     private String seoUrl;
+
     @Column
     private String seoTitle;
+
     @Column
     private String seoKeywords;
-    @Column
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String seoDescription;
+
     @Column
     private Date startPremiereDate;
+
     @Column
     private Date endPremiereDate;
 }

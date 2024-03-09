@@ -1,9 +1,6 @@
 package spacelab.kinocms.specification;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import spacelab.kinocms.enums.TypeFilm;
 import spacelab.kinocms.model.Cinema;
@@ -46,6 +43,24 @@ public class SessionSpecification implements Specification<Session> {
         }
         if (film != null) {
             predicates.add(cb.equal(root.get("filmId"), film));
+        }
+
+        if (d3d != null && d3d) {
+            Join<Session, Film> filmJoin = root.join("filmId", JoinType.LEFT);
+            Predicate typePredicate = cb.isMember(TypeFilm.Threedimensional, filmJoin.get("typeFilm"));
+            predicates.add(typePredicate);
+        }
+
+        if (d2d != null && d2d) {
+            Join<Session, Film> filmJoin = root.join("filmId", JoinType.LEFT);
+            Predicate typePredicate = cb.isMember(TypeFilm.Twodimensional, filmJoin.get("typeFilm"));
+            predicates.add(typePredicate);
+        }
+
+        if (imax != null && imax) {
+            Join<Session, Film> filmJoin = root.join("filmId", JoinType.LEFT);
+            Predicate typePredicate = cb.isMember(TypeFilm.IMAX, filmJoin.get("typeFilm"));
+            predicates.add(typePredicate);
         }
 
         if (cinema != null) {

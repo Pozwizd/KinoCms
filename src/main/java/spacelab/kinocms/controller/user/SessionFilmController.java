@@ -59,6 +59,8 @@ public class SessionFilmController {
     @GetMapping("/getAllSession")
     @ResponseBody
     public List<Session> getAllSession() {
+        List<Session> sessions = sessionService.getAllSession();
+        System.out.println(sessions);
         return sessionService.getAllSession();
     }
 

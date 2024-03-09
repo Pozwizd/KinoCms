@@ -60,15 +60,7 @@
                     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
                         <i class="ti ti-x ti-sm align-middle"></i>
                     </a>
-                    <!-- Search Small Screens -->
-                    <div class="navbar-search-wrapper search-input-wrapper container-fluid">
-                        <input
-                                type="text"
-                                class="form-control search-input border-0"
-                                placeholder="Search..."
-                                aria-label="Search..."
-                        />
-                    </div>
+
                 </div>
 
                 <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -76,7 +68,10 @@
                         <i class="ti ti-menu-2 ti-sm"></i>
                     </a>
                 </div>
-
+                <form class="m-lg-3 d-flex" onsubmit="return false">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </form>
                 <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                     <ul class="navbar-nav flex-row align-items-center ms-auto">
                         <li class="nav-item me-2 me-xl-0">
@@ -135,7 +130,7 @@
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="page-2.html" class="menu-link">
+                                <a href="/posters/soon" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-app-window"></i>
                                     <div>Скоро</div>
                                 </a>
@@ -153,44 +148,34 @@
                                 </a>
                             </li>
                             <li class="menu-item">
+                                <a href="/news" class="menu-link">
+                                    <i class="menu-icon tf-icons ti ti-file"></i>
+                                    <div>Новости</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
                                 <a href="/" class="menu-link menu-toggle">
                                     <i class="menu-icon tf-icons ti ti-file"></i>
 
                                     <div>О кинотеатре</div>
                                 </a>
-                                <ul class="menu-sub">
-                                    <li class="menu-item">
-                                        <a href="#" class="menu-link">
+                                <ul class="menu-sub" >
+                                    <li class="menu-item" th:each="page, i : ${pages}"
+                                    th:if="${page.status}">
+                                        <a th:href="@{/pages/{id}(id=*{page.id})}"
+                                           class="menu-link">
                                             <i class="menu-icon tf-icons ti ti-file"></i>
-                                            <div>О кинотеатре</div>
+                                            <div th:text="${page.name}">О кинотеатре</div>
                                         </a>
                                     </li>
                                     <li class="menu-item">
-                                        <a href="#" class="menu-link">
-                                            <i class="menu-icon tf-icons ti ti-file"></i>
-                                            <div>Новости</div>
-                                        </a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#" class="menu-link">
-                                            <i class="menu-icon tf-icons ti ti-file"></i>
-                                            <div>Реклама</div>
-                                        </a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#" class="menu-link">
-                                            <i class="menu-icon tf-icons ti ti-file"></i>
-                                            <div>Кафе</div>
-                                        </a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#" class="menu-link">
+                                        <a href="/app" class="menu-link">
                                             <i class="menu-icon tf-icons ti ti-file"></i>
                                             <div>Мобильные приложение</div>
                                         </a>
                                     </li>
                                     <li class="menu-item">
-                                        <a href="#" class="menu-link">
+                                        <a href="/pages/contact" class="menu-link">
                                             <i class="menu-icon tf-icons ti ti-file"></i>
                                             <div>Контакты</div>
                                         </a>
@@ -234,11 +219,11 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <h3>Мобильные приложения</h3>
-                                    <a href="#" style="max-height: 50px; max-width: 70px;">
+                                    <a href="/app" style="max-height: 50px; max-width: 70px;">
                                         <img src="/customAssets/googlePlay.png"
                                              style="max-height: 50px; max-width: 100px;"/>
                                     </a>
-                                    <a href="#" style="max-height: 50px; max-width: 70px;">
+                                    <a href="/app" style="max-height: 50px; max-width: 70px;">
                                         <img src="/customAssets/appStore.png"
                                              style="max-height: 50px; max-width: 100px;"/>
                                     </a>

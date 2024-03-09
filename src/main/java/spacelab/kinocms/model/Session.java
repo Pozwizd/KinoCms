@@ -26,7 +26,6 @@ public class Session {
 //    Тип данных для времени должен быть типом datatime
     @Column
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime timeSession;
 
     @ManyToOne

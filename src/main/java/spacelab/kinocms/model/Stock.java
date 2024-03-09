@@ -31,7 +31,8 @@ public class Stock {
     private Date datePosting;
     @Column
     private Date dateCreated;
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
     @Column
     private String mainImage;
@@ -45,6 +46,7 @@ public class Stock {
     private String seoTitle;
     @Column
     private String seoKeywords;
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String seoDescription;
 }
