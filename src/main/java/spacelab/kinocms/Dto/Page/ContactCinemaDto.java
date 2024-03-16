@@ -1,7 +1,6 @@
 package spacelab.kinocms.Dto.Page;
 
 import lombok.Data;
-import lombok.Value;
 import org.springframework.web.multipart.MultipartFile;
 import spacelab.kinocms.model.page.ContactCinema;
 

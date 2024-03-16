@@ -5,9 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.Dto.Page.ContactPageDto;
 import spacelab.kinocms.model.page.ContactCinema;
 import spacelab.kinocms.model.page.ContactPage;
-import spacelab.kinocms.Dto.Page.ContactPageDto;
 import spacelab.kinocms.service.ContactCinemaService;
 import spacelab.kinocms.service.ContactService;
 

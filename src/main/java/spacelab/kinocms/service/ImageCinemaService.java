@@ -2,7 +2,6 @@ package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.Cinema;
-import spacelab.kinocms.model.Hall;
 import spacelab.kinocms.model.ImagesEntity.ImageCinema;
 
 import java.util.List;

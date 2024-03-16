@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.model.ImagesEntity.ImageNews;
-import spacelab.kinocms.model.ImagesEntity.ImageStock;
 import spacelab.kinocms.model.News;
-import spacelab.kinocms.model.Stock;
 import spacelab.kinocms.service.ImageNewsService;
 import spacelab.kinocms.service.NewsService;
 

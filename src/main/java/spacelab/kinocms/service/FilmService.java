@@ -3,7 +3,6 @@ package spacelab.kinocms.service;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.Film;
 
-import java.sql.Date;
 import java.util.List;
 
 @Service

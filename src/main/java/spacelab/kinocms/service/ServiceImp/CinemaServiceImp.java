@@ -1,6 +1,8 @@
 package spacelab.kinocms.service.ServiceImp;
 
 import lombok.AllArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.Cinema;
 import spacelab.kinocms.repository.CinemaRepository;
@@ -13,6 +15,7 @@ import java.util.List;
 public class CinemaServiceImp implements CinemaService {
 
     private final CinemaRepository cinemaRepository;
+    private static final Logger logger = LogManager.getLogger(CinemaServiceImp.class);
 
     @Override
     public void saveCinema(Cinema cinema) {
@@ -30,30 +33,36 @@ public class CinemaServiceImp implements CinemaService {
         cinema1.setSeoDescription(cinema.getSeoDescription());
         cinema1.setSeoKeywords(cinema.getSeoKeywords());
         cinemaRepository.save(cinema1);
+        logger.info("Save cinema: " + cinema);
     }
 
     @Override
     public Cinema getCinema(Long id) {
+        logger.info("Get cinema by id: " + id);
         return cinemaRepository.findById(id).orElse(null);
     }
 
     @Override
     public Cinema getLastCinema() {
+        logger.info("Get last cinema");
         return cinemaRepository.findTopCinemaByOrderByIdDesc();
     }
 
     @Override
     public List<Cinema> getAllCinemas() {
+        logger.info("Get all cinemas");
         return cinemaRepository.findAll();
     }
 
     @Override
     public void deleteCinema(long id) {
+        logger.info("Delete cinema by id: " + id);
         cinemaRepository.deleteById(id);
     }
 
     @Override
     public void updateCinema(Cinema cinema) {
         cinemaRepository.save(cinema);
+        logger.info("Update cinema: " + cinema);
     }
 }

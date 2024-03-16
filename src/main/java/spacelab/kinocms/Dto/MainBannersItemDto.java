@@ -1,6 +1,5 @@
 package spacelab.kinocms.Dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

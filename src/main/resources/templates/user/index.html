@@ -26,7 +26,7 @@
                          th:each="banner, i : ${banners}"
                          th:classappend="${i.first ? 'active' : ''}"
                          th:data-bs-interval="${bannerBlocks.timeChange}*1000">
-                        <a th:href="@{films/editFilm/{id}(id=*{banner.url})}"  style="width: 1000px; height: 400px">
+                        <a th:href="@{/{id}(id=*{banner.url})}"  style="width: 1000px; height: 400px">
                             <img class="d-block w-100" th:src="${banner.pathImage}" alt="First slide"
                                  style="width: 1000px; height: 400px"/>
                         </a>

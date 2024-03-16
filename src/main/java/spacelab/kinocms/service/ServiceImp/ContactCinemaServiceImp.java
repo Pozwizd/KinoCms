@@ -1,9 +1,11 @@
 package spacelab.kinocms.service.ServiceImp;
 
 import lombok.AllArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.page.ContactCinema;
 import spacelab.kinocms.Dto.Page.ContactCinemaDto;
+import spacelab.kinocms.model.page.ContactCinema;
 import spacelab.kinocms.model.page.ContactPage;
 import spacelab.kinocms.repository.ContactCinemaRepository;
 import spacelab.kinocms.service.ContactCinemaService;
@@ -24,10 +26,12 @@ public class ContactCinemaServiceImp implements ContactCinemaService {
 
     private final ContactCinemaRepository contactCinemaRepository;
 
+    private static final Logger logger = LogManager.getLogger(ContactCinemaServiceImp.class);
 
     @Override
     public void saveContactCinema(ContactCinema contactCinema) {
         contactCinemaRepository.save(contactCinema);
+        logger.info("Save contact cinema: " + contactCinema);
     }
 
     @Override
@@ -55,25 +59,30 @@ public class ContactCinemaServiceImp implements ContactCinemaService {
             contactCinema.setLogo("/images/" + fileName);
         }
         contactCinemaRepository.saveAndFlush(contactCinema);
+        logger.info("Save contact cinema: " + contactCinema);
     }
 
     @Override
     public List<ContactCinema> getContactCinemas() {
+        logger.info("Get all contact cinemas");
         return contactCinemaRepository.findAll();
     }
 
     @Override
     public ContactCinema getContactCinema(long id) {
+        logger.info("Get contact cinema by id: " + id);
         return contactCinemaRepository.findById(id).orElse(null);
     }
 
     @Override
     public void deleteContactCinema(long id) {
+        logger.info("Delete contact cinema by id: " + id);
         contactCinemaRepository.deleteById(id);
     }
 
     @Override
     public void updateContactCinema(ContactCinema contactCinema) {
-        contactCinemaRepository.saveAndFlush(contactCinema);
+        contactCinemaRepository.save(contactCinema);
+        logger.info("Update contact cinema: " + contactCinema);
     }
 }

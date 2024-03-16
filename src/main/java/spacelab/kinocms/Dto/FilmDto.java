@@ -3,7 +3,6 @@ package spacelab.kinocms.Dto;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Data;
-import lombok.Value;
 import spacelab.kinocms.enums.TypeFilm;
 import spacelab.kinocms.model.Film;
 

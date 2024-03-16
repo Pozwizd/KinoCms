@@ -6,13 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import spacelab.kinocms.enums.Gender;
 import spacelab.kinocms.enums.Lanquage;
 
 import java.sql.Date;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
@@ -53,10 +54,12 @@ public class User implements UserDetails {
 
     private String city;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Return the authorities for this user somehow
-        return Arrays.asList(() -> "ROLE_USER");
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

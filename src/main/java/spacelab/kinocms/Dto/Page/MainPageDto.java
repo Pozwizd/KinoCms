@@ -1,7 +1,6 @@
 package spacelab.kinocms.Dto.Page;
 
 import lombok.Data;
-import lombok.Value;
 import spacelab.kinocms.model.page.MainPage;
 
 import java.io.Serializable;

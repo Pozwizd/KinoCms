@@ -1,7 +1,6 @@
 package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.page.ContactPage;
 import spacelab.kinocms.model.page.MainPage;
 
 @Service

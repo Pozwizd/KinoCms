@@ -103,6 +103,55 @@
                         <a th:if="${mainPage.phoneNumber2}" th:href="'tel:' + ${mainPage.phoneNumber2}" th:text="${mainPage.phoneNumber2}">Call us</a>
                     </ul>
                 </div>
+                <div th:if="${isUser == false}" class="d-flex justify-content-center align-items-center align-content-center w-25" >
+                    <div class="d-flex justify-content-center align-items-center align-content-center">
+                        <a th:href="@{/login}">Вход/Регистрация</a>
+                    </div>
+                </div>
+                <div th:if="${isUser == true}" class="d-flex justify-content-center align-items-center align-content-center w-px-14" >
+                    <!-- User -->
+                    <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                        <div class="avatar avatar-online">
+                            <img src="../../assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="pages-account-settings-account.html">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 me-3">
+                                        <div class="avatar avatar-online">
+                                            <img src="../../assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <span class="fw-semibold d-block" th:text="${userName}">John Doe</span>
+                                        <small class="text-muted" th:text="${userRole}">Admin</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="dropdown-divider"></div>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/cabinet/">
+                                <i class="ti ti-user-check me-2 ti-sm"></i>
+                                <span class="align-middle">My Profile</span>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="dropdown-divider"></div>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/logout">
+                                <i class="ti ti-logout me-2 ti-sm"></i>
+                                <span class="align-middle">Log Out</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <!--/ User -->
+                </div>
             </div>
         </nav>
 
@@ -194,17 +243,7 @@
                     <!-- Layout Demo -->
                     <div class="layout-demo-wrapper">
                         <div class="layout-demo-placeholder">
-                            <img
-                                    src="../../assets/img/layouts/layout-horizontal-fluid-light.png"
-                                    class="img-fluid"
-                                    alt="Layout fluid"
-                                    data-app-light-img="layouts/layout-horizontal-fluid-light.png"
-                                    data-app-dark-img="layouts/layout-horizontal-fluid-dark.png"
-                            />
-                        </div>
-                        <div class="layout-demo-info">
-                            <h4>Layout fluid</h4>
-                            <p>Fluid layout sets a <code>100% width</code> at each responsive breakpoint.</p>
+                            Что-то пошло не так
                         </div>
                     </div>
                     <!--/ Layout Demo -->

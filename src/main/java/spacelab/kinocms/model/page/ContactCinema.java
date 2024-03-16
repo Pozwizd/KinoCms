@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.enums.Status;
 
 @Getter
 @Setter
@@ -28,7 +27,8 @@ public class ContactCinema {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "location")
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String location;
 
     @Column(name = "logo")

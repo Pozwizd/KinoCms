@@ -9,8 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.model.ImagesEntity.ImageStock;
 import spacelab.kinocms.model.Stock;
-import spacelab.kinocms.model.page.ImagePage;
-import spacelab.kinocms.model.page.Page;
 import spacelab.kinocms.service.ImageStockService;
 import spacelab.kinocms.service.StockService;
 

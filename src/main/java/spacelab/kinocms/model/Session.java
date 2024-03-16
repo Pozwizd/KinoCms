@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.lang.reflect.Type;
-import java.sql.Types;
 import java.time.LocalDateTime;
 
 

@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
-import lombok.Value;
 import spacelab.kinocms.enums.Gender;
 import spacelab.kinocms.enums.Lanquage;
 import spacelab.kinocms.model.User;

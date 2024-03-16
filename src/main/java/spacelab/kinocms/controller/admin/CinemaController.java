@@ -11,17 +11,11 @@ import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.Cinema;
 import spacelab.kinocms.model.ImagesEntity.ImageCinema;
-import spacelab.kinocms.model.ImagesEntity.ImageNews;
-import spacelab.kinocms.model.News;
-import spacelab.kinocms.service.*;
+import spacelab.kinocms.service.CinemaService;
+import spacelab.kinocms.service.HallService;
+import spacelab.kinocms.service.ImageCinemaService;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @AllArgsConstructor

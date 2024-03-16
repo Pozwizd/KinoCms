@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.enums.Status;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -18,6 +17,9 @@ import java.util.List;
 @Entity
 @Table(name = "page")
 public class Page{
+    public Page(Long id) {
+        this.id = id;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

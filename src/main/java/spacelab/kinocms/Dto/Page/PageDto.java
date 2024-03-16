@@ -1,11 +1,9 @@
 package spacelab.kinocms.Dto.Page;
 
 import lombok.Data;
-import lombok.Value;
 import spacelab.kinocms.model.page.Page;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 /**
  * DTO for {@link Page}
