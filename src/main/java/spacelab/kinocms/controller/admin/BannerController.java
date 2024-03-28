@@ -58,7 +58,8 @@ public class BannerController {
     @GetMapping("/getMainBanner/{id}")
     @ResponseBody
     public Banner getMainBanner(@PathVariable String id) {
-        return bannerService.getBanner(Long.parseLong(id));
+        Banner banner = bannerService.getBanner(Long.parseLong(id));
+        return banner;
     }
 
     @GetMapping("/deleteMainBanner/{id}")

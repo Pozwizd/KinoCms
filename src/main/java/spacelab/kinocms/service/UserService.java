@@ -17,4 +17,6 @@ public interface UserService {
     Page<User> findAllUsers(int page, int pageSize);
 
     Page<User> findUsersByRequest(int page, int pageSize, String search);
+
+    User getUserByEmail(String name);
 }

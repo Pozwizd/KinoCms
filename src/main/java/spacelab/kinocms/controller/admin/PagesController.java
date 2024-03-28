@@ -112,16 +112,16 @@ public class PagesController {
     }
 //   Ajax  ====================================================================
 
-    @GetMapping("/editPage/showMainPage/{id}")
+    @GetMapping("/editPage/{nothing}/showMainPage/{id}")
     @ResponseBody
-    public Page showMainPage(Model model, @PathVariable long id) {
+    public Page showMainPage(Model model, @PathVariable long id, @PathVariable String nothing) {
         return pageService.getPage(id); // для отображения картинки в форме редактирования страницы и для отправки картинки на сервер для загрузки в форму редактирования страницы и для отправки картинки на сервер для загрузки в форму редактирования страницы и для отправки картинки на сервер для загрузки в форму редактирования страницы и для отправ�
     }
 
-    @PostMapping("/editPage/editMainPage/{id}")
+    @PostMapping("/editPage/{nothing}/editMainPage/{id}")
     @ResponseBody
     public ResponseEntity<String> editMainPage(@RequestPart("file") MultipartFile file,
-                                               @PathVariable Long id) {
+                                               @PathVariable Long id, @PathVariable String nothing) {
 
 
         Page page = pageService.getPage(id);
@@ -131,9 +131,9 @@ public class PagesController {
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
-    @PostMapping("/editPage/deleteMainPage/{id}")
+    @PostMapping("/editPage/{nothing}/deleteMainPage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteMainPage(Model model, @PathVariable long id) {
+    public ResponseEntity<String> deleteMainPage(Model model, @PathVariable long id, @PathVariable String nothing) {
         Page page = pageService.getPage(id);
 
         uploadFile.deleteFile(page.getMainImage());
@@ -146,38 +146,38 @@ public class PagesController {
         return ResponseEntity.ok("Файл успешно удален");
     }
 
-    @GetMapping("/editPage/showAllImages/{id}")
+    @GetMapping("/editPage/{nothing}/showAllImages/{id}")
     @ResponseBody
-    public List<ImagePage> showAllImages(@PathVariable String id) {
+    public List<ImagePage> showAllImages(@PathVariable String id, @PathVariable String nothing) {
         return imagePageService.getAllImagesPageByPage(pageService.getPage(Long.parseLong(id)));
     }
 
-    @GetMapping("/editPage/getImage/{id}")
+    @GetMapping("/editPage/{nothing}/getImage/{id}")
     @ResponseBody
-    public ImagePage getImage(@PathVariable String id) {
+    public ImagePage getImage(@PathVariable String id, @PathVariable String nothing) {
         return imagePageService.getImagePage(Long.parseLong(id));
     }
 
-    @GetMapping("/editPage/deleteImage/{id}")
+    @GetMapping("/editPage/{nothing}/deleteImage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteImage(@PathVariable String id) {
+    public ResponseEntity<String> deleteImage(@PathVariable String id, @PathVariable String nothing) {
         imagePageService.deleteImagePage(Long.parseLong(id));
         return ResponseEntity.ok("Image deleted successfully");
     }
 
-    @GetMapping("/editPage/createNewImage/{id}")
+    @GetMapping("/editPage/{nothing}/createNewImage/{id}")
     @ResponseBody
-    public ImagePage createImagePage(@PathVariable String id) {
+    public ImagePage createImagePage(@PathVariable String id, @PathVariable String nothing) {
         ImagePage imagePage = new ImagePage();
         imagePage.setPage(pageService.getPage(Long.parseLong(id)));
         imagePageService.saveImagePage(imagePage);
         return imagePageService.getLastImagePage();
     }
 
-    @PostMapping("/editPage/editImagePage/{id}")
+    @PostMapping("/editPage/{nothing}/editImagePage/{id}")
     @ResponseBody
     public ResponseEntity<String> editImagePage(@RequestPart("file") MultipartFile file,
-                                                @PathVariable Long id) {
+                                                @PathVariable Long id, @PathVariable String nothing) {
 
         ImagePage imagePage = imagePageService.getImagePage(id);
         imagePage.setUrl(uploadFile.uploadFile(file, imagePage.getUrl()));

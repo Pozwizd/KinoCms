@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.banners.Banner;
 import spacelab.kinocms.model.banners.BannerBlock;
 import spacelab.kinocms.repository.BannerRepository;
@@ -26,6 +27,8 @@ class BannerServiceImpTest {
 
     @Mock
     private BannerRepository bannerRepository;
+    @Mock
+    private UploadFile uploadFile;
 
     @InjectMocks
     private BannerServiceImp bannerService;
@@ -45,9 +48,26 @@ class BannerServiceImpTest {
 
     @Test
     void testDeleteBanner() {
-        long id = 1L;
-        bannerService.deleteBanner(id);
-        verify(bannerRepository).deleteById(id);
+//        long id = 1L;
+//        bannerService.deleteBanner(id);
+//        verify(bannerRepository).deleteById(id);
+
+        // Arrange
+        long bannerId = 1L;
+        String imagePath = "path/to/image.jpg";
+        Banner banner = new Banner();
+        banner.setId(bannerId);
+        banner.setUrl(imagePath);
+
+        when(bannerRepository.findById(bannerId)).thenReturn(Optional.of(banner));
+
+        // Act
+        bannerService.deleteBanner(bannerId);
+
+        // Assert
+        verify(bannerRepository, times(1)).findById(bannerId);
+        verify(uploadFile, times(1)).deleteFile(banner.getUrl());
+        verify(bannerRepository, times(1)).deleteById(bannerId);
     }
 
     @Test

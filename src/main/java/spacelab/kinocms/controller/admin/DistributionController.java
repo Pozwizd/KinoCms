@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequestMapping("admin/distribution")
+@RequestMapping("/admin/distribution")
 @AllArgsConstructor
 public class DistributionController {
 
@@ -66,7 +66,7 @@ public class DistributionController {
         }
         session.removeAttribute("userList");
 
-        return new ModelAndView("redirect:/admin/mailing/distribution/");
+        return new ModelAndView("redirect:/admin/distribution/");
     }
 
     @GetMapping("/userMailing")
@@ -110,7 +110,7 @@ public class DistributionController {
         }
         MailTemplate mailTemplate = new MailTemplate();
         mailTemplate.setName(file.getOriginalFilename());
-        mailTemplate.setUrl(uploadFile.uploadMailTemplate(file, mailTemplate.getUrl()));
+        mailTemplate.setUrl(uploadFile.uploadFile(file, mailTemplate.getUrl()));
 
         mailTemplateService.saveMailTemplate(mailTemplate);
         return ResponseEntity.ok(response);

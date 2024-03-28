@@ -7,8 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.Film;
 import spacelab.kinocms.model.ImagesEntity.ImageFilm;
+import spacelab.kinocms.model.banners.Banner;
 import spacelab.kinocms.repository.ImageFilmRepository;
 
 import java.util.ArrayList;
@@ -23,7 +25,8 @@ class ImageFilmServiceImpTest {
 
     @Mock
     private ImageFilmRepository imageFilmRepository;
-
+    @Mock
+    private UploadFile uploadFile;
     @InjectMocks
     private ImageFilmServiceImp imageFilmService;
 
@@ -41,9 +44,24 @@ class ImageFilmServiceImpTest {
 
     @Test
     public void deleteImageFilmTest() {
-        Long imageFilmId = 1L;
+
+
+// Arrange
+        long imageFilmId = 1L;
+        String imagePath = "path/to/image.jpg";
+        ImageFilm imageFilm = new ImageFilm();
+        imageFilm.setId(imageFilmId);
+        imageFilm.setUrl(imagePath);
+
+        when(imageFilmRepository.findById(imageFilmId)).thenReturn(Optional.of(imageFilm));
+
+        // Act
         imageFilmService.deleteImageFilm(imageFilmId);
-        verify(imageFilmRepository).deleteById(imageFilmId);
+
+        // Assert
+        verify(imageFilmRepository, times(1)).findById(imageFilmId);
+        verify(uploadFile, times(1)).deleteFile(imageFilm.getUrl());
+        verify(imageFilmRepository, times(1)).deleteById(imageFilmId);
     }
 
     @Test

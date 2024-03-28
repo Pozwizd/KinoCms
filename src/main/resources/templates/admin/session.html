@@ -17,7 +17,7 @@
         </div>
 
         <div class="d-flex flex-row justify-content-end align-items-center">
-            <a class="btn btn-primary" href="/admin/session/add">Добавить страницу</a>
+            <a class="btn btn-primary" href="add/">Добавить страницу</a>
         </div>
         <br/>
         <div class="d-flex flex-row justify-content-end align-items-center" >
@@ -77,20 +77,23 @@
                         </div>
                         <button class="btn btn-primary text-center" type="submit">Сохранить</button>
                     </form>
-                    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
-                    <script src="/assets/vendor/libs/select2/select2.js"></script>
+                    <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+                    <script th:src="@{/assets/vendor/libs/select2/select2.js}"></script>
 
 
-                    <script src="/assets/vendor/libs/toastr/toastr.js"></script>
+                    <script th:src="@{/assets/vendor/libs/toastr/toastr.js}"></script>
                     <script>
 
+                        let baseUrl = window.location.href; // получаем базовый URL текущей страницы
                         $(document).ready(function () {
                             loadTable();
                         });
 
                         function loadTable() {
+                            let url = baseUrl + '/getSessionPageDto';
+                            console.log(url)
                             $.ajax({
-                                url: '/admin/session/getSessionPageDto',
+                                url: url,
                                 type: 'GET',
                                 success: function (response) {
                                     $('#sessionTableBody').empty();
@@ -174,7 +177,7 @@
                                             '<input class="form-control" type="text" name="priceVip" value="' + response.sessions[i].priceVip + '" />' +
                                             '</td>' +
                                             '<td>' +
-                                            '<a style="max-width: 24px;" href="/admin/session/delete/' + response.sessions[i].id + '" class="btn btn-danger">\n' +
+                                            '<a style="max-width: 24px;" href="delete/' + response.sessions[i].id + '" class="btn btn-danger">\n' +
                                             '<i class="ti ti-trash"></i>\n' +
                                             '</a>' +
                                             '</td>' +
@@ -201,10 +204,11 @@
 
                         function changeCinema(thisElement) {
                             let valueId = $(thisElement).val();
+                            let url = baseUrl + '/getHallsByCinema/' + valueId;
                             let i = $(thisElement).data('index');
                             $('#hallId' + i).empty();
                             $.ajax({
-                                url: '/admin/session/getHallsByCinema/' + valueId,
+                                url: url,
                                 type: 'GET',
                                 success: function (response) {
                                     let select = '';
@@ -247,9 +251,10 @@
 
                                 entities.push(formData);
                             });
+                            let url = baseUrl + '/saveSessions';
                             let jsonData = JSON.stringify(entities);
                             $.ajax({
-                                url: '/admin/session/saveSessions',
+                                url: url,
                                 type: 'POST',
                                 data: jsonData,
                                 contentType: 'application/json',

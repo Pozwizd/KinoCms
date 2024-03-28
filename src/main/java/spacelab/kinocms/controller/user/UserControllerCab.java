@@ -11,6 +11,8 @@ import spacelab.kinocms.Dto.UserDto;
 import spacelab.kinocms.Mapper.UserMapper;
 import spacelab.kinocms.service.UserService;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/cabinet")
 @AllArgsConstructor
@@ -18,9 +20,9 @@ public class UserControllerCab {
 
     private final UserService userService;
     private final UserMapper userMapper;
-    @GetMapping("/{userId}")
-    public ModelAndView viewUserDetails(@PathVariable Long userId, Model model) {
-        UserDto user = userMapper.toDto(userService.getUser(userId));
+    @GetMapping({"","/"})
+    public ModelAndView viewUserDetails(Model model, Principal principal) {
+        UserDto user = userMapper.toDto(userService.getUserByEmail(principal.getName()));
         model.addAttribute("title", "Личный кабинет");
         model.addAttribute("pageActive", "users");
         model.addAttribute("user", user);

@@ -22,7 +22,7 @@
         <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
             <div class="container-fluid">
                 <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
-                    <a href="/" class="app-brand-link gap-2">
+                    <a th:href="@{/}" class="app-brand-link gap-2">
                 <span class="app-brand-logo demo">
                   <svg width="32" height="22" viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg"
                        layout:replace="user/template/fragments/svgLogo">
@@ -117,11 +117,11 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <a class="dropdown-item" href="pages-account-settings-account.html">
+                            <a class="dropdown-item" href="#">
                                 <div class="d-flex">
                                     <div class="flex-shrink-0 me-3">
                                         <div class="avatar avatar-online">
-                                            <img src="../../assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
+                                            <img th:src="@{/assets/img/avatars/1.png}" alt class="h-auto rounded-circle" />
                                         </div>
                                     </div>
                                     <div class="flex-grow-1">
@@ -135,7 +135,7 @@
                             <div class="dropdown-divider"></div>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="/cabinet/">
+                            <a class="dropdown-item" th:href="@{/cabinet/}">
                                 <i class="ti ti-user-check me-2 ti-sm"></i>
                                 <span class="align-middle">My Profile</span>
                             </a>
@@ -144,7 +144,7 @@
                             <div class="dropdown-divider"></div>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="/logout">
+                            <a class="dropdown-item" th:href="@{/logout}">
                                 <i class="ti ti-logout me-2 ti-sm"></i>
                                 <span class="align-middle">Log Out</span>
                             </a>
@@ -167,37 +167,37 @@
                         <ul class="menu-inner py-1">
                             <!-- Page -->
                             <li class="menu-item" th:classappend="${pageActive == 'statistics' ? 'active' : ''}">
-                                <a href="/posters/" class="menu-link">
+                                <a th:href="@{/posters/}" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-smart-home"></i>
                                     <div>Афиша</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="/session" class="menu-link">
+                                <a th:href="@{/session}" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-app-window"></i>
                                     <div>Расписание</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="/posters/soon" class="menu-link">
+                                <a th:href="@{/posters/soon}" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-app-window"></i>
                                     <div>Скоро</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="/cinema" class="menu-link">
+                                <a th:href="@{/cinema}" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-app-window"></i>
                                     <div>Кинотеатры</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="/stock" class="menu-link">
+                                <a th:href="@{/stock}" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-app-window"></i>
                                     <div>Акции</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="/news" class="menu-link">
+                                <a th:href="@{/news}" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-file"></i>
                                     <div>Новости</div>
                                 </a>
@@ -218,13 +218,13 @@
                                         </a>
                                     </li>
                                     <li class="menu-item">
-                                        <a href="/app" class="menu-link">
+                                        <a th:href="@{/app}" class="menu-link">
                                             <i class="menu-icon tf-icons ti ti-file"></i>
                                             <div>Мобильные приложение</div>
                                         </a>
                                     </li>
                                     <li class="menu-item">
-                                        <a href="/pages/contact" class="menu-link">
+                                        <a th:href="@{/pages/contact}" class="menu-link">
                                             <i class="menu-icon tf-icons ti ti-file"></i>
                                             <div>Контакты</div>
                                         </a>
@@ -258,32 +258,40 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <h3>Мобильные приложения</h3>
-                                    <a href="/app" style="max-height: 50px; max-width: 70px;">
-                                        <img src="/customAssets/googlePlay.png"
+                                    <a th:href="@{/app}" style="max-height: 50px; max-width: 70px;">
+                                        <img th:src="@{/customAssets/googlePlay.png}"
                                              style="max-height: 50px; max-width: 100px;"/>
                                     </a>
                                     <a href="/app" style="max-height: 50px; max-width: 70px;">
-                                        <img src="/customAssets/appStore.png"
+                                        <img th:src="@{/customAssets/appStore.png}"
                                              style="max-height: 50px; max-width: 100px;"/>
                                     </a>
                                     <p class="small mt-4 text-black">Разработка сайтов: AVADA-MEDIA</p>
                                 </div>
                                 <div class="col-md-3">
-                                    <h3>Афиша</h3>
+                                    <h3>
+                                        <a th:href="@{/posters/}">Афиша</a>
+                                    </h3>
                                     <ul class="list-unstyled">
-                                        <li><a href="#">Расписание</a></li>
-                                        <li><a href="#">Скоро в прокате</a></li>
-                                        <li><a href="#">Кинотеатры</a></li>
-                                        <li><a href="#">Акции</a></li>
+                                        <li><a th:href="@{/session}">Расписание</a></li>
+                                        <li><a th:href="@{/posters/soon}">Скоро в прокате</a></li>
+                                        <li><a th:href="@{/cinema}">Кинотеатры</a></li>
+                                        <li><a th:href="@{/stock}">Акции</a></li>
                                     </ul>
                                 </div>
                                 <div class="col-md-3">
-                                    <h3>О кинотеатре</h3>
+                                    <h3>
+                                        <a href="#">О кинотеатре</a>
+                                    </h3>
                                     <ul class="list-unstyled">
-                                        <li><a href="#">Новости</a></li>
-                                        <li><a href="#">Реклама</a></li>
-                                        <li><a href="#">Кафе-Бар</a></li>
-                                        <li><a href="#">Контакты</a></li>
+                                        <li><a th:href="@{/news}">Новости</a></li>
+
+                                        <li th:each="page, i : ${pages}">
+                                            <a th:href="@{/pages/{id}(id=*{page.id})}" th:text="${page.name}">
+
+                                            </a>
+                                        </li>
+
                                     </ul>
                                 </div>
                                 <div class="col-md-3">

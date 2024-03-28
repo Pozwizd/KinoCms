@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.banners.Banner;
 import spacelab.kinocms.model.banners.BannerBlock;
 import spacelab.kinocms.repository.BannerRepository;
@@ -16,6 +17,7 @@ import java.util.List;
 public class BannerServiceImp implements BannerService {
 
     private final BannerRepository bannerRepository;
+    private final UploadFile uploadFile;
     private static final Logger logger = LogManager.getLogger(BannerServiceImp.class);
 
     @Override
@@ -27,6 +29,7 @@ public class BannerServiceImp implements BannerService {
     @Override
     public void deleteBanner(long id) {
         logger.info("Delete banner by id: " + id);
+        bannerRepository.findById(id).ifPresent(banner -> uploadFile.deleteFile(banner.getUrl()));
         bannerRepository.deleteById(id);
     }
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import spacelab.kinocms.model.User;
 import spacelab.kinocms.repository.UserRepository;
 import spacelab.kinocms.service.*;
 
@@ -19,14 +20,11 @@ public class AdminControllerAdvice {
     private final PageService pageService;
     private final NewsService newsService;
     private final UserRepository userRepository;
+    UserService userService;
 
     @ModelAttribute
     public void addCommonAttributes(Model model, Principal principal) {
-        model.addAttribute("isUser", true);
-        model.addAttribute("userName", userRepository
-                .findUserByEmail(principal.getName()).get().getName());
-        model.addAttribute("userRole", userRepository
-                .findUserByEmail(principal.getName()).get().getRole().name());
-
+        userRepository.findUserByEmail(principal.getName()).ifPresent(user
+                -> model.addAttribute("user", user));
     }
 }

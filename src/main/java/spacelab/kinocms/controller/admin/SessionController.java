@@ -55,14 +55,14 @@ public class SessionController {
         return hallService.getHallByCinema(cinemaService.getCinema(Long.parseLong(id)));
     }
 
-    @GetMapping("/add")
+    @GetMapping("/add/")
     public ModelAndView addSession() {
         Session session = new Session();
         session.setCinemaId(cinemaService.getCinema(1L));
         session.setTimeSession(LocalDateTime.now());
 
         sessionService.createSession(session);
-        return new ModelAndView("redirect:/admin/session/");
+        return new ModelAndView("redirect:/admin/session");
     }
 
     @PostMapping("/saveSessions")
@@ -81,7 +81,7 @@ public class SessionController {
     @ResponseBody
     public ModelAndView deleteSession(@PathVariable String id) {
         sessionService.deleteSession(Long.parseLong(id));
-        return new ModelAndView("redirect:/admin/session/");
+        return new ModelAndView("redirect:/admin/session");
     }
 
 }

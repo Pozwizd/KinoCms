@@ -5,6 +5,7 @@
 <body>
 <div layout:fragment="content">
     <div class="container">
+        <!--Блок с баннерами-->
         <form id="MainBannerForm"
               class="p-2 form-block rounded-3 border">
             <div>
@@ -56,10 +57,11 @@
             <br>
         </form>
         <br/>
+        <!--Блок с фоновым баннером-->
         <div class="rounded-start border">
             <div class="d-flex flex-row justify-content-center">
                 <div></div>
-                <h4 class="fw-bold pt-3">На главной верх</h4>
+                <h4 class="fw-bold pt-3">Сквозной банер на заднем фоне</h4>
             </div>
             <div class="row">
                 <div class="col-1 align-items-center d-flex justify-content-center align-content-center">
@@ -118,13 +120,14 @@
             </div>
         </div>
         <br/>
+        <!--Блок с баннерами для акций и новостей-->
         <form id="BannerForNewsAndStocksForm"
               class="p-2 form-block rounded-3 border">
             <div>
                 <div>
                     <div class="d-flex flex-row justify-content-center">
                         <div></div>
-                        <h4 class="fw-bold pt-3">На главной верх</h4>
+                        <h4 class="fw-bold pt-3">На главной Новости Акции</h4>
                     </div>
                     <div class="d-flex flex-row justify-content-end">
                         <div class="form-check form-switch form-check-inline col-1 my-auto">
@@ -137,7 +140,6 @@
                     </div>
                 </div>
                 <div class="row row-cols-1 row-cols-md-4 g-4 mb-5" id="BannerForNewsAndStocksBlock">
-
                 </div>
                 <hr class="line"/>
                 <div class="col-12 d-flex justify-content-around">
@@ -162,22 +164,25 @@
                                 id="saveButtonBannerForNewsAndStocks">
                             Сохранить
                         </button>
+                        <p th:text="${projectPath}"></p>
                     </div>
                 </div>
             </div>
             <br>
         </form>
-        <script src="/assets/vendor/libs/jquery/jquery.js"></script>
-        <script src="/assets/vendor/libs/block-ui/block-ui.js"></script>
-
+        <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+        <script th:src="@{/assets/vendor/libs/block-ui/block-ui.js}"></script>
         <script>
+
+            let baseUrl = window.location.href;
             $(document).ready(function () {
                 showAllImages()
-            });
 
+            });
             function showAllImages() {
+                let url = baseUrl + 'showAllMainBanner/';
                 $.ajax({
-                    url: '/admin/banners/showAllMainBanner/',
+                    url: url,
                     method: 'GET',
                     dataType: 'JSON',
                     success: function (result) {
@@ -226,16 +231,17 @@
                 let file = element.files[0];
                 let formData = new FormData();
                 formData.append("file", file);
-
+                let url = baseUrl + 'editMainBanner/' + id;
                 $.ajax({
-                    url: '/admin/banners/editMainBanner/' + id,
+                    url: url,
                     method: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function (result) {
+                        let url2 = baseUrl + 'getMainBanner/' + id;
                         $.ajax({
-                            url: '/admin/banners/getMainBanner/' + id,
+                            url: url2,
                             method: 'GET',
                             success: function (result) {
                                 console.log("Загружено", result);
@@ -261,8 +267,9 @@
 
             function addBlockMainBanner() {
                 let index;
+                let url = baseUrl + 'createMainBanner/';
                 $.ajax({
-                    url: '/admin/banners/createMainBanner/',
+                    url: url,
                     method: 'GET',
                     dataType: 'JSON',
                     success: function (result) {
@@ -275,8 +282,9 @@
             function removeBlockMainBanner(element, id) {
                 let block = $('#MainBannerBlock' + id);
                 block.remove();
+                let url = baseUrl + 'deleteMainBanner/' + id;
                 $.ajax({
-                    url: '/admin/banners/deleteMainBanner/' + id,
+                    url: url,
                     method: 'GET',
                     dataType: 'JSON',
                     success: function (result) {
@@ -318,9 +326,9 @@
                     };
 
                     let jsonData = JSON.stringify(entity);
-
-                    $.ajax({
-                        url: '/admin/banners/editAllMainBanners/',
+                    let url = baseUrl + 'editAllMainBanners/';
+                        $.ajax({
+                        url: url,
                         type: 'POST',
                         data: jsonData,
                         contentType: 'application/json',
@@ -383,15 +391,15 @@
             }
         </script>
 
-
         <script>
             $(document).ready(function () {
                 drawBackgroundBanner()
             });
 
             function drawBackgroundBanner() {
+                let url = baseUrl + 'getBackgroundBanner/';
                 $.ajax({
-                    url: '/admin/banners/getBackgroundBanner/',
+                    url: url,
                     method: 'GET',
                     dataType: 'JSON',
                     success: function (result) {
@@ -414,16 +422,17 @@
                 let file = element.files[0];
                 let formData = new FormData();
                 formData.append("file", file);
-
+                let url = baseUrl + 'editBackgroundBanner/';
                 $.ajax({
-                    url: '/admin/banners/editBackgroundBanner/',
+                    url: url,
                     method: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function (result) {
+                        let url2 = baseUrl + 'getBackgroundBanner/';
                         $.ajax({
-                            url: '/admin/banners/getBackgroundBanner/',
+                            url: url2,
                             method: 'GET',
                             success: function (result) {
                                 console.log("Загружено", result);
@@ -446,9 +455,9 @@
             function removeBackgroundBanner() {
                 let block = $('#background-image');
                 block.remove();
-
+                let url = baseUrl + 'deleteBackgroundBanner/'
                 $.ajax({
-                    url: '/admin/banners/deleteBackgroundBanner/',
+                    url: url,
                     method: 'POST',
                     processData: false,
                     contentType: false,
@@ -465,8 +474,9 @@
                 $('input[name="backgroundImage"]').change(function () {
 
                     let radioButtonValue = $(this).val();
-                    $.ajax({
-                        url: '/admin/banners/changeBackgroundBannerBlock/',
+                    let url = baseUrl + 'changeBackgroundBannerBlock/'
+                        $.ajax({
+                        url: url,
                         type: 'POST',
                         data: {radioButton: radioButtonValue},
                         success: function (response) {
@@ -486,8 +496,9 @@
             });
 
             function showAllBannerForNewsAndStocks() {
+                let url = baseUrl + 'showAllBannerForNewsAndStocks/'
                 $.ajax({
-                    url: '/admin/banners/showAllBannerForNewsAndStocks/',
+                    url: url,
                     method: 'GET',
                     dataType: 'JSON',
                     success: function (result) {
@@ -536,16 +547,17 @@
                 let file = element.files[0];
                 let formData = new FormData();
                 formData.append("file", file);
-
-                $.ajax({
-                    url: '/admin/banners/editBannerForNewsAndStocks/' + id,
+                let url = baseUrl + 'editBannerForNewsAndStocks/' + id;
+                    $.ajax({
+                    url: url,
                     method: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function (result) {
+                        let url2 = baseUrl + 'getBannerForNewsAndStocks/' + id
                         $.ajax({
-                            url: '/admin/banners/getBannerForNewsAndStocks/' + id,
+                            url: url2,
                             method: 'GET',
                             success: function (result) {
                                 console.log("Загружено", result);
@@ -571,8 +583,9 @@
 
             function addBlockBannerForNewsAndStocks() {
                 let index;
+                let url = baseUrl + 'createBannerForNewsAndStocks/';
                 $.ajax({
-                    url: '/admin/banners/createBannerForNewsAndStocks/',
+                    url: url,
                     method: 'GET',
                     dataType: 'JSON',
                     success: function (result) {
@@ -585,8 +598,9 @@
             function removeBlockBannerForNewsAndStocks(element, id) {
                 let block = $('#BannerForNewsAndStocksBlock' + id);
                 block.remove();
+                let url = baseUrl + 'deleteBannerForNewsAndStocks/' + id
                 $.ajax({
-                    url: '/admin/banners/deleteBannerForNewsAndStocks/' + id,
+                    url: url,
                     method: 'GET',
                     dataType: 'JSON',
                     success: function (result) {
@@ -624,9 +638,9 @@
                     };
 
                     let jsonData = JSON.stringify(entity);
-
+                    let url = baseUrl + 'editAllBannerForNewsAndStocks/';
                     $.ajax({
-                        url: '/admin/banners/editAllBannerForNewsAndStocks/',
+                        url: url,
                         type: 'POST',
                         data: jsonData,
                         contentType: 'application/json',

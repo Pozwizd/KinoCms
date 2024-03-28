@@ -8,6 +8,7 @@ import spacelab.kinocms.model.ImagesEntity.ImageNews;
 import spacelab.kinocms.model.News;
 import spacelab.kinocms.repository.ImageNewsRepository;
 import spacelab.kinocms.service.ImageNewsService;
+import spacelab.kinocms.service.NewsService;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class ImageNewsServiceImp implements ImageNewsService {
 
     private final ImageNewsRepository imageNewsRepository;
+    private final NewsService newsService;
     private static final Logger logger = LogManager.getLogger(ImageNewsServiceImp.class);
 
 
@@ -32,9 +34,10 @@ public class ImageNewsServiceImp implements ImageNewsService {
     }
 
     @Override
-    public ImageNews getLastImageNews() {
+    public ImageNews getLastImageNews(String id) {
+
         logger.info("Get last image news");
-        return imageNewsRepository.findAll().get(imageNewsRepository.findAll().size() - 1);
+        return imageNewsRepository.findImageNewsByNewsOrderByIdDesc(newsService.getNews(Long.parseLong(id)));
     }
 
     @Override

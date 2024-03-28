@@ -127,6 +127,7 @@
                             </div>
                             <script src="/assets/vendor/libs/jquery/jquery.js"></script>
                             <script>
+                                let baseUrl = window.location.href;
                                 $(document).ready(function () {
                                     showMainImage();
                                     showAllImages();
@@ -134,8 +135,9 @@
 
 
                                 showMainImage = () => {
+                                    let url = baseUrl + '/showMainPage/' + [[${film.id}]];
                                     $.ajax({
-                                        url: '/admin/films/editFilm/showMainPage/' + [[${film.id}]],
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'Text',
                                         success: function (result) {
@@ -159,9 +161,9 @@
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-
+                                    let url = baseUrl + '/editMainPage/' + [[${film.id}]]
                                     $.ajax({
-                                        url: '/admin/films/editFilm/editMainPage/' + [[${film.id}]],
+                                        url: url,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
@@ -182,8 +184,9 @@
 // Получение ближайшего элемента img от текущего элемента
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
+                                    let url = baseUrl + '/deleteMainPage/' + [[${film.id}]]
                                     $.ajax({
-                                        url: '/admin/films/editFilm/deleteMainPage/' + [[${film.id}]],
+                                        url: url,
                                         method: 'POST',
                                         processData: false,
                                         contentType: false,
@@ -199,8 +202,9 @@
                                 }
 
                                 showAllImages = () => {
+                                    let url = baseUrl + '/showAllImages/' + [[${film.id}]];
                                     $.ajax({
-                                        url: '/admin/films/editFilm/showAllImages/' + [[${film.id}]],
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -243,8 +247,9 @@
                                 // Добавляем картинку
                                 const addBlock = () => {
                                     let index;
+                                    let url = baseUrl + '/createNewImage/' + [[${film.id}]];
                                     $.ajax({
-                                        url: '/admin/films/editFilm/createNewImage/' + [[${film.id}]],
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -279,17 +284,18 @@
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-
+                                    let url = baseUrl + '/editImageFilm/' + id;
                                     $.ajax({
-                                        url: '/admin/films/editFilm/editImageFilm/' + id,
+                                        url: url,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
                                         contentType: false,
                                         success: function (result) {
                                             console.log("Выгрузка файла прошла успешно");
+                                            let url2 = baseUrl + '/getImage/' + id;
                                             $.ajax({
-                                                url: '/admin/films/editFilm/getImage/' + id,
+                                                url: url2,
                                                 method: 'GET',
                                                 success: function (result) {
                                                     console.log("Загрузка файла прошла успешно");
@@ -317,8 +323,9 @@
                                 function removeBlock(element, id) {
                                     let block = element.closest('.col-3');
                                     block.remove();
-                                    $.ajax({
-                                        url: '/admin/films/editFilm/deleteImage/' + id,
+                                    let url = baseUrl + '/deleteImage/' + id;
+                                        $.ajax({
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {

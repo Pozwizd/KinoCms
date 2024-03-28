@@ -13,7 +13,7 @@ public interface ImageNewsService {
 
     ImageNews getImageNews(long id);
 
-    ImageNews getLastImageNews();
+    ImageNews getLastImageNews(String id);
 
     List<ImageNews> getAllImagesNews();
 

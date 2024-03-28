@@ -1,3 +1,4 @@
+let baseUrl = window.location.href;
 $(document).ready(function () {
     showAllImages();
     showLogo();
@@ -9,8 +10,9 @@ $(document).ready(function () {
 });
 // Logo
 showLogo = () => {
+    let url = baseUrl + '/showLogoPath/' + window.cinemaId;
     $.ajax({
-        url: '/admin/cinema/editCinema/showLogoPath/' + window.cinemaId,
+        url: url,
         method: 'GET',
         dataType: "Text",
         success: function (result) {
@@ -34,9 +36,9 @@ function changeLogo(element) {
     let file = element.files[0];
     let formData = new FormData();
     formData.append("file", file);
-
+    let url = baseUrl + '/editLogoPath/' + window.cinemaId
     $.ajax({
-        url: '/admin/cinema/editCinema/editLogoPath/' + window.cinemaId,
+        url: url,
         method: 'POST',
         data: formData,
         processData: false,
@@ -56,8 +58,10 @@ function changeLogo(element) {
 function deleteLogo(element) {
     let nearestImg = $(element).closest('#logoBlock').find('#logoImage');
     nearestImg.remove();
-    $.ajax({
-        url: '/admin/cinema/editCinema/deleteLogoPath/' + window.cinemaId,
+    let url = baseUrl + '/deleteLogoPath/' + window.cinemaId
+        $.ajax({
+
+        url: url,
         method: 'POST',
         processData: false,
         contentType: false,
@@ -74,8 +78,9 @@ function deleteLogo(element) {
 // TopBanner
 
 showTopBanner = () => {
+    let url = baseUrl + '/showTopBanner/'
     $.ajax({
-        url: '/admin/cinema/editCinema/showTopBanner/' + window.cinemaId,
+        url: url,
         method: 'GET',
         dataType: 'Text',
         success: function (result) {
@@ -98,9 +103,9 @@ function changeTopBanner(element) {
     let file = element.files[0];
     let formData = new FormData();
     formData.append("file", file);
-
+    let url = baseUrl + '/editTopBanner/' + window.cinemaId
     $.ajax({
-        url: '/admin/cinema/editCinema/editTopBanner/' + window.cinemaId,
+        url: url,
         method: 'POST',
         data: formData,
         processData: false,
@@ -120,8 +125,9 @@ function changeTopBanner(element) {
 function deleteTopBanner(element) {
     let nearestImg = $(element).closest('#topBannerBlock').find('#topBannerImage');
     nearestImg.remove();
+    let url = baseUrl + '/deleteTopBanner/' + window.cinemaId
     $.ajax({
-        url: '/admin/cinema/editCinema/deleteTopBanner/' + window.cinemaId,
+        url: url,
         method: 'POST',
         processData: false,
         contentType: false,
@@ -136,8 +142,9 @@ function deleteTopBanner(element) {
 }
 
 showAllImages = () => {
-    $.ajax({
-        url: '/admin/cinema/editCinema/showAllImages/' + window.cinemaId,
+    let url = baseUrl + '/showAllImages/' + window.cinemaId
+        $.ajax({
+        url: url,
         method: 'GET',
         dataType: 'JSON',
         success: function (result) {
@@ -178,8 +185,9 @@ function drawImages(result) {
 
 const addBlock = () => {
     let index;
+    let url = baseUrl + '/createNewImage/' + window.cinemaId
     $.ajax({
-        url: '/admin/cinema/editCinema/createNewImage/' + window.cinemaId,
+        url: url,
         method: 'GET',
         dataType: 'JSON',
         success: function (result) {
@@ -214,17 +222,18 @@ function editImagePage(element, id) {
     let file = element.files[0];
     let formData = new FormData();
     formData.append("file", file);
-
+    let url = baseUrl + '/editImageCinema/' + id
     $.ajax({
-        url: '/admin/cinema/editCinema/editImageCinema/' + id,
+        url: url,
         method: 'POST',
         data: formData,
         processData: false,
         contentType: false,
         success: function (result) {
             console.log("Выгрузка файла прошла успешно");
+            let url2 = baseUrl + '/getImage/' + id
             $.ajax({
-                url: '/admin/cinema/editCinema/getImage/' + id,
+                url: url2,
                 method: 'GET',
                 success: function (result) {
                     console.log("Загрузка файла прошла успешно");
@@ -250,8 +259,9 @@ function editImagePage(element, id) {
 function removeBlock(element, id) {
     let block = element.closest('.col-3');
     block.remove();
+    let url = baseUrl + '/deleteImage/' + id
     $.ajax({
-        url: '/admin/cinema/editCinema/deleteImage/' + id,
+        url: url,
         method: 'GET',
         dataType: 'JSON',
         success: function (result) {

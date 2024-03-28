@@ -1,12 +1,14 @@
 package spacelab.kinocms.controller.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.ImagesEntity.ImageStock;
 import spacelab.kinocms.model.Stock;
 import spacelab.kinocms.service.ImageStockService;
@@ -22,18 +24,13 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("admin/stocks")
+@AllArgsConstructor
 public class StockController {
 
-    private static final String UPLOAD_FOLDER = Paths.get("images").toFile().getAbsolutePath() + "/";
-
     private final StockService stockService;
-
+    private final UploadFile uploadFile;
     private final ImageStockService imageStockService;
 
-    public StockController(StockService stockService, ImageStockService imageStockService) {
-        this.stockService = stockService;
-        this.imageStockService = imageStockService;
-    }
 
     @GetMapping({"/", ""})
     public ModelAndView index(Model model) {
@@ -85,98 +82,71 @@ public class StockController {
 
 //   Ajax  ====================================================================
 
-    @GetMapping("/editStock/showMainPage/{id}")
+    @GetMapping("/editStock/{nothing}/showMainPage/{id}")
     @ResponseBody
-    public Stock showMainImageStock(Model model, @PathVariable long id) {
+    public Stock showMainImageStock(Model model, @PathVariable long id, @PathVariable String nothing) {
         return stockService.getStock(id);
     }
 
-    @PostMapping("/editStock/editMainPage/{id}")
+    @PostMapping("/editStock/{nothing}/editMainPage/{id}")
     @ResponseBody
     public ResponseEntity<String> editMainImageStock(@RequestPart("file") MultipartFile file,
-                                                     @PathVariable Long id) {
+                                                     @PathVariable Long id, @PathVariable String nothing) {
 
         Stock stock = stockService.getStock(id);
-        if (stock.getMainImage() != null) {
-            String filePath = Paths.get("").toFile().getAbsolutePath() + stock.getMainImage();
-            File oldFile = new File(filePath);
-            oldFile.delete();
-        }
-        String fileName = file.getOriginalFilename();
-        try {
-            file.transferTo(new File(UPLOAD_FOLDER + fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        stock.setMainImage("/images/" + fileName);
+
+        stock.setMainImage(uploadFile.uploadFile(file, stock.getMainImage()));
         stockService.saveStock(stock);
 
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
-    @PostMapping("/editStock/deleteMainPage/{id}")
+    @PostMapping("/editStock/{nothing}/deleteMainPage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteImageStock(Model model, @PathVariable long id) {
+    public ResponseEntity<String> deleteImageStock(Model model, @PathVariable long id, @PathVariable String nothing) {
         Stock stock = stockService.getStock(id);
-        if (stock.getMainImage() != null) {
-            String filePath = Paths.get("").toFile().getAbsolutePath() + stock.getMainImage();
-            File oldFile = new File(filePath);
-            oldFile.delete();
-        }
+        uploadFile.deleteFile(stock.getMainImage());
         stock.setMainImage(null);
         stockService.saveStock(stock);
-        model.addAttribute("title", "Редактирование страницы " + stock.getName());
-        model.addAttribute("stockActive", "pages");
-        model.addAttribute("stockCommon", stock);
         return ResponseEntity.ok("Файл успешно удален");
     }
 
-    @GetMapping("/editStock/showAllImages/{id}")
+    @GetMapping("/editStock/{nothing}/showAllImages/{id}")
     @ResponseBody
-    public List<ImageStock> showAllImages(@PathVariable String id) {
+    public List<ImageStock> showAllImages(@PathVariable String id, @PathVariable String nothing) {
         return imageStockService.getAllImagesStockByStock(stockService.getStock(Long.parseLong(id)));
     }
 
-    @GetMapping("/editStock/getImage/{id}")
+    @GetMapping("/editStock/{nothing}/getImage/{id}")
     @ResponseBody
-    public ImageStock getImage(@PathVariable String id) {
+    public ImageStock getImage(@PathVariable String id, @PathVariable String nothing) {
         return imageStockService.getImageStock(Long.parseLong(id));
     }
 
-    @GetMapping("/editStock/deleteImage/{id}")
+    @GetMapping("/editStock/{nothing}/deleteImage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteImage(@PathVariable String id) {
+    public ResponseEntity<String> deleteImage(@PathVariable String id, @PathVariable String nothing) {
         imageStockService.deleteImageStock(Long.parseLong(id));
         return ResponseEntity.ok("Image deleted successfully");
     }
 
-    @GetMapping("/editStock/createNewImage/{id}")
+    @GetMapping("/editStock/{nothing}/createNewImage/{id}")
     @ResponseBody
-    public ImageStock createImageStock(@PathVariable String id) {
+    public ImageStock createImageStock(@PathVariable String id, @PathVariable String nothing) {
         ImageStock imageStock = new ImageStock();
         imageStock.setStock(stockService.getStock(Long.parseLong(id)));
         imageStockService.saveImageStock(imageStock);
         return imageStockService.getLastImageStock();
     }
 
-    @PostMapping("/editStock/editImageStock/{id}")
+    @PostMapping("/editStock/{nothing}/editImageStock/{id}")
     @ResponseBody
     public ResponseEntity<String> editImageStock(@RequestPart("file") MultipartFile file,
-                                                 @PathVariable Long id) {
+                                                 @PathVariable Long id, @PathVariable String nothing) {
 
         ImageStock imageStock = imageStockService.getImageStock(id);
-        if (imageStock.getUrl() != null) {
-            String filePath = Paths.get("").toFile().getAbsolutePath() + imageStock.getUrl();
-            File oldFile = new File(filePath);
-            oldFile.delete();
-        }
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        try {
-            file.transferTo(new File(UPLOAD_FOLDER + fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        imageStock.setUrl("/images/" + fileName);
+
+        imageStock.setUrl(uploadFile.uploadFile(file, imageStock.getUrl()));
         imageStockService.saveImageStock(imageStock);
 
         return ResponseEntity.ok("Файл успешно загружен");

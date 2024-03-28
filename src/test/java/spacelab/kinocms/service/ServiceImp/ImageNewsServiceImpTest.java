@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import spacelab.kinocms.model.ImagesEntity.ImageNews;
 import spacelab.kinocms.model.News;
 import spacelab.kinocms.repository.ImageNewsRepository;
+import spacelab.kinocms.service.NewsService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,8 @@ class ImageNewsServiceImpTest {
 
     @Mock
     private ImageNewsRepository imageNewsRepository;
-
+    @Mock
+    private NewsService newsService;
     @InjectMocks
     private ImageNewsServiceImp imageNewsService;
 
@@ -50,12 +52,25 @@ class ImageNewsServiceImpTest {
 
     @Test
     public void getLastImageNewsTest() {
+//        Retest
+        News news = new News();
+        ImageNews imageNews = new ImageNews();
+        ImageNews imageNews2 = new ImageNews();
+        news.setId(1L);
+        imageNews.setId(1L);
+        imageNews2.setId(2L);
+        imageNews.setNews(news);
+        imageNews2.setNews(news);
         List<ImageNews> imageNewsList = new ArrayList<>();
-        ImageNews expectedImageNews = new ImageNews();
-        imageNewsList.add(expectedImageNews);
-        when(imageNewsRepository.findAll()).thenReturn(imageNewsList);
-        ImageNews actualImageNews = imageNewsService.getLastImageNews();
-        assertEquals(expectedImageNews, actualImageNews);
+        imageNewsList.add(imageNews);
+        imageNewsList.add(imageNews2);
+        when(newsService.getNews(1L)).thenReturn(news);
+        when(imageNewsRepository.findImageNewsByNewsOrderByIdDesc(news)).thenReturn(imageNews2);
+        ImageNews actualImageNews = imageNewsService.getLastImageNews("1");
+        verify(imageNewsRepository).findImageNewsByNewsOrderByIdDesc(news);
+        assertEquals(imageNews2, actualImageNews);
+
+
     }
 
     @Test

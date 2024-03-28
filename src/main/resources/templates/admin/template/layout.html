@@ -66,61 +66,61 @@
             <ul class="menu-inner py-1">
                 <!-- Page -->
                 <li class="menu-item" th:classappend="${pageActive == 'statistics' ? 'active' : ''}">
-                    <a href="/admin" class="menu-link active">
+                    <a th:href="@{/admin}" class="menu-link active">
                         <i class="menu-icon tf-icons ti ti-smart-home"></i>
                         <div>Статистика</div>
                     </a>
                 </li>
                 <li class="menu-item" th:classappend="${pageActive == 'banners' ? 'active' : ''}">
-                    <a href="/admin/banners/" class="menu-link" >
+                    <a th:href="@{/admin/banners/}" class="menu-link" >
                         <i class="menu-icon tf-icons ti ti-app-window"></i>
                         <div>Баннера/Слайдеры</div>
                     </a>
                 </li>
                 <li class="menu-item" th:classappend="${pageActive == 'film' ? 'active' : ''}">
-                    <a href="/admin/films" class="menu-link">
+                    <a th:href="@{/admin/films}" class="menu-link">
                         <i class="menu-icon tf-icons ti ti-app-window"></i>
                         <div>Фильмы</div>
                     </a>
                 </li>
                 <li class="menu-item" th:classappend="${pageActive == 'cinema' ? 'active' : ''}">
-                    <a href="/admin/cinema" class="menu-link">
+                    <a th:href="@{/admin/cinema}" class="menu-link">
                         <i class="menu-icon tf-icons ti ti-app-window"></i>
                         <div>Кинотеатры</div>
                     </a>
                 </li>
                 <li class="menu-item" th:classappend="${pageActive == 'session' ? 'active' : ''}">
-                    <a href="/admin/session" class="menu-link">
+                    <a th:href="@{/admin/session}" class="menu-link">
                         <i class="menu-icon tf-icons ti ti-app-window"></i>
                         <div>Расписание</div>
                     </a>
                 </li>
                 <li class="menu-item" th:classappend="${pageActive == 'news' ? 'active' : ''}">
-                    <a href="/admin/news" class="menu-link">
+                    <a th:href="@{/admin/news}" class="menu-link">
                         <i class="menu-icon tf-icons ti ti-app-window"></i>
                         <div>Новости</div>
                     </a>
                 </li>
                 <li class="menu-item" th:classappend="${pageActive == 'Stocks' ? 'active' : ''}">
-                    <a href="/admin/stocks" class="menu-link">
+                    <a th:href="@{/admin/stocks}" class="menu-link">
                         <i class="menu-icon tf-icons ti ti-app-window"></i>
                         <div>Акции</div>
                     </a>
                 </li>
                 <li class="menu-item" th:classappend="${pageActive == 'pages' ? 'active' : ''}">
-                    <a href="/admin/pages"  class="menu-link">
+                    <a th:href="@{/admin/pages}"  class="menu-link">
                         <i class="menu-icon tf-icons ti ti-app-window"></i>
                         <div>Страницы</div>
                     </a>
                 </li>
                 <li class="menu-item" th:classappend="${pageActive == 'users' ? 'active' : ''}">
-                    <a href="/admin/users" class="menu-link">
+                    <a th:href="@{/admin/users}" class="menu-link">
                         <i class="menu-icon tf-icons ti ti-app-window"></i>
                         <div>Пользователи</div>
                     </a>
                 </li>
                 <li class="menu-item" th:classappend="${pageActive == 'distribution' ? 'active' : ''}">
-                    <a href="/admin/distribution" class="menu-link">
+                    <a th:href="@{/admin/distribution}" class="menu-link">
                         <i class="menu-icon tf-icons ti ti-app-window"></i>
                         <div>Рассылка</div>
                     </a>
@@ -155,7 +155,7 @@
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                 <div class="avatar avatar-online">
-                                    <img src="/assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
+                                    <img th:src="@{/assets/img/avatars/1.png}" alt class="h-auto rounded-circle" />
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -168,8 +168,8 @@
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <span class="fw-semibold d-block">John Doe</span>
-                                                <small class="text-muted">Admin</small>
+                                                <span class="fw-semibold d-block" th:text="${user.name}">John Doe</span>
+                                                <small class="text-muted" th:text="${user.role}">Admin</small>
                                             </div>
                                         </div>
                                     </a>
@@ -236,14 +236,28 @@
                                 <script>
                                     document.write(new Date().getFullYear());
                                 </script>
-                                , made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="fw-semibold">Pixinvent</a>
+                                , Разработано SpaceLab
                             </div>
                             <div>
+                                <a href="https://themeforest.net/licenses/standard" class="footer-link me-4"
+                                   target="_blank"
+                                >License</a
+                                >
+                                <a href="https://1.envato.market/pixinvent_portfolio" target="_blank"
+                                   class="footer-link me-4"
+                                >More Themes</a
+                                >
+
                                 <a
                                         href="https://pixinvent.com/demo/vuexy-html-bootstrap-admin-template/documentation/"
                                         target="_blank"
                                         class="footer-link me-4"
                                 >Documentation</a
+                                >
+
+                                <a href="https://pixinvent.ticksy.com/" target="_blank"
+                                   class="footer-link d-none d-sm-inline-block"
+                                >Support</a
                                 >
                             </div>
                         </div>

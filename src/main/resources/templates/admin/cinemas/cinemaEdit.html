@@ -31,19 +31,6 @@
                             <li class="nav-item">
                                 <button
                                         type="button"
-                                        class="nav-link"
-                                        role="tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#navs-pills-within-card-link"
-                                        aria-controls="navs-pills-within-card-link"
-                                        aria-selected="false"
-                                >
-                                    Link
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button
-                                        type="button"
                                         class="nav-link disabled"
                                         role="tab"
                                         data-bs-toggle="tab"
@@ -159,11 +146,11 @@
                             <div class="col-12 text-center">
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
-                            <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+                            <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
                             <script>
                                 window.cinemaId = [[${cinema.id}]];
                             </script>
-                            <script src="/customAssets/js/cinemaEdit.js"></script>
+                            <script th:src="@{/customAssets/js/cinemaEdit.js}"></script>
 
 
                         </div>
@@ -213,8 +200,7 @@
                             <br>
                             <hr/>
                             <div class="d-flex flex-row justify-content-center align-items-center">
-                                <a href="/admin/cinema/createHall"
-                                   th:href="@{/admin/cinema/createHall/{id}(id=${cinema.id})}"
+                                <a th:href="@{/admin/cinema/createHall/{id}(id=${cinema.id})}"
                                    class="btn btn-primary">Создать Зал</a>
                             </div>
                         </div>
@@ -278,13 +264,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="navs-pills-within-card-link" role="tabpanel">
-                        <h4 class="card-title">Special link title</h4>
-                        <p class="card-text">
-                            With supporting text below as a natural lead-in to additional content.
-                        </p>
-                        <a href="javascript:void(0)" class="btn btn-secondary">Go somewhere</a>
-                    </div>
+
                 </div>
             </div>
         </form>

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.Film;
 import spacelab.kinocms.repository.FilmRepository;
 import spacelab.kinocms.service.FilmService;
@@ -18,6 +19,7 @@ import java.util.List;
 public class FilmServiceImp implements FilmService {
 
     private final FilmRepository filmRepository;
+    private final UploadFile uploadFile;
     private static final Logger logger = LogManager.getLogger(FilmServiceImp.class);
 
 
@@ -47,8 +49,13 @@ public class FilmServiceImp implements FilmService {
 
     @Override
     public void deleteFilm(Long id) {
+        Film film = filmRepository.findById(id).orElse(null);
+        if (film != null) {
+            uploadFile.deleteFile(film.getMainImage());
+            film.getImagesFilm().forEach(imageFilm -> uploadFile.deleteFile(imageFilm.getUrl()));
+            filmRepository.deleteById(id);
+        }
         logger.info("Delete film by id: " + id);
-        filmRepository.deleteById(id);
     }
 
     @Override

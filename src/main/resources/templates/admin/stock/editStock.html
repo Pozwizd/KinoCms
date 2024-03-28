@@ -114,7 +114,7 @@
                                             <button
                                                     type="button"
                                                     class="btn btn-danger"
-                                            onclick="deleteMainImage(this)">
+                                                    onclick="deleteMainImage(this)">
                                                 Удалить
                                             </button>
                                         </a>
@@ -132,8 +132,8 @@
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
                             <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
-                            <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js}"></script>
                             <script>
+                                let baseUrl = window.location.href;
                                 $(document).ready(function () {
                                     showMainImage();
                                     showAllImages();
@@ -142,9 +142,11 @@
                                 });
 
 
-                                showMainImage = () =>{
+                                showMainImage = () => {
+                                    let url = baseUrl + '/showMainPage/' + [[${stock.id}]];
+                                    console.log(url)
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/showMainPage/' + [[${stock.id}]],
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -158,19 +160,19 @@
                                                 ' max-height: 200px;">').appendTo('#mainImageBlock');
 
                                         },
-                                        error: function (){
+                                        error: function () {
                                             console.log('error Main page');
                                         }
                                     })
                                 }
 
-                                function changeMainPage(element){
+                                function changeMainPage(element) {
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-
+                                    let url = baseUrl + '/editMainPage/' + [[${stock.id}]];
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/editMainPage/' + [[${stock.id}]],
+                                        url: url,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
@@ -187,11 +189,12 @@
                                     });
                                 }
 
-                                function deleteMainImage(element){
+                                function deleteMainImage(element) {
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
+                                    let url = baseUrl + '/deleteMainPage/' + [[${stock.id}]];
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/deleteMainPage/' + [[${stock.id}]],
+                                        url: url,
                                         method: 'POST',
                                         processData: false,
                                         contentType: false,
@@ -199,16 +202,17 @@
                                             console.log(result);
                                             showMainImage();
                                         },
-                                        error: function (){
-                                          console.log("Error delete mainPage")
+                                        error: function () {
+                                            console.log("Error delete mainPage")
                                         }
                                     })
 
                                 }
 
                                 showAllImages = () => {
+                                    let url = baseUrl + '/showAllImages/' + [[${stock.id}]];
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/showAllImages/' + [[${stock.id}]],
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -217,6 +221,7 @@
                                         }
                                     })
                                 }
+
                                 function drawImages(result) {
                                     for (const data of result) {
                                         $('<div class="col-3">' +
@@ -224,7 +229,7 @@
                                             '<img src="' + (data.url != null ? data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
                                             ' id="imagePage' + data.id + '" ' +
                                             'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                            '<label class="form-label" id="imagePageEdit' +data.id+'" style="max-width: 250px;">' +
+                                            '<label class="form-label" id="imagePageEdit' + data.id + '" style="max-width: 250px;">' +
                                             '<input type="file" ' +
                                             'class="form-control" ' +
                                             'accept="image/png, image/jpeg" onchange="editImagePage(this,' + data.id + ')" multiple/>' +
@@ -242,10 +247,12 @@
 
                                     }
                                 }
+
                                 const addBlock = () => {
                                     let index;
+                                    let url = baseUrl + '/createNewImage/' + [[${stock.id}]];
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/createNewImage/' + [[${stock.id}]],
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -253,12 +260,12 @@
                                             $('<div class="col-3">' +
                                                 '<div class="d-flex flex-column" style="max-width: 100%;">' +
                                                 '<img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"' +
-                                                ' id="imagePage"'+ result.id +' ' +
+                                                ' id="imagePage"' + result.id + ' ' +
                                                 'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                                '<label class="form-label"  id="imagePageEdit'+ result.id +'" style="max-width: 250px;">' +
+                                                '<label class="form-label"  id="imagePageEdit' + result.id + '" style="max-width: 250px;">' +
                                                 '<input type="file" ' +
                                                 'class="form-control"' +
-                                                'accept="image/png, image/jpeg" onchange="editImagePage(this,'+ result.id +')" multiple/>' +
+                                                'accept="image/png, image/jpeg" onchange="editImagePage(this,' + result.id + ')" multiple/>' +
                                                 '</label>' +
                                                 '<label class="form-label" style="max-width: 250px;">' +
                                                 '<button style="width: 250px;" ' +
@@ -279,17 +286,18 @@
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-
+                                    let url = baseUrl + '/editImageStock/' + id;
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/editImageStock/' + id,
+                                        url: url,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
                                         contentType: false,
                                         success: function (result) {
                                             console.log("Выгрузка файла прошла успешно");
+                                            let url2 = baseUrl + '/getImage/' + id;
                                             $.ajax({
-                                                url: '/admin/stocks/editStock/getImage/' + id,
+                                                url: url2,
                                                 method: 'GET',
                                                 success: function (result) {
                                                     console.log("Загрузка файла прошла успешно");
@@ -315,8 +323,9 @@
                                 function removeBlock(element, id) {
                                     let block = element.closest('.col-3');
                                     block.remove();
+                                    let url = baseUrl + '/deleteImage/' + id;
                                     $.ajax({
-                                        url: '/admin/stocks/editStock/deleteImage/' + id,
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {

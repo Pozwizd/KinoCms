@@ -1,12 +1,14 @@
 package spacelab.kinocms.controller.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.ImagesEntity.ImageNews;
 import spacelab.kinocms.model.News;
 import spacelab.kinocms.service.ImageNewsService;
@@ -22,17 +24,14 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("admin/news")
+@AllArgsConstructor
 public class NewsController {
 
-    private static final String UPLOAD_FOLDER = Paths.get("images").toFile().getAbsolutePath() + "/";
-
     private final NewsService newsService;
+    private final UploadFile uploadFile;
     private final ImageNewsService imageNewsService;
 
-    public NewsController(NewsService newsService, ImageNewsService imageNewsService) {
-        this.newsService = newsService;
-        this.imageNewsService = imageNewsService;
-    }
+
 
     @GetMapping({"/", ""})
     public ModelAndView index(Model model) {
@@ -83,101 +82,72 @@ public class NewsController {
 
 // Ajax ====================================================================
 
-    @GetMapping("/editNews/showMainPage/{id}")
+    @GetMapping("/editNews/{id}/showMainPage/")
     @ResponseBody
-    public String showMainImageNews(Model model, @PathVariable long id) {
-        News news = newsService.getNews(id);
-        return news.getMainImage();
+    public News showMainImageNews(Model model, @PathVariable long id) {
+        return newsService.getNews(id);
     }
 
-    @PostMapping("/editNews/editMainPage/{id}")
+    @PostMapping("/editNews/{id}/editMainPage/")
     @ResponseBody
     public ResponseEntity<String> editMainImageNews(@RequestPart("file") MultipartFile file,
                                                     @PathVariable Long id) {
 
         News news = newsService.getNews(id);
-        if (news.getMainImage() != null) {
-            String filePath = Paths.get("").toFile().getAbsolutePath() + news.getMainImage();
-            File oldFile = new File(filePath);
-            oldFile.delete();
-        }
-        String fileName = file.getOriginalFilename();
-        try {
-            file.transferTo(new File(UPLOAD_FOLDER + fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        news.setMainImage("/images/" + fileName);
+        news.setMainImage(uploadFile.uploadFile(file, news.getMainImage()));
         newsService.saveNews(news);
 
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
-    @PostMapping("/editNews/deleteMainPage/{id}")
+    @PostMapping("/editNews/{id}/deleteMainPage/")
     @ResponseBody
     public ResponseEntity<String> deleteImageNews(Model model, @PathVariable long id) {
         News news = newsService.getNews(id);
-        if (news.getMainImage() != null) {
-            String filePath = Paths.get("").toFile().getAbsolutePath() + news.getMainImage();
-            File oldFile = new File(filePath);
-            oldFile.delete();
-        }
+        uploadFile.deleteFile(news.getMainImage());
         news.setMainImage(null);
         newsService.saveNews(news);
-        model.addAttribute("title", "Редактирование новости " + news.getName());
-        model.addAttribute("newsActive", "news");
-        model.addAttribute("newsCommon", news);
         return ResponseEntity.ok("Файл успешно удален");
     }
 
-    @GetMapping("/editNews/showAllImages/{id}")
+    @GetMapping("/editNews/{id}/showAllImages/")
     @ResponseBody
     public List<ImageNews> showAllImages(@PathVariable String id) {
-        List<ImageNews> images = imageNewsService.getAllImagesNewsByNews(newsService.getNews(Long.parseLong(id)));
-        System.out.println(images);
-        return images;
+        return imageNewsService.getAllImagesNewsByNews(newsService.getNews(Long.parseLong(id)));
     }
 
-    @GetMapping("/editNews/getImage/{id}")
+    @GetMapping("/editNews/{nothing}/getImage/{id}")
     @ResponseBody
-    public ImageNews getImage(@PathVariable String id) {
+    public ImageNews getImage(@PathVariable String id, @PathVariable String nothing) {
         return imageNewsService.getImageNews(Long.parseLong(id));
     }
 
-    @GetMapping("/editNews/deleteImage/{id}")
+    @GetMapping("/editNews/{nothing}/deleteImage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteImage(@PathVariable String id) {
+    public ResponseEntity<String> deleteImage(@PathVariable String id, @PathVariable String nothing) {
+        uploadFile.deleteFile(imageNewsService.getImageNews(Long.parseLong(id)).getUrl());
         imageNewsService.deleteImageNews(Long.parseLong(id));
         return ResponseEntity.ok("Image deleted successfully");
     }
 
-    @GetMapping("/editNews/createNewImage/{id}")
+    @GetMapping("/editNews/{id}/createNewImage/")
     @ResponseBody
-    public ImageNews createImageNews(@PathVariable String id) {
+    public ImageNews createImageNews(@PathVariable String id, @PathVariable String nothing) {
         ImageNews imageNews = new ImageNews();
         imageNews.setNews(newsService.getNews(Long.parseLong(id)));
         imageNewsService.saveImageNews(imageNews);
-        return imageNewsService.getLastImageNews();
+        imageNews = imageNewsService.getLastImageNews(id);
+        return imageNews;
     }
 
-    @PostMapping("/editNews/editImageNews/{id}")
+    @PostMapping("/editNews/{nothing}/editImageNews/{id}")
     @ResponseBody
     public ResponseEntity<String> editImageNews(@RequestPart("file") MultipartFile file,
                                                 @PathVariable Long id) {
 
+
         ImageNews imageNews = imageNewsService.getImageNews(id);
-        if (imageNews.getUrl() != null) {
-            String filePath = Paths.get("").toFile().getAbsolutePath() + imageNews.getUrl();
-            File oldFile = new File(filePath);
-            oldFile.delete();
-        }
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        try {
-            file.transferTo(new File(UPLOAD_FOLDER + fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        imageNews.setUrl("/images/" + fileName);
+        imageNews.setUrl(uploadFile.uploadFile(file, imageNews.getUrl()));
         imageNewsService.saveImageNews(imageNews);
 
         return ResponseEntity.ok("Файл успешно загружен");

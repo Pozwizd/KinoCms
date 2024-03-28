@@ -7,7 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.Film;
+import spacelab.kinocms.model.ImagesEntity.ImageFilm;
 import spacelab.kinocms.repository.FilmRepository;
 
 import java.sql.Date;
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +28,8 @@ class FilmServiceImpTest {
 
     @Mock
     private FilmRepository filmRepository;
-
+    @Mock
+    private UploadFile uploadFile;
     @InjectMocks
     private FilmServiceImp filmService;
 
@@ -70,9 +74,26 @@ class FilmServiceImpTest {
 
     @Test
     public void deleteFilmTest() {
-        Long filmId = 1L;
+
+        long filmId = 1L;
+        Film film = new Film();
+        film.setId(filmId);
+        film.setMainImage("main-image.jpg");
+        ImageFilm imageFilm1 = new ImageFilm();
+        imageFilm1.setUrl("image1.jpg");
+        ImageFilm imageFilm2 = new ImageFilm();
+        imageFilm2.setUrl("image2.jpg");
+        List<ImageFilm> imageFilms = Arrays.asList(imageFilm1, imageFilm2);
+        film.setImagesFilm(imageFilms);
+
+        when(filmRepository.findById(filmId)).thenReturn(Optional.of(film));
+        // Act
         filmService.deleteFilm(filmId);
-        verify(filmRepository).deleteById(filmId);
+        // Assert
+        verify(filmRepository, times(1)).findById(filmId);
+        verify(uploadFile, times(1)).deleteFile(imageFilm1.getUrl());
+        verify(uploadFile, times(1)).deleteFile(imageFilm2.getUrl());
+        verify(filmRepository, times(1)).deleteById(filmId);
     }
 
     @Test

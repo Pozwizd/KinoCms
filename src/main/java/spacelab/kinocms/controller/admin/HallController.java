@@ -68,14 +68,14 @@ public class HallController {
 
 // Ajax ====================================================================
 
-    @GetMapping("/editHall/showSchemeHall/{id}")
+    @GetMapping("/editHall/{id}/showSchemeHall/")
     @ResponseBody
     public String showSchemeHall(Model model, @PathVariable long id) {
         Hall hall = hallService.getHall(id);
         return hall.getUrlSchemeImageHall();
     }
 
-    @PostMapping("/editHall/editSchemeHall/{id}")
+    @PostMapping("/editHall/{id}/editSchemeHall/")
     @ResponseBody
     public ResponseEntity<String> editSchemeHall(@RequestPart("file") MultipartFile file,
                                                @PathVariable Long id) {
@@ -87,7 +87,7 @@ public class HallController {
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
-    @PostMapping("/editHall/deleteSchemeHall/{id}")
+    @PostMapping("/editHall/{id}/deleteSchemeHall/")
     @ResponseBody
     public ResponseEntity<String> deleteSchemeHall(Model model, @PathVariable long id) {
         Hall hall = hallService.getHall(id);
@@ -99,14 +99,14 @@ public class HallController {
 
 //    TopBanner
 
-    @GetMapping("/editHall/showTopBanner/{id}")
+    @GetMapping("/editHall/{id}/showTopBanner/")
     @ResponseBody
     public String showTopBannerImage(Model model, @PathVariable long id) {
         Hall hall = hallService.getHall(id);
         return hall.getTopBanner();
     }
 
-    @PostMapping("/editHall/editTopBanner/{id}")
+    @PostMapping("/editHall/{id}/editTopBanner/")
     @ResponseBody
     public ResponseEntity<String> editTopBanner(@RequestPart("file") MultipartFile file,
                                                 @PathVariable Long id) {
@@ -117,7 +117,7 @@ public class HallController {
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
-    @PostMapping("/editHall/deleteTopBanner/{id}")
+    @PostMapping("/editHall/{id}/deleteTopBanner/")
     @ResponseBody
     public ResponseEntity<String> deleteTopBanner(Model model, @PathVariable long id) {
         Hall hall = hallService.getHall(id);
@@ -127,29 +127,29 @@ public class HallController {
         return ResponseEntity.ok("Файл успешно удален");
     }
 
-    @GetMapping("/editHall/showAllImages/{id}")
+    @GetMapping("/editHall/{id}/showAllImages/")
     @ResponseBody
     public List<ImageHall> showAllImages(@PathVariable String id) {
         Hall  hall = hallService.getHall(Long.parseLong(id));
         return imageHallService.getAllImageHallByHall(hall);
     }
 
-    @GetMapping("/editHall/getImage/{id}")
+    @GetMapping("/editHall/{nothing}/getImage/{id}")
     @ResponseBody
-    public ImageHall getImage(@PathVariable String id) {
+    public ImageHall getImage(@PathVariable String id, @PathVariable String nothing) {
         return imageHallService.getImageHall(Long.parseLong(id));
     }
 
-    @GetMapping("/editHall/deleteImage/{id}")
+    @GetMapping("/editHall/{nothing}/deleteImage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteImage(@PathVariable String id) {
+    public ResponseEntity<String> deleteImage(@PathVariable String id, @PathVariable String nothing) {
         imageHallService.deleteImageHall(Long.parseLong(id));
         return ResponseEntity.ok("Image deleted successfully");
     }
 
-    @GetMapping("/editHall/createNewImage/{id}")
+    @GetMapping("/editHall/{nothing}/createNewImage/{id}")
     @ResponseBody
-    public ImageHall createImageHall(@PathVariable String id) {
+    public ImageHall createImageHall(@PathVariable String id, @PathVariable String nothing) {
         ImageHall imageHall = new ImageHall();
         Hall hall = hallService.getHall(Long.parseLong(id));
         imageHall.setHall(hall);
@@ -158,10 +158,10 @@ public class HallController {
 
     }
 
-    @PostMapping("/editHall/editImageHall/{id}")
+    @PostMapping("/editHall/{nothing}/editImageHall/{id}")
     @ResponseBody
     public ResponseEntity<String> editImageHall(@RequestPart("file") MultipartFile file,
-                                                @PathVariable Long id) {
+                                                @PathVariable Long id, @PathVariable String nothing) {
         ImageHall imageHall = imageHallService.getImageHall(id);
         imageHall.setUrl(uploadFile.uploadFile(file,imageHall.getUrl()));
         imageHallService.saveImageHall(imageHall);

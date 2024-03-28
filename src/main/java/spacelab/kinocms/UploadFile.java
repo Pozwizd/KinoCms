@@ -1,63 +1,61 @@
 package spacelab.kinocms;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UploadFile {
 
-    private static final String UPLOAD_FOLDER = Paths.get("images").toFile().getAbsolutePath() + "/";
+    @Value("${upload.folder.path}")
+    private String projectPath;
 
-    private static final String UPLOAD_HTML_TEMPLATE = Paths.get("htmlTemplate").toFile().getAbsolutePath() + "/";
 
     public String uploadFile(MultipartFile file, String OldPath) {
-
-        if (OldPath != null){
-            String filePath = Paths.get("").toFile().getAbsolutePath() + OldPath;
-            File oldFile = new File(filePath);
-            oldFile.delete();
-        }
-
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        createFolder(projectPath);
+        deleteFile(OldPath);
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         try {
-            file.transferTo(new File(UPLOAD_FOLDER + fileName));
+            file.transferTo(new File( Paths.get(projectPath).toAbsolutePath() + "/" + fileName));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "/images/" + fileName;
+        return "/" + Paths.get(projectPath).subpath(Paths.get(projectPath).getNameCount()-1,
+                Paths.get(projectPath).getNameCount()) + "/" + fileName;
     }
 
-    public String uploadMailTemplate(MultipartFile file, String OldPath) {
+    public void deleteFile(String deletingFilePath) {
+        if (deletingFilePath != null) {
+            String nameFile = Arrays.stream(deletingFilePath.split("/"))
+                    .skip(2)
+                    .collect(Collectors.joining("/"));
 
-        if (OldPath != null){
-            String filePath = Paths.get("").toFile().getAbsolutePath() + OldPath;
-            File oldFile = new File(filePath);
+            File oldFile = Paths.get(projectPath + "/" + nameFile).toAbsolutePath().toFile();
             oldFile.delete();
         }
-
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        try {
-            file.transferTo(new File(UPLOAD_HTML_TEMPLATE + fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "htmlTemplate/" + fileName;
     }
+    public void createFolder(String path) {
+        Path currentPath = Paths.get(path).toAbsolutePath();
 
+        File folder = new File(currentPath.toString());
 
-    public Boolean deleteFile(String deletingFilePath) {
-        if (deletingFilePath != null){
-            String filePath = Paths.get("").toFile().getAbsolutePath() + deletingFilePath;
-            File oldFile = new File(filePath);
-            oldFile.delete();
-            return true;
+        if (!folder.exists()) {
+            boolean created = folder.mkdir();
+            if (created) {
+                System.out.println("Папка успешно создана: " + folder.getAbsolutePath());
+            } else {
+                System.out.println("Не удалось создать папку: " + folder.getAbsolutePath());
+            }
+        } else {
+            System.out.println("Папка уже существует: " + folder.getAbsolutePath());
         }
-        return false;
     }
-
 }

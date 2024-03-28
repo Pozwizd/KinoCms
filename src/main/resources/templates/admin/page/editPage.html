@@ -123,8 +123,9 @@
                             <div class="col-12 text-center">
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
-                            <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+                            <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
                             <script>
+                                let baseUrl = window.location.href;
                                 $(document).ready(function () {
                                     showMainImage();
                                     showAllImages();
@@ -134,8 +135,10 @@
 
 
                                 showMainImage = () =>{
-                                    $.ajax({
-                                        url: '/admin/pages/editPage/showMainPage/' + [[${pageCommon.id}]],
+                                    let url = baseUrl + '/showMainPage/' + [[${pageCommon.id}]];
+                                    console.log(url)
+                                        $.ajax({
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -159,9 +162,9 @@
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-
+                                    let url = baseUrl + '/editMainPage/' + [[${pageCommon.id}]];
                                     $.ajax({
-                                        url: '/admin/pages/editPage/editMainPage/' + [[${pageCommon.id}]],
+                                        url: url,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
@@ -182,8 +185,9 @@
 // Получение ближайшего элемента img от текущего элемента
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
+                                    let url = baseUrl + '/deleteMainPage/' + [[${pageCommon.id}]];
                                     $.ajax({
-                                        url: '/admin/pages/editPage/deleteMainPage/' + [[${pageCommon.id}]],
+                                        url: url,
                                         method: 'POST',
                                         processData: false,
                                         contentType: false,
@@ -199,8 +203,9 @@
                                 }
 
                                 showAllImages = () => {
+                                    let url = baseUrl + '/showAllImages/' + [[${pageCommon.id}]];
                                     $.ajax({
-                                        url: '/admin/pages/editPage/showAllImages/' + [[${pageCommon.id}]],
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -237,9 +242,10 @@
                                 }
                                 // Добавляем картинку
                                 const addBlock = () => {
+                                    let url = baseUrl + '/createNewImage/' + [[${pageCommon.id}]];
                                     let index;
                                     $.ajax({
-                                        url: '/admin/pages/editPage/createNewImage/' + [[${pageCommon.id}]],
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -274,17 +280,18 @@
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-
+                                    let url = baseUrl + '/editImagePage/' + id;
                                     $.ajax({
-                                        url: '/admin/pages/editPage/editImagePage/' + id,
+                                        url: url,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
                                         contentType: false,
                                         success: function (result) {
                                             console.log("Выгрузка файла прошла успешно");
+                                            let url2 = baseUrl + '/getImage/' + id;
                                             $.ajax({
-                                                url: '/admin/pages/editPage/getImage/' + id,
+                                                url: url2,
                                                 method: 'GET',
                                                 success: function (result) {
                                                     console.log("Загрузка файла прошла успешно");
@@ -312,8 +319,9 @@
                                 function removeBlock(element, id) {
                                     let block = element.closest('.col-3');
                                     block.remove();
+                                    let url = baseUrl + '/deleteImage/' + id;
                                     $.ajax({
-                                        url: '/admin/pages/editPage/deleteImage/' + id,
+                                        url: url,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
