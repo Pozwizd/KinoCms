@@ -1,8 +1,9 @@
 package spacelab.kinocms.service.ServiceImp;
 
 import lombok.AllArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.banners.Banner;
@@ -14,14 +15,16 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Log4j2
 public class BannerServiceImp implements BannerService {
 
     private final BannerRepository bannerRepository;
     private final UploadFile uploadFile;
-    private static final Logger logger = LogManager.getLogger(BannerServiceImp.class);
+    private static final Logger logger = LoggerFactory.getLogger(BannerServiceImp.class);
 
     @Override
     public void saveBanner(Banner banner) {
+        log.info("Create new banner");
         logger.info("Save banner: " + banner);
         bannerRepository.save(banner);
     }

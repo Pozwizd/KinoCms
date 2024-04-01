@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.page.Page;
 import spacelab.kinocms.repository.PageRepository;
 import spacelab.kinocms.service.ImagePageService;
@@ -20,9 +21,10 @@ import java.util.List;
 @AllArgsConstructor
 public class PageServiceImp implements PageService {
 
-    private static final String UPLOAD_FOLDER = Paths.get("images").toFile().getAbsolutePath() + "/";;
+
     private final PageRepository pageRepository;
     private final ImagePageService imagePageService;
+    private final UploadFile uploadFile;
     private static final Logger logger = LogManager.getLogger(PageServiceImp.class);
 
     @Override
@@ -71,16 +73,8 @@ public class PageServiceImp implements PageService {
     public void editPage(Page page, MultipartFile mainImagePage) {
 
         if (mainImagePage.getOriginalFilename() != null && mainImagePage.getOriginalFilename() != "" && mainImagePage.getSize() > 0){
-            String filePath = Paths.get("").toFile().getAbsolutePath() + pageRepository.findById(page.getId()).get().getMainImage();
-            File file = new File(filePath);
-            file.delete();
-            String fileName = mainImagePage.getOriginalFilename();
-            try {
-                mainImagePage.transferTo(new File(UPLOAD_FOLDER + fileName));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            page.setMainImage("/images/" + fileName);
+            page.setMainImage(uploadFile.uploadFile(mainImagePage,
+                    pageRepository.findById(page.getId()).get().getMainImage()));
         } else {
             page.setMainImage(pageRepository.findById(page.getId()).get().getMainImage());
         }

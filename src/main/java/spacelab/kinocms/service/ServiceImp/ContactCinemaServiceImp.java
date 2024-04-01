@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.Dto.Page.ContactCinemaDto;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.page.ContactCinema;
 import spacelab.kinocms.model.page.ContactPage;
 import spacelab.kinocms.repository.ContactCinemaRepository;
@@ -25,6 +26,7 @@ public class ContactCinemaServiceImp implements ContactCinemaService {
 
 
     private final ContactCinemaRepository contactCinemaRepository;
+    private final UploadFile uploadFile;
 
     private static final Logger logger = LogManager.getLogger(ContactCinemaServiceImp.class);
 
@@ -45,18 +47,7 @@ public class ContactCinemaServiceImp implements ContactCinemaService {
         contactCinema.setContactPage(contactPage);
 
         if(!Objects.equals(contactCinemaDto.getLogo().getOriginalFilename(), "")) {
-            if (contactCinema.getLogo() != null) {
-                String fileName = Paths.get("").toFile().getAbsolutePath() + contactCinema.getLogo();
-                File file = new File(fileName);
-                file.delete();
-            }
-            String fileName = UUID.randomUUID().toString() + "_" + contactCinemaDto.getLogo().getOriginalFilename();
-            try {
-                contactCinemaDto.getLogo().transferTo(new File(UPLOAD_FOLDER + fileName));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            contactCinema.setLogo("/images/" + fileName);
+            contactCinema.setLogo(uploadFile.uploadFile(contactCinemaDto.getLogo(), contactCinema.getLogo()));
         }
         contactCinemaRepository.saveAndFlush(contactCinema);
         logger.info("Save contact cinema: " + contactCinema);

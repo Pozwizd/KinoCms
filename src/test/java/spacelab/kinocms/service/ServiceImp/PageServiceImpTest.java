@@ -3,17 +3,20 @@ package spacelab.kinocms.service.ServiceImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.page.Page;
 import spacelab.kinocms.repository.PageRepository;
 import spacelab.kinocms.service.ImagePageService;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +32,9 @@ class PageServiceImpTest {
 
     @Mock
     private ImagePageService imagePageService;
+
+    @Mock
+    private UploadFile uploadFile;
 
     @InjectMocks
     private PageServiceImp pageService;
@@ -106,22 +112,30 @@ class PageServiceImpTest {
     }
 
     @Test
-    void testEditPageWithNewImage() throws IOException {
-        long id = 1L;
+    public void editPageTest() {
+        // Arrange
+        Long pageId = 1L;
         Page existingPage = new Page();
-        existingPage.setId(id);
-        existingPage.setMainImage("/old/image.jpg");
-        when(pageRepository.findById(id)).thenReturn(Optional.of(existingPage));
-        Page updatedPage = new Page();
-        updatedPage.setId(id);
-        String fileName = "new_image.jpg";
-        MockMultipartFile mockFile = new MockMultipartFile("file", fileName, "image/jpeg", "test data".getBytes());
-        pageService.editPage(updatedPage, mockFile);
-        String expectedPath = Paths.get("images").toFile().getAbsolutePath() + "/" + fileName;
-        verify(pageRepository, times(2)).findById(id);
-        verify(pageRepository).save(argThat(page -> page.getMainImage().equals("/images/" + fileName)));
-    }
+        existingPage.setId(pageId);
+        existingPage.setMainImage("existing-image.jpg");
 
+        Page updatedPage = new Page();
+        updatedPage.setId(pageId);
+
+        MultipartFile newMainImage = new MockMultipartFile("new-image.jpg", "new-image.jpg", "image/jpeg", "test data".getBytes());
+
+        when(pageRepository.findById(pageId)).thenReturn(Optional.of(existingPage));
+        when(uploadFile.uploadFile(newMainImage, existingPage.getMainImage())).thenReturn("new-image.jpg");
+
+        pageService.editPage(updatedPage, newMainImage);
+
+        ArgumentCaptor<Page> pageCaptor = ArgumentCaptor.forClass(Page.class);
+        verify(pageRepository, times(1)).save(pageCaptor.capture());
+
+        Page savedPage = pageCaptor.getValue();
+        assertEquals("new-image.jpg", savedPage.getMainImage());
+        assertEquals(existingPage.getDateOfCreated(), savedPage.getDateOfCreated());
+    }
     @Test
     void testEditPageWithoutNewImage() {
         long id = 1L;

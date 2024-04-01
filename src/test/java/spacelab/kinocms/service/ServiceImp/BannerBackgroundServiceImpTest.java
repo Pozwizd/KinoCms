@@ -1,5 +1,7 @@
 package spacelab.kinocms.service.ServiceImp;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +23,7 @@ public class BannerBackgroundServiceImpTest {
 
     @Mock
     private BannerBackgroundRepository bannerBackgroundRepository;
-
+    private static final Logger logger = LogManager.getLogger(BannerBackgroundServiceImpTest.class);
     @InjectMocks
     private BannerBackgroundServiceImp bannerBackgroundService;
 
@@ -32,7 +34,10 @@ public class BannerBackgroundServiceImpTest {
 
     @Test
     public void testGetBannerBackground() {
-        BannerBackground bannerBackground = new BannerBackground(1L, true, "background1.jpg");
+        logger.info("Get banner background by id: " + 1L);
+        logger.info("work " + 2L);
+        logger.error("This is a simple message at ERROR level. " +
+                "This is the minimum visible level.");        BannerBackground bannerBackground = new BannerBackground(1L, true, "background1.jpg");
         when(bannerBackgroundRepository.findById(1L)).thenReturn(Optional.of(bannerBackground));
         BannerBackground result = bannerBackgroundService.getBannerBackground(1L);
         assertNotNull(result);
