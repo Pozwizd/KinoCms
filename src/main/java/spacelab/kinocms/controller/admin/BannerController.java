@@ -1,5 +1,7 @@
 package spacelab.kinocms.controller.admin;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,7 +17,9 @@ import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.banners.*;
 import spacelab.kinocms.service.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -32,7 +36,7 @@ public class BannerController {
 
 
     @GetMapping({"/", ""})
-    public ModelAndView index(Model model) {
+    public ModelAndView index(Model model, HttpServletRequest request, ServletContext servletContext) {
         model.addAttribute("title", "Banners");
         model.addAttribute("pageActive", "banners");
 
@@ -42,7 +46,13 @@ public class BannerController {
         model.addAttribute("bannerBlock", bannerBlockService.getBannerBlock(1L));
         model.addAttribute("bannerBlockForNewsAndStocks", bannerBlockForNewsAndStocksService
                 .getBannerBlockForNewsAndStocks(1L));
-
+        String contextPath = request.getContextPath();
+        String currentUrl = request.getRequestURI();
+        String currentUrlW = request.getRequestURI();
+        String context =  Arrays.stream(currentUrlW.split("/"))
+                .skip(2)
+                .collect(Collectors.joining("/"));
+        System.out.println(contextPath);
         return new ModelAndView("admin/banners");
     }
 
@@ -65,6 +75,8 @@ public class BannerController {
     @GetMapping("/deleteMainBanner/{id}")
     @ResponseBody
     public ResponseEntity<String> deleteMainBanner(@PathVariable String id) {
+        Banner banner = bannerService.getBanner(Long.parseLong(id));
+        uploadFile.deleteFile(banner.getPathImage());
         bannerService.deleteBanner(Long.parseLong(id));
         return ResponseEntity.ok("Image deleted successfully");
     }

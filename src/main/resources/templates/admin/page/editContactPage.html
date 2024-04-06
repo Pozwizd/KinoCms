@@ -68,9 +68,13 @@
                                             Главная картинка
                                         </label>
                                         <img
-                                                th:src="${contacts[__${cont.index}__].logo == null ? 'https://via.placeholder.com/250x200&text=Empty' : contacts[__${cont.index}__].logo}"
+                                                th:src="@{{logoImage}(logoImage=
+                                                            *{!#strings.isEmpty(contactCinemas[__${cont.index}__].logo)}
+                                                ? ${appContextPath} + *{contactCinemas[__${cont.index}__].logo}
+                                                : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения')}"
                                                 alt=""
-                                             style="max-width: 250px; max-height: 200px;"
+
+                                                style="max-width: 250px; max-height: 200px;"
                                         >
                                     </div>
                                     <div class="col-6">
@@ -108,7 +112,7 @@
                         class="btn btn-primary"
                         onclick="deleteLastContact()">Удалить
                 </button>
-                
+
             </div>
         </div>
 
@@ -172,7 +176,8 @@
             </div>
         </div>
     </form>
-    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+    <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+
     <script>
         $(document).ready(function () {
             const textarea = document.querySelectorAll('[data-autosize]');
@@ -180,6 +185,7 @@
         });
 
         let index = (document.querySelectorAll('[data-contact-block]').length) + 1;
+
         function createNewContact() {
             $('<div>\n' +
                 '                    <div class="card" data-contact-block>\n' +
@@ -257,7 +263,7 @@
                 '                </div>').appendTo('#contactsCinema');
             index++;
         }
-        
+
         function deleteLastContact() {
             let index = document.querySelectorAll('[data-contact-block]')
             let lastElement = index.item(index.length - 1);

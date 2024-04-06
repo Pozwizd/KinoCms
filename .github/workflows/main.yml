@@ -8,6 +8,7 @@ jobs:
   build-deploy:
     name: Build and Deploy spring boot application
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,3 +25,12 @@ jobs:
         run: |
           mvn clean
           mvn -B package --file pom.xml
+
+      - name: Tomcat Deploy
+        env:
+          TOMCAT_MANAGER_URL: https://slj.demodev.cc/manager/text/deploy?path=/kinoCMS&update=true
+          TOMCAT_USERNAME: ${{ secrets.TOMCAT_USERNAME }}
+          TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }}
+        run: |
+          curl -v -u $TOMCAT_USERNAME:$TOMCAT_PASSWORD -T target/*.war "$TOMCAT_MANAGER_URL"
+          curl -v -u $TOMCAT_USERNAME:$TOMCAT_PASSWORD "${TOMCAT_MANAGER_URL/%\/deploy/\/reload}"

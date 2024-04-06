@@ -15,7 +15,11 @@
                     <div class="card-header">
                         <ul class="nav nav-pills card-header-pills" role="tablist"
                             style="display: flex; justify-content: flex-end;">
-
+                            <div class="form-check form-switch form-check-inline col-1 my-auto">
+                                <label>
+                                    <input class="form-check-input" type="checkbox" th:field="*{status}"/>
+                                </label>
+                            </div>
                             <li class="nav-item ml-auto">
                                 <button
                                         type="button"
@@ -27,19 +31,6 @@
                                         aria-selected="true"
                                 >
                                     Русский
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button
-                                        type="button"
-                                        class="nav-link"
-                                        role="tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#navs-pills-within-card-link"
-                                        aria-controls="navs-pills-within-card-link"
-                                        aria-selected="false"
-                                >
-                                    Link
                                 </button>
                             </li>
                             <li class="nav-item">
@@ -128,10 +119,11 @@
                             <div class="col-12 text-center">
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
+                            <div th:text="${appContextPath}" hidden id="appContextPath"></div>
                             <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
                             <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js}"></script>
                             <script>
-                                let baseUrl = window.location.href;
+                                let appContextPath = document.getElementById("appContextPath").textContent
                                 $(document).ready(function () {
                                     showMainImage();
                                     // Загружаем страницу и требуем все картинки
@@ -140,15 +132,14 @@
 
 
                                 showMainImage = () =>{
-                                    let url = baseUrl + '/showMainPage/';
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/news/editNews/showMainPage/' + [[${news.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
                                             console.log(result)
                                             $('<img src="' +
-                                                (result.mainImage == null ? 'https://via.placeholder.com/250x200&text=Empty' : result.mainImage)
+                                                (result.mainImage == null ? 'https://via.placeholder.com/250x200&text=Empty' : appContextPath + result.mainImage)
                                                 + '"' +
                                                 ' class="img-fluid"\n' +
                                                 ' id="mainImage" \n' +
@@ -157,7 +148,7 @@
 
                                         },
                                         error: function ( error ) {
-                                            console.log('error Main page' + error);
+                                            console.log(error);
                                         }
                                     })
                                 }
@@ -166,9 +157,8 @@
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-                                    let url = baseUrl + '/editMainPage/';
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/news/editNews/editMainPage/' + [[${news.id}]],
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
@@ -189,9 +179,8 @@
 // Получение ближайшего элемента img от текущего элемента
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
-                                    let url = baseUrl + '/deleteMainPage/'
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/news/editNews/deleteMainPage/' + [[${news.id}]],
                                         method: 'POST',
                                         processData: false,
                                         contentType: false,
@@ -207,9 +196,8 @@
                                 }
 
                                 showAllImages = () => {
-                                    let url = baseUrl + '/showAllImages/';
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/news/editNews/showAllImages/' + [[${news.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -226,7 +214,7 @@
                                     for (const data of result) {
                                         $('<div class="col-3">' +
                                             '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                                            '<img src="' + (data.url != null ? data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
+                                            '<img src="' + (data.url != null ? appContextPath + data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
                                             ' id="imagePage' + data.id + '" ' +
                                             'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
                                             '<label class="form-label" id="imagePageEdit' +data.id+'" style="max-width: 250px;">' +
@@ -249,11 +237,8 @@
                                 }
                                 // Добавляем картинку
                                 const addBlock = () => {
-                                    let index;
-                                    let url = baseUrl + '/createNewImage/';
-                                    console.log(url)
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/news/editNews/createNewImage/' + [[${news.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -280,7 +265,7 @@
                                                 '</div>').appendTo('#gallery-image');
                                         },
                                         error: function (error) {
-                                            console.log(error);
+                                            console.log("Проблема при создании файла:", error);
                                         }
                                     })
                                 }
@@ -291,23 +276,20 @@
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-                                    let url = baseUrl + '/editImageNews/' + id
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/news/editNews/editImageNews/' + id,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
                                         contentType: false,
                                         success: function (result) {
                                             console.log("Выгрузка файла прошла успешно");
-                                            let url = baseUrl + '/getImage/' + id
                                             $.ajax({
-                                                url: url,
+                                                url: appContextPath + '/admin/news/editNews/getImage/' + id,
                                                 method: 'GET',
                                                 success: function (result) {
-                                                    console.log("Загрузка файла прошла успешно");
                                                     let block = $(element).closest('.col-3').find('img');
-                                                    $('<img src="' + result.url + '" ' +
+                                                    $('<img src="' + appContextPath + result.url + '" ' +
                                                         'id="imagePage' + result.id + '" ' +
                                                         'class="img-fluid mb-2" ' +
                                                         'style="max-width: 250px; max-height: 200px;">')
@@ -330,9 +312,8 @@
                                 function removeBlock(element, id) {
                                     let block = element.closest('.col-3');
                                     block.remove();
-                                    let url = baseUrl + '/deleteImage/' + id
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/news/editNews/deleteImage/' + id,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -410,13 +391,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="navs-pills-within-card-link" role="tabpanel">
-                        <h4 class="card-title">Special link title</h4>
-                        <p class="card-text">
-                            With supporting text below as a natural lead-in to additional content.
-                        </p>
-                        <a href="javascript:void(0)" class="btn btn-secondary">Go somewhere</a>
-                    </div>
+
                 </div>
             </div>
         </form>

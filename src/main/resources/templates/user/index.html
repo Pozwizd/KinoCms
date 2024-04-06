@@ -27,7 +27,9 @@
                          th:classappend="${i.first ? 'active' : ''}"
                          th:data-bs-interval="${bannerBlocks.timeChange}*1000">
                         <a th:href="@{/{id}(id=*{banner.url})}"  style="width: 1000px; height: 400px">
-                            <img class="d-block w-100" th:src="${banner.pathImage}" alt="First slide"
+                            <img class="d-block w-100"
+                                 th:src="@{${banner.pathImage}}" alt="First slide"
+
                                  style="width: 1000px; height: 400px"/>
                         </a>
                         <div class="carousel-caption d-none d-md-block">
@@ -63,7 +65,7 @@
                 <div class="card h-100 text-center mb-3">
                     <a  th:href="@{/film/{id}(id=*{film.id})}">
                         <img class="card-img-top"
-                             th:src="${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}"
+                             th:src="@{${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}}"
                              alt="Card image cap"/>
                     </a>
                     <div class="card-body">
@@ -80,7 +82,7 @@
                 <div class="card h-100 text-center mb-3">
                     <a th:href="@{/film/{id}(id=*{film.id})}">
                         <img class="card-img-top"
-                             th:src="${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}"
+                             th:src="@{${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}}"
                              alt="Card image cap"/>
                     </a>
                     <div class="card-body">
@@ -114,7 +116,7 @@
                          th:classappend="${i.first ? 'active' : ''}"
                          th:data-bs-interval="${bannerBlocks.timeChange}*1000">
                         <a th:href="@{films/editFilm/{id}(id=*{banner.url})}"  style="width: 1000px; height: 400px">
-                            <img class="d-block w-100" th:src="${banner.pathImage}" alt="First slide"
+                            <img class="d-block w-100" th:src="@{${banner.pathImage}}" alt="First slide"
                                  style="width: 1000px; height: 400px"/>
                         </a>
                         <div class="carousel-caption d-none d-md-block">

@@ -49,6 +49,7 @@ public class StockServiceImp implements StockService {
     @Override
     public void updateStock(Stock stock) {
         logger.info("Update stock: " + stock);
+        stock.setDateCreated(stocksRepository.findById(stock.getId()).get().getDateCreated());
         stocksRepository.save(stock);
     }
 }

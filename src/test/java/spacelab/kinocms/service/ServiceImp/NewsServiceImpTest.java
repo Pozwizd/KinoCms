@@ -74,6 +74,8 @@ class NewsServiceImpTest {
     @Test
     void testUpdateNews() {
         News news = new News();
+        news.setId(1L);
+        when(newsRepository.findById(1L)).thenReturn(Optional.of(news));
         newsService.updateNews(news);
         verify(newsRepository).save(news);
     }

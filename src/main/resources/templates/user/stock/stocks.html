@@ -26,7 +26,7 @@
                          th:each="stock, i : ${stocks}"
                          th:classappend="${i.first ? 'active' : ''}">
                         <a th:href="@{stock/{id}(id=*{stock.id})}"  style="width: 1000px; height: 400px">
-                            <img class="d-block w-100" th:src="${stock.mainImage}" alt="First slide"
+                            <img class="d-block w-100" th:src="@{${stock.mainImage==null || stock.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200.png?text=Нет+Изображения' : stock.mainImage}}" alt="First slide"
                                  style="width: 1000px; height: 400px"/>
                         </a>
                     </div>
@@ -53,7 +53,7 @@
                                             <div class="card h-100 text-center mb-3">
                                                 <a th:href="@{/stock/{id}(id=*{stock.id})}">
                                                     <img class="card-img-top"
-                                                         th:src="${stock.mainImage == null || stock.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : stock.mainImage}"
+                                                         th:src="@{${stock.mainImage == null || stock.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200.png?text=Нет+Изображения' : stock.mainImage}}"
                                                          alt="Card image cap"/>
                                                 </a>
                                                 <div class="card-body">

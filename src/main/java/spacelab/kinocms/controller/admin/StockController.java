@@ -53,10 +53,7 @@ public class StockController {
     }
 
     @PostMapping("/editStock/{id}")
-    public ModelAndView editBasicPage(@ModelAttribute Stock stock,
-                                      @PathVariable String id,
-                                      @RequestParam(name = "mainImagePage", required = false)
-                                          MultipartFile mainImagePage) {
+    public ModelAndView editBasicPage(@ModelAttribute Stock stock) {
 
         stockService.updateStock(stock);
         return new ModelAndView("redirect:/admin/stocks");
@@ -82,16 +79,16 @@ public class StockController {
 
 //   Ajax  ====================================================================
 
-    @GetMapping("/editStock/{nothing}/showMainPage/{id}")
+    @GetMapping("/editStock/showMainPage/{id}")
     @ResponseBody
-    public Stock showMainImageStock(Model model, @PathVariable long id, @PathVariable String nothing) {
+    public Stock showMainImageStock(Model model, @PathVariable long id) {
         return stockService.getStock(id);
     }
 
-    @PostMapping("/editStock/{nothing}/editMainPage/{id}")
+    @PostMapping("/editStock/editMainPage/{id}")
     @ResponseBody
     public ResponseEntity<String> editMainImageStock(@RequestPart("file") MultipartFile file,
-                                                     @PathVariable Long id, @PathVariable String nothing) {
+                                                     @PathVariable Long id) {
 
         Stock stock = stockService.getStock(id);
 
@@ -101,9 +98,9 @@ public class StockController {
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
-    @PostMapping("/editStock/{nothing}/deleteMainPage/{id}")
+    @PostMapping("/editStock/deleteMainPage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteImageStock(Model model, @PathVariable long id, @PathVariable String nothing) {
+    public ResponseEntity<String> deleteImageStock(Model model, @PathVariable long id) {
         Stock stock = stockService.getStock(id);
         uploadFile.deleteFile(stock.getMainImage());
         stock.setMainImage(null);
@@ -111,38 +108,38 @@ public class StockController {
         return ResponseEntity.ok("Файл успешно удален");
     }
 
-    @GetMapping("/editStock/{nothing}/showAllImages/{id}")
+    @GetMapping("/editStock/showAllImages/{id}")
     @ResponseBody
-    public List<ImageStock> showAllImages(@PathVariable String id, @PathVariable String nothing) {
+    public List<ImageStock> showAllImages(@PathVariable String id) {
         return imageStockService.getAllImagesStockByStock(stockService.getStock(Long.parseLong(id)));
     }
 
-    @GetMapping("/editStock/{nothing}/getImage/{id}")
+    @GetMapping("/editStock/getImage/{id}")
     @ResponseBody
-    public ImageStock getImage(@PathVariable String id, @PathVariable String nothing) {
+    public ImageStock getImage(@PathVariable String id) {
         return imageStockService.getImageStock(Long.parseLong(id));
     }
 
-    @GetMapping("/editStock/{nothing}/deleteImage/{id}")
+    @GetMapping("/editStock/deleteImage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteImage(@PathVariable String id, @PathVariable String nothing) {
+    public ResponseEntity<String> deleteImage(@PathVariable String id) {
         imageStockService.deleteImageStock(Long.parseLong(id));
         return ResponseEntity.ok("Image deleted successfully");
     }
 
-    @GetMapping("/editStock/{nothing}/createNewImage/{id}")
+    @GetMapping("/editStock/createNewImage/{id}")
     @ResponseBody
-    public ImageStock createImageStock(@PathVariable String id, @PathVariable String nothing) {
+    public ImageStock createImageStock(@PathVariable String id) {
         ImageStock imageStock = new ImageStock();
         imageStock.setStock(stockService.getStock(Long.parseLong(id)));
         imageStockService.saveImageStock(imageStock);
         return imageStockService.getLastImageStock();
     }
 
-    @PostMapping("/editStock/{nothing}/editImageStock/{id}")
+    @PostMapping("/editStock/editImageStock/{id}")
     @ResponseBody
     public ResponseEntity<String> editImageStock(@RequestPart("file") MultipartFile file,
-                                                 @PathVariable Long id, @PathVariable String nothing) {
+                                                 @PathVariable Long id) {
 
         ImageStock imageStock = imageStockService.getImageStock(id);
 

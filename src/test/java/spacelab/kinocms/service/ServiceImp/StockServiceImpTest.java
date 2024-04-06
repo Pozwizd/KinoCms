@@ -73,6 +73,8 @@ class StockServiceImpTest {
     @Test
     void testUpdateStock() {
         Stock stock = new Stock();
+        stock.setId(1L);
+        when(stocksRepository.findById(1L)).thenReturn(Optional.of(stock));
         stockService.updateStock(stock);
         verify(stocksRepository).save(stock);
     }

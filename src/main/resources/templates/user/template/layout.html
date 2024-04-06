@@ -13,7 +13,9 @@
 <head layout:replace="user/template/fragments/head">
 </head>
 
-<body th:style="'background-image: url(\'' + (${bannerBackground.isDefault} ? '' : ${bannerBackground.url} ) + '\');'">
+<body th:style="'background-image: url(\''
+ + (${bannerBackground.isDefault}
+  ? '' :  ${appContextPath} + ${bannerBackground.url} ) + '\'); height: 100vh; background-size: cover; background-repeat: no-repeat;'">
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
     <div class="layout-container">
@@ -112,7 +114,7 @@
                     <!-- User -->
                     <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                         <div class="avatar avatar-online">
-                            <img src="../../assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
+                            <img th:src="@{/assets/img/avatars/1.png}" alt class="h-auto rounded-circle" />
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -152,6 +154,7 @@
                     </ul>
                     <!--/ User -->
                 </div>
+
             </div>
         </nav>
 
@@ -262,7 +265,7 @@
                                         <img th:src="@{/customAssets/googlePlay.png}"
                                              style="max-height: 50px; max-width: 100px;"/>
                                     </a>
-                                    <a href="/app" style="max-height: 50px; max-width: 70px;">
+                                    <a th:href="@{/app}" style="max-height: 50px; max-width: 70px;">
                                         <img th:src="@{/customAssets/appStore.png}"
                                              style="max-height: 50px; max-width: 100px;"/>
                                     </a>

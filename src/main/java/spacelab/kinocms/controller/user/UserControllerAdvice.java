@@ -36,7 +36,6 @@ public class UserControllerAdvice {
         }
 
 
-
         model.addAttribute("basicPages", newsService);
 
         model.addAttribute("pages", pageService.getAllPages());

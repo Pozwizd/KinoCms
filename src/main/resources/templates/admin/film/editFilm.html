@@ -37,6 +37,7 @@
                                         data-bs-target="#navs-pills-within-card-link"
                                         aria-controls="navs-pills-within-card-link"
                                         aria-selected="false"
+                                        disabled
                                 >English</button>
                             </li>
                         </ul>
@@ -101,7 +102,7 @@
                                                class="form-control"
                                                accept="image/png, image/jpeg"
                                                name="mainImagePage"
-                                               onchange="changeMainPage(this)"/>
+                                               onchange="changeMainImage(this)"/>
                                     </label>
                                     <label class="form-label">
                                         <a>
@@ -125,25 +126,27 @@
                             <div class="col-12 text-center">
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
-                            <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+                            <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+                            <div th:text="${appContextPath}" hidden id="appContextPath"></div>
                             <script>
+                                let appContextPath = document.getElementById("appContextPath").textContent
+
                                 let baseUrl = window.location.href;
                                 $(document).ready(function () {
                                     showMainImage();
-                                    showAllImages();
+                                    showAllImageFilm();
                                 });
 
 
                                 showMainImage = () => {
-                                    let url = baseUrl + '/showMainPage/' + [[${film.id}]];
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/films/editFilm/showMainPage/' + [[${film.id}]],
                                         method: 'GET',
                                         dataType: 'Text',
                                         success: function (result) {
-                                            console.log(result)
+                                            console.log("Успешно загружена главная обложка", result);
                                             $('<img src="' +
-                                                (result == null || result === '' ? 'https://via.placeholder.com/250x200&text=Empty' : result)
+                                                (result == null || result === '' ? 'https://via.placeholder.com/250x200&text=Empty' : appContextPath + result)
                                                 + '"' +
                                                 ' class="img-fluid"\n' +
                                                 ' id="mainImage" \n' +
@@ -151,84 +154,80 @@
                                                 ' max-height: 200px;">').appendTo('#mainImageBlock');
 
                                         },
-                                        error: function () {
-                                            console.log('error Main page');
+                                        error: function (error) {
+                                            console.log('Произошла ошибка при загрузке главной обложки', error);
                                         }
                                     })
                                 }
 
-                                function changeMainPage(element) {
+                                function changeMainImage(element) {
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-                                    let url = baseUrl + '/editMainPage/' + [[${film.id}]]
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/films/editFilm/editMainImage/' + [[${film.id}]],
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
                                         contentType: false,
                                         success: function (result) {
-                                            console.log("Выгрузка файла прошла успешно");
+                                            console.log("Успешно изменена обложки", result);
                                             let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                             nearestImg.remove();
                                             showMainImage();
                                         },
                                         error: function (error) {
-                                            console.error("Ошибка при загрузке файла:", error);
+                                            console.error("Ошибка при загрузке обложки", error);
                                         }
                                     });
                                 }
 
                                 function deleteMainImage(element) {
-// Получение ближайшего элемента img от текущего элемента
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
-                                    let url = baseUrl + '/deleteMainPage/' + [[${film.id}]]
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/films/editFilm/deleteMainImage/' + [[${film.id}]],
                                         method: 'POST',
                                         processData: false,
                                         contentType: false,
                                         success: function (result) {
-                                            console.log(result);
+                                            console.log("Успешно удалена обложка", result);
                                             showMainImage();
                                         },
-                                        error: function () {
-                                            console.log("Error delete mainPage")
+                                        error: function (error) {
+                                            console.log("Произошла ошибка при удалении обложки", error);
                                         }
                                     })
 
                                 }
 
-                                showAllImages = () => {
-                                    let url = baseUrl + '/showAllImages/' + [[${film.id}]];
+                                function showAllImageFilm () {
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/films/editFilm/showAllImageFilm/' + [[${film.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
-                                            console.log(result);
-                                            drawImages(result)
+                                            console.log("Успешно загружены картинки фильма", result);
+                                            drawImagesFilm(result)
                                         },
                                         error: function (error) {
-                                            console.log(error);
+                                            console.log('Произошла ошибка при загрузке картинок фильма', error);
                                         }
                                     })
                                 }
 
                                 // Рисуем картинки
-                                function drawImages(result) {
+                                function drawImagesFilm(result) {
                                     for (const data of result) {
                                         $('<div class="col-3">' +
                                             '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                                            '<img src="' + (data.url != null ? data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
+                                            '<img src="' + (data.url != null ? appContextPath + data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
                                             ' id="imagePage' + data.id + '" ' +
                                             'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
                                             '<label class="form-label" id="imagePageEdit' + data.id + '" style="max-width: 250px;">' +
                                             '<input type="file" ' +
                                             'class="form-control" ' +
-                                            'accept="image/png, image/jpeg" onchange="editImagePage(this,' + data.id + ')" multiple/>' +
+                                            'accept="image/png, image/jpeg" onchange="editImageFilm(this,' + data.id + ')" multiple/>' +
                                             '</label>' +
                                             '<label class="form-label" style="max-width: 250px;">' +
                                             '<button style="width: 250px;" ' +
@@ -240,16 +239,12 @@
                                             '</label>' +
                                             '</div>' +
                                             '</div>').appendTo('#gallery-image');
-
                                     }
                                 }
 
-                                // Добавляем картинку
-                                const addBlock = () => {
-                                    let index;
-                                    let url = baseUrl + '/createNewImage/' + [[${film.id}]];
+                                function addNewImageFilm () {
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/films/editFilm/createNewImage/' + [[${film.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -262,7 +257,7 @@
                                                 '<label class="form-label"  id="imagePageEdit' + result.id + '" style="max-width: 250px;">' +
                                                 '<input type="file" ' +
                                                 'class="form-control"' +
-                                                'accept="image/png, image/jpeg" onchange="editImagePage(this,' + result.id + ')" multiple/>' +
+                                                'accept="image/png, image/jpeg" onchange="editImageFilm(this,' + result.id + ')" multiple/>' +
                                                 '</label>' +
                                                 '<label class="form-label" style="max-width: 250px;">' +
                                                 '<button style="width: 250px;" ' +
@@ -277,30 +272,27 @@
                                         }
                                     })
                                 }
-                                document.querySelector('#add-image-button').addEventListener('click', addBlock);
+                                document.querySelector('#add-image-button').addEventListener('click', addNewImageFilm);
 
-                                // Изменяем картинку
-                                function editImagePage(element, id) {
+                                function editImageFilm(element, id) {
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-                                    let url = baseUrl + '/editImageFilm/' + id;
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/films/editFilm/editImageFilm/' + id,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
                                         contentType: false,
                                         success: function (result) {
-                                            console.log("Выгрузка файла прошла успешно");
-                                            let url2 = baseUrl + '/getImage/' + id;
+                                            console.log("Успешно изменена картинка фильма", result);
                                             $.ajax({
-                                                url: url2,
+                                                url: appContextPath + '/admin/films/editFilm/getImage/' + id,
                                                 method: 'GET',
                                                 success: function (result) {
-                                                    console.log("Загрузка файла прошла успешно");
+                                                    console.log("Успешно получена картинка фильма", result);
                                                     let block = $(element).closest('.col-3').find('img');
-                                                    $('<img src="' + result.url + '" ' +
+                                                    $('<img src="' + appContextPath +  result.url + '" ' +
                                                         'id="imagePage' + result.id + '" ' +
                                                         'class="img-fluid mb-2" ' +
                                                         'style="max-width: 250px; max-height: 200px;">')
@@ -308,28 +300,28 @@
                                                     block.remove();
                                                 },
                                                 error: function (error) {
-                                                    console.error("Ошибка при загрузке файла:", error);
+                                                    console.error("Ошибка при получении обновленной картинки фильма", error);
                                                 }
                                             });
                                         },
                                         error: function (error) {
-                                            console.error("Ошибка при загрузке файла:", error);
+                                            console.error("Ошибка при изменении картинки фильма", error);
                                         }
                                     });
                                 }
 
-
-                                // Удаляем картинку
                                 function removeBlock(element, id) {
                                     let block = element.closest('.col-3');
                                     block.remove();
-                                    let url = baseUrl + '/deleteImage/' + id;
                                         $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/films/editFilm/deleteImage/' + id,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
-                                            console.log(result);
+                                            console.log("Успешно удалена картинка фильма", result);
+                                        },
+                                        error: function (error) {
+                                            console.error("Ошибка при удалении картинки фильма", error);
                                         }
                                     })
                                 }
@@ -420,20 +412,21 @@
                                     </button>
                                 </div>
                                 <div class="d-grid gap-2 col-3 mx-auto mt-3">
-                                    <a type="submit" class="btn btn-outline-primary">Вернуть базовую версию
+                                    <a type="submit" id="refreshButton" class="btn btn-outline-primary">Вернуть базовую версию
                                     </a>
                                 </div>
+                                <script>
+                                    const refreshButton = document.getElementById('refreshButton');
+
+                                    refreshButton.addEventListener('click', function() {
+                                        location.reload();
+                                    });
+                                </script>
 
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="navs-pills-within-card-link" role="tabpanel">
-                        <h4 class="card-title">Special link title</h4>
-                        <p class="card-text">
-                            With supporting text below as a natural lead-in to additional content.
-                        </p>
-                        <a href="javascript:void(0)" class="btn btn-secondary">Go somewhere</a>
-                    </div>
+
                 </div>
             </div>
         </form>

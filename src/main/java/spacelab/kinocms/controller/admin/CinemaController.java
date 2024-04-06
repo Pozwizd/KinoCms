@@ -72,18 +72,18 @@ public class CinemaController {
 
 // Ajax ====================================================================
 
-    @GetMapping("/editCinema/{nothing}/showLogoPath/{id}")
+    @GetMapping("/editCinema/showLogoCinemaPath/{id}")
     @ResponseBody
-    public String showMainImageNews(Model model, @PathVariable long id, @PathVariable String nothing) {
+    public String showMainImageNews(@PathVariable long id) {
         Cinema cinema = cinemaService.getCinema(id);
         System.out.println(cinema.getLogoPath());
         return cinema.getLogoPath();
     }
 
-    @PostMapping("/editCinema/{nothing}/editLogoPath/{id}")
+    @PostMapping("/editCinema/editLogoPath/{id}")
     @ResponseBody
     public ResponseEntity<String> editLogoPath(@RequestPart("file") MultipartFile file,
-                                               @PathVariable Long id, @PathVariable String nothing) {
+                                               @PathVariable Long id) {
 
         Cinema cinema = cinemaService.getCinema(id);
         cinema.setLogoPath(uploadFile.uploadFile(file,cinema.getLogoPath()));
@@ -91,9 +91,9 @@ public class CinemaController {
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
-    @PostMapping("/editCinema/{nothing}/deleteLogoPath/{id}")
+    @PostMapping("/editCinema/deleteLogoPath/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteCinema(Model model, @PathVariable long id, @PathVariable String nothing) {
+    public ResponseEntity<String> deleteCinema(Model model, @PathVariable long id) {
         Cinema cinema = cinemaService.getCinema(id);
         uploadFile.deleteFile(cinema.getLogoPath());
         cinema.setLogoPath(null);
@@ -103,17 +103,17 @@ public class CinemaController {
 
 //    TopBanner
 
-    @GetMapping("/editCinema/{id}/showTopBanner/")
+    @GetMapping("/editCinema/showTopBanner/{id}")
     @ResponseBody
     public String showTopBannerImage(Model model, @PathVariable long id ) {
         Cinema cinema = cinemaService.getCinema(id);
         return cinema.getTopBanner();
     }
 
-    @PostMapping("/editCinema/{nothing}/editTopBanner/{id}")
+    @PostMapping("/editCinema/editTopBanner/{id}")
     @ResponseBody
     public ResponseEntity<String> editTopBanner(@RequestPart("file") MultipartFile file,
-                                                @PathVariable Long id, @PathVariable String nothing) {
+                                                @PathVariable Long id) {
 
         Cinema cinema = cinemaService.getCinema(id);
         cinema.setTopBanner(uploadFile.uploadFile(file,cinema.getTopBanner()));
@@ -121,9 +121,9 @@ public class CinemaController {
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
-    @PostMapping("/editCinema/{nothing}/deleteTopBanner/{id}")
+    @PostMapping("/editCinema/deleteTopBanner/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteTopBanner(Model model, @PathVariable long id, @PathVariable String nothing) {
+    public ResponseEntity<String> deleteTopBanner(@PathVariable long id) {
         Cinema cinema = cinemaService.getCinema(id);
         uploadFile.deleteFile(cinema.getTopBanner());
         cinema.setTopBanner(null);
@@ -132,31 +132,29 @@ public class CinemaController {
     }
 
 
-    @GetMapping("/editCinema/{nothing}/showAllImages/{id}")
+    @GetMapping("/editCinema/showAllImagesCinema/{id}")
     @ResponseBody
-    public List<ImageCinema> showAllImages(@PathVariable String id, @PathVariable String nothing) {
+    public List<ImageCinema> showAllImages(@PathVariable String id) {
         Cinema cinema = cinemaService.getCinema(Long.parseLong(id));
-        List<ImageCinema> imageCinemaList = imageCinemaService.getAllImageCinemaByCinema(cinema);
-        System.out.println(imageCinemaList);
-        return imageCinemaList;
+        return imageCinemaService.getAllImageCinemaByCinema(cinema);
     }
 
-    @GetMapping("/editCinema/{nothing}/getImage/{id}")
+    @GetMapping("/editCinema/getImageCinema/{id}")
     @ResponseBody
-    public ImageCinema getImage(@PathVariable String id, @PathVariable String nothing) {
+    public ImageCinema getImage(@PathVariable String id) {
         return imageCinemaService.getImageCinema(Long.parseLong(id));
     }
 
-    @GetMapping("/editCinema/{nothing}/deleteImage/{id}")
+    @GetMapping("/editCinema/deleteImageCinema/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteImage(@PathVariable String id, @PathVariable String nothing) {
+    public ResponseEntity<String> deleteImage(@PathVariable String id) {
         imageCinemaService.deleteImageCinema(Long.parseLong(id));
         return ResponseEntity.ok("Image deleted successfully");
     }
 
-    @GetMapping("/editCinema/{nothing}/createNewImage/{id}")
+    @GetMapping("/editCinema/createNewImage/{id}")
     @ResponseBody
-    public ImageCinema createImageNews(@PathVariable String id, @PathVariable String nothing) {
+    public ImageCinema createImageNews(@PathVariable String id) {
         ImageCinema imageCinema = new ImageCinema();
         Cinema cinema = cinemaService.getCinema(Long.parseLong(id));
         imageCinema.setCinema(cinema);
@@ -164,10 +162,10 @@ public class CinemaController {
         return imageCinemaService.getLastImageCinemaByCinema(cinema);
     }
 
-    @PostMapping("/editCinema/{nothing}/editImageCinema/{id}")
+    @PostMapping("/editCinema/editImageCinema/{id}")
     @ResponseBody
     public ResponseEntity<String> editImageNews(@RequestPart("file") MultipartFile file,
-                                                @PathVariable Long id, @PathVariable String nothing) {
+                                                @PathVariable Long id) {
         ImageCinema imageCinema = imageCinemaService.getImageCinema(id);
         imageCinema.setUrl(uploadFile.uploadFile(file,imageCinema.getUrl()));
         imageCinemaService.saveImageCinema(imageCinema);

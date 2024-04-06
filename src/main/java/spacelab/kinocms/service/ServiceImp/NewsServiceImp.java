@@ -24,13 +24,13 @@ public class NewsServiceImp implements NewsService {
 
     @Override
     public void saveNews(News news) {
-        logger.info("Save news: " + news);
+        logger.info("Save news: {}", news);
         newsRepository.save(news);
     }
 
     @Override
     public News getNews(long id) {
-        logger.info("Get news by id: " + id);
+        logger.info("Get news by id: {}", id);
         return newsRepository.findById(id).orElse(null);
     }
 
@@ -42,13 +42,14 @@ public class NewsServiceImp implements NewsService {
 
     @Override
     public void deleteNews(long id) {
-        logger.info("Delete news by id: " + id);
+        logger.info("Delete news by id: {}", id);
         newsRepository.deleteById(id);
     }
 
     @Override
     public void updateNews(News news) {
-        logger.info("Update news: " + news);
+        logger.info("Update news: {}", news);
+        news.setDateCreated(newsRepository.findById(news.getId()).get().getDateCreated());
         newsRepository.save(news);
     }
 }

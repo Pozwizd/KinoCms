@@ -31,7 +31,9 @@ public class News {
     private Date datePosting;
     @Column
     private Date dateCreated;
-    @Column
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
     @Column
     private String mainImage;

@@ -36,19 +36,6 @@
                             <li class="nav-item">
                                 <button
                                         type="button"
-                                        class="nav-link"
-                                        role="tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#navs-pills-within-card-link"
-                                        aria-controls="navs-pills-within-card-link"
-                                        aria-selected="false"
-                                >
-                                    Link
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button
-                                        type="button"
                                         class="nav-link disabled"
                                         role="tab"
                                         data-bs-toggle="tab"
@@ -131,9 +118,10 @@
                             <div class="col-12 text-center">
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
+                            <div th:text="${appContextPath}" hidden id="appContextPath"></div>
                             <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
                             <script>
-                                let baseUrl = window.location.href;
+                                let appContextPath = document.getElementById("appContextPath").textContent
                                 $(document).ready(function () {
                                     showMainImage();
                                     showAllImages();
@@ -143,16 +131,14 @@
 
 
                                 showMainImage = () => {
-                                    let url = baseUrl + '/showMainPage/' + [[${stock.id}]];
-                                    console.log(url)
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/stocks/editStock/showMainPage/' + [[${stock.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
                                             console.log(result)
                                             $('<img src="' +
-                                                (result.mainImage == null ? 'https://via.placeholder.com/250x200&text=Empty' : result.mainImage)
+                                                (result.mainImage == null || result.mainImage === "" ? 'https://via.placeholder.com/250x200&text=Empty' : appContextPath + result.mainImage)
                                                 + '"' +
                                                 ' class="img-fluid"\n' +
                                                 ' id="mainImage" \n' +
@@ -170,9 +156,8 @@
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-                                    let url = baseUrl + '/editMainPage/' + [[${stock.id}]];
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/stocks/editStock/editMainPage/' + [[${stock.id}]],
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
@@ -192,9 +177,8 @@
                                 function deleteMainImage(element) {
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
-                                    let url = baseUrl + '/deleteMainPage/' + [[${stock.id}]];
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/stocks/editStock/deleteMainPage/' + [[${stock.id}]],
                                         method: 'POST',
                                         processData: false,
                                         contentType: false,
@@ -210,9 +194,8 @@
                                 }
 
                                 showAllImages = () => {
-                                    let url = baseUrl + '/showAllImages/' + [[${stock.id}]];
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/stocks/editStock/showAllImages/' + [[${stock.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -226,7 +209,7 @@
                                     for (const data of result) {
                                         $('<div class="col-3">' +
                                             '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                                            '<img src="' + (data.url != null ? data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
+                                            '<img src="' + (data.url != null || data.url === "" ? appContextPath + data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
                                             ' id="imagePage' + data.id + '" ' +
                                             'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
                                             '<label class="form-label" id="imagePageEdit' + data.id + '" style="max-width: 250px;">' +
@@ -249,10 +232,8 @@
                                 }
 
                                 const addBlock = () => {
-                                    let index;
-                                    let url = baseUrl + '/createNewImage/' + [[${stock.id}]];
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/stocks/editStock/createNewImage/' + [[${stock.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -265,7 +246,7 @@
                                                 '<label class="form-label"  id="imagePageEdit' + result.id + '" style="max-width: 250px;">' +
                                                 '<input type="file" ' +
                                                 'class="form-control"' +
-                                                'accept="image/png, image/jpeg" onchange="editImagePage(this,' + result.id + ')" multiple/>' +
+                                                ' accept="image/png, image/jpeg" onchange="editImagePage(this,' + result.id + ')" multiple/>' +
                                                 '</label>' +
                                                 '<label class="form-label" style="max-width: 250px;">' +
                                                 '<button style="width: 250px;" ' +
@@ -286,23 +267,22 @@
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-                                    let url = baseUrl + '/editImageStock/' + id;
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/stocks/editStock/editImageStock/' + id,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
                                         contentType: false,
                                         success: function (result) {
                                             console.log("Выгрузка файла прошла успешно");
-                                            let url2 = baseUrl + '/getImage/' + id;
                                             $.ajax({
-                                                url: url2,
+                                                url: appContextPath + '/admin/stocks/editStock/getImage/' + id,
                                                 method: 'GET',
+                                                dataType: 'JSON',
                                                 success: function (result) {
                                                     console.log("Загрузка файла прошла успешно");
                                                     let block = $(element).closest('.col-3').find('img');
-                                                    $('<img src="' + result.url + '" ' +
+                                                    $('<img src="' + appContextPath + result.url + '" ' +
                                                         'id="imagePage' + result.id + '" ' +
                                                         'class="img-fluid mb-2" ' +
                                                         'style="max-width: 250px; max-height: 200px;">')
@@ -323,13 +303,14 @@
                                 function removeBlock(element, id) {
                                     let block = element.closest('.col-3');
                                     block.remove();
-                                    let url = baseUrl + '/deleteImage/' + id;
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/stocks/editStock/deleteImage/' + id,
                                         method: 'GET',
-                                        dataType: 'JSON',
                                         success: function (result) {
                                             console.log(result);
+                                        },
+                                        error: function (error) {
+                                            console.log(error);
                                         }
                                     })
                                 }
@@ -403,13 +384,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="navs-pills-within-card-link" role="tabpanel">
-                        <h4 class="card-title">Special link title</h4>
-                        <p class="card-text">
-                            With supporting text below as a natural lead-in to additional content.
-                        </p>
-                        <a href="javascript:void(0)" class="btn btn-secondary">Go somewhere</a>
-                    </div>
+
                 </div>
             </div>
         </form>

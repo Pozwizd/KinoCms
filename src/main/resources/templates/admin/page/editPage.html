@@ -33,19 +33,7 @@
                                     Русский
                                 </button>
                             </li>
-                            <li class="nav-item">
-                                <button
-                                        type="button"
-                                        class="nav-link"
-                                        role="tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#navs-pills-within-card-link"
-                                        aria-controls="navs-pills-within-card-link"
-                                        aria-selected="false"
-                                >
-                                    Link
-                                </button>
-                            </li>
+
                             <li class="nav-item">
                                 <button
                                         type="button"
@@ -123,9 +111,10 @@
                             <div class="col-12 text-center">
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
+                            <div th:text="${appContextPath}" hidden id="appContextPath"></div>
                             <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
                             <script>
-                                let baseUrl = window.location.href;
+                                let appContextPath = document.getElementById("appContextPath").textContent
                                 $(document).ready(function () {
                                     showMainImage();
                                     showAllImages();
@@ -135,16 +124,14 @@
 
 
                                 showMainImage = () =>{
-                                    let url = baseUrl + '/showMainPage/' + [[${pageCommon.id}]];
-                                    console.log(url)
                                         $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/pages/editPage/showMainPage/' + [[${pageCommon.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
                                             console.log(result)
                                             $('<img src="' +
-                                                (result.mainImage == null ? 'https://via.placeholder.com/250x200&text=Empty' : result.mainImage)
+                                                (result.mainImage == null || result.mainImage === "" ? 'https://via.placeholder.com/250x200&text=Empty' : appContextPath + result.mainImage)
                                                 + '"' +
                                                 ' class="img-fluid"\n' +
                                                 ' id="mainImage" \n' +
@@ -162,9 +149,8 @@
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-                                    let url = baseUrl + '/editMainPage/' + [[${pageCommon.id}]];
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/pages/editPage/editMainPage/' + [[${pageCommon.id}]],
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
@@ -182,12 +168,10 @@
                                 }
 
                                 function deleteMainImage(element){
-// Получение ближайшего элемента img от текущего элемента
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
-                                    let url = baseUrl + '/deleteMainPage/' + [[${pageCommon.id}]];
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/pages/editPage/deleteMainPage/' + [[${pageCommon.id}]],
                                         method: 'POST',
                                         processData: false,
                                         contentType: false,
@@ -203,9 +187,8 @@
                                 }
 
                                 showAllImages = () => {
-                                    let url = baseUrl + '/showAllImages/' + [[${pageCommon.id}]];
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/pages/editPage/showAllImages/' + [[${pageCommon.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -214,12 +197,12 @@
                                         }
                                     })
                                 }
-                                // Рисуем картинки
+
                                 function drawImages(result) {
                                     for (const data of result) {
                                         $('<div class="col-3">' +
                                             '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                                            '<img src="' + (data.url != null ? data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
+                                            '<img src="' + (data.url != null|| data.url === "" ? appContextPath + data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
                                             ' id="imagePage' + data.id + '" ' +
                                             'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
                                             '<label class="form-label" id="imagePageEdit' +data.id+'" style="max-width: 250px;">' +
@@ -242,10 +225,8 @@
                                 }
                                 // Добавляем картинку
                                 const addBlock = () => {
-                                    let url = baseUrl + '/createNewImage/' + [[${pageCommon.id}]];
-                                    let index;
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/pages/editPage/createNewImage/' + [[${pageCommon.id}]],
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -275,28 +256,25 @@
                                 }
                                 document.querySelector('#add-image-button').addEventListener('click', addBlock);
 
-                                // Изменяем картинку
                                 function editImagePage(element, id) {
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
-                                    let url = baseUrl + '/editImagePage/' + id;
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/pages/editPage/editImagePage/' + id,
                                         method: 'POST',
                                         data: formData,
                                         processData: false,
                                         contentType: false,
                                         success: function (result) {
                                             console.log("Выгрузка файла прошла успешно");
-                                            let url2 = baseUrl + '/getImage/' + id;
                                             $.ajax({
-                                                url: url2,
+                                                url: appContextPath + '/admin/pages/editPage/getImage/' + id,
                                                 method: 'GET',
                                                 success: function (result) {
                                                     console.log("Загрузка файла прошла успешно");
                                                     let block = $(element).closest('.col-3').find('img');
-                                                    $('<img src="' + result.url + '" ' +
+                                                    $('<img src="'+ appContextPath + result.url + '" ' +
                                                         'id="imagePage' + result.id + '" ' +
                                                         'class="img-fluid mb-2" ' +
                                                         'style="max-width: 250px; max-height: 200px;">')
@@ -319,9 +297,8 @@
                                 function removeBlock(element, id) {
                                     let block = element.closest('.col-3');
                                     block.remove();
-                                    let url = baseUrl + '/deleteImage/' + id;
                                     $.ajax({
-                                        url: url,
+                                        url: appContextPath + '/admin/pages/editPage/deleteImage/' + id,
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -391,13 +368,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="navs-pills-within-card-link" role="tabpanel">
-                        <h4 class="card-title">Special link title</h4>
-                        <p class="card-text">
-                            With supporting text below as a natural lead-in to additional content.
-                        </p>
-                        <a href="javascript:void(0)" class="btn btn-secondary">Go somewhere</a>
-                    </div>
+
                 </div>
             </div>
         </form>

@@ -19,7 +19,7 @@
                 </a>
                 <a th:href="@{cinema/editCinema/{id}(id=*{cinema.id})}">
                     <img class="card-img-top"
-                         th:src="${cinema.logoPath == null || cinema.logoPath.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : cinema.logoPath}"
+                         th:src="@{${cinema.logoPath == null || cinema.logoPath .isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : cinema.logoPath}}"
                          alt="Card image cap"/>
                 </a>
 

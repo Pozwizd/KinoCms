@@ -54,10 +54,7 @@ public class NewsController {
     }
 
     @PostMapping("/editNews/{id}")
-    public ModelAndView editBasicPage(@ModelAttribute News news,
-                                      @PathVariable String id,
-                                      @RequestParam(name = "mainImagePage", required = false)
-                                      MultipartFile mainImagePage) {
+    public ModelAndView editBasicPage(@ModelAttribute News news) {
 
         newsService.updateNews(news);
         return new ModelAndView("redirect:/admin/news");
@@ -82,13 +79,13 @@ public class NewsController {
 
 // Ajax ====================================================================
 
-    @GetMapping("/editNews/{id}/showMainPage/")
+    @GetMapping("/editNews/showMainPage/{id}")
     @ResponseBody
     public News showMainImageNews(Model model, @PathVariable long id) {
         return newsService.getNews(id);
     }
 
-    @PostMapping("/editNews/{id}/editMainPage/")
+    @PostMapping("/editNews/editMainPage/{id}")
     @ResponseBody
     public ResponseEntity<String> editMainImageNews(@RequestPart("file") MultipartFile file,
                                                     @PathVariable Long id) {
@@ -100,9 +97,9 @@ public class NewsController {
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
-    @PostMapping("/editNews/{id}/deleteMainPage/")
+    @PostMapping("/editNews/deleteMainPage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteImageNews(Model model, @PathVariable long id) {
+    public ResponseEntity<String> deleteImageNews(@PathVariable long id) {
         News news = newsService.getNews(id);
         uploadFile.deleteFile(news.getMainImage());
         news.setMainImage(null);
@@ -110,29 +107,29 @@ public class NewsController {
         return ResponseEntity.ok("Файл успешно удален");
     }
 
-    @GetMapping("/editNews/{id}/showAllImages/")
+    @GetMapping("/editNews/showAllImages/{id}")
     @ResponseBody
     public List<ImageNews> showAllImages(@PathVariable String id) {
         return imageNewsService.getAllImagesNewsByNews(newsService.getNews(Long.parseLong(id)));
     }
 
-    @GetMapping("/editNews/{nothing}/getImage/{id}")
+    @GetMapping("/editNews/getImage/{id}")
     @ResponseBody
-    public ImageNews getImage(@PathVariable String id, @PathVariable String nothing) {
+    public ImageNews getImage(@PathVariable String id) {
         return imageNewsService.getImageNews(Long.parseLong(id));
     }
 
-    @GetMapping("/editNews/{nothing}/deleteImage/{id}")
+    @GetMapping("/editNews/deleteImage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteImage(@PathVariable String id, @PathVariable String nothing) {
+    public ResponseEntity<String> deleteImage(@PathVariable String id) {
         uploadFile.deleteFile(imageNewsService.getImageNews(Long.parseLong(id)).getUrl());
         imageNewsService.deleteImageNews(Long.parseLong(id));
         return ResponseEntity.ok("Image deleted successfully");
     }
 
-    @GetMapping("/editNews/{id}/createNewImage/")
+    @GetMapping("/editNews/createNewImage/{id}")
     @ResponseBody
-    public ImageNews createImageNews(@PathVariable String id, @PathVariable String nothing) {
+    public ImageNews createImageNews(@PathVariable String id) {
         ImageNews imageNews = new ImageNews();
         imageNews.setNews(newsService.getNews(Long.parseLong(id)));
         imageNewsService.saveImageNews(imageNews);
@@ -140,11 +137,10 @@ public class NewsController {
         return imageNews;
     }
 
-    @PostMapping("/editNews/{nothing}/editImageNews/{id}")
+    @PostMapping("/editNews/editImageNews/{id}")
     @ResponseBody
     public ResponseEntity<String> editImageNews(@RequestPart("file") MultipartFile file,
                                                 @PathVariable Long id) {
-
 
         ImageNews imageNews = imageNewsService.getImageNews(id);
         imageNews.setUrl(uploadFile.uploadFile(file, imageNews.getUrl()));

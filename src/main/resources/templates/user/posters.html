@@ -44,7 +44,7 @@
                                         <div class="card h-100 text-center mb-3 d-flex justify-content-center align-items-center">
                                             <a th:href="@{/film/{id}(id=*{film.id})}">
                                                 <img class="card-img-top"
-                                                     th:src="${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}"
+                                                     th:src="@{${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}}"
                                                      alt="Card image cap"/>
                                             </a>
                                             <div class="card-body d-flex justify-content-center align-items-center">
@@ -60,7 +60,7 @@
                                         <div class="card h-100 text-center mb-3 d-flex justify-content-center align-items-center">
                                             <a th:href="@{/film/{id}(id=*{film.id})}">
                                                 <img class="card-img-top"
-                                                     th:src="${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}"
+                                                     th:src="@{${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}}"
                                                      alt="Card image cap"/>
                                             </a>
                                             <div class="card-body d-flex justify-content-center align-items-center">

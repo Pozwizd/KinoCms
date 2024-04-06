@@ -146,11 +146,275 @@
                             <div class="col-12 text-center">
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
+                            <div th:text="${appContextPath}" hidden id="appContextPath"></div>
                             <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+
                             <script>
-                                window.cinemaId = [[${cinema.id}]];
+                                let appContextPath = document.getElementById("appContextPath").textContent
+
+                                $(document).ready(function () {
+                                    const textarea = document.querySelectorAll('[data-autosize]');
+                                    autosize(textarea);
+
+                                    showAllImagesCinema();
+                                    showLogoCinema();
+                                    showTopBanner();
+
+                                });
+
+
+                                function showLogoCinema () {
+                                    $.ajax({
+                                        url: appContextPath + '/admin/cinema/editCinema/showLogoCinemaPath/' + [[${cinema.id}]],
+                                        method: 'GET',
+                                        dataType: "Text",
+                                        success: function (result) {
+                                            console.log("Успешно загружен логотип кинотеатра", result)
+                                            $('<img src="' +
+                                                (result == null || result === "" ? 'https://via.placeholder.com/250x200.png?text=Нет+Изображения' : appContextPath + result)
+                                                + '"' +
+                                                ' class="img-fluid"\n' +
+                                                ' id="logoImage" \n' +
+                                                ' style="max-width: 250px;' +
+                                                ' max-height: 200px;">').appendTo('#logoImageBlock');
+                                        },
+                                        error: function (result) {
+                                            console.log("Ошибка при загрузке логотипа кинотеатра", result)
+                                        }
+                                    })
+                                }
+
+                                function changeLogo(element) {
+                                    let file = element.files[0];
+                                    let formData = new FormData();
+                                    formData.append("file", file);
+                                    $.ajax({
+                                        url: appContextPath + '/admin/cinema/editCinema/editLogoPath/' + [[${cinema.id}]],
+                                        method: 'POST',
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                        success: function (result) {
+                                            console.log("Изменение лого успешно");
+                                            let nearestImg = $(element).closest('#logoBlock').find('#logoImage');
+                                            nearestImg.remove();
+                                            showLogoCinema();
+                                        },
+                                        error: function (error) {
+                                            console.error("Ошибка при загрузке лого:", error);
+                                        }
+                                    });
+                                }
+
+                                function deleteLogo(element) {
+                                    let nearestImg = $(element).closest('#logoBlock').find('#logoImage');
+                                    nearestImg.remove();
+                                    $.ajax({
+                                        url: appContextPath + '/admin/cinema/editCinema/deleteLogoPath/' + [[${cinema.id}]],
+                                        method: 'POST',
+                                        processData: false,
+                                        contentType: false,
+                                        success: function (result) {
+                                            showLogoCinema();
+                                            console.log("Удаление лого прошло успешно", result);
+                                        },
+                                        error: function () {
+                                            console.log("Ошибка удаления лого")
+                                        }
+                                    })
+                                }
+
+                                // TopBanner
+
+                                function showTopBanner () {
+                                    $.ajax({
+                                        url: appContextPath + '/admin/cinema/editCinema/showTopBanner/' + [[${cinema.id}]],
+                                        method: 'GET',
+                                        dataType: 'Text',
+                                        success: function (result) {
+                                            console.log("Лого должно успешно отобразиться")
+                                            $('<img src="' +
+                                                (result == null || result === "" ? 'https://via.placeholder.com/250x200.png?text=Нет+Изображения' : appContextPath + result)
+                                                + '"' +
+                                                ' class="img-fluid"\n' +
+                                                ' id="topBannerImage" \n' +
+                                                ' style="max-width: 250px;' +
+                                                ' max-height: 200px;">').appendTo('#topBannerImageBlock');
+                                        },
+                                        error: function () {
+                                            console.log('error logo');
+                                        }
+                                    })
+                                }
+
+                                function changeTopBanner(element) {
+                                    let file = element.files[0];
+                                    let formData = new FormData();
+                                    formData.append("file", file);
+                                    $.ajax({
+                                        url: appContextPath + '/admin/cinema/editCinema/editTopBanner/' + [[${cinema.id}]],
+                                        method: 'POST',
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                        success: function (result) {
+                                            console.log("Изменение лого успешно");
+                                            let nearestImg = $(element).closest('#topBannerBlock').find('#topBannerImage');
+                                            nearestImg.remove();
+                                            showTopBanner();
+                                        },
+                                        error: function (error) {
+                                            console.error("Ошибка при загрузке лого:", error);
+                                        }
+                                    });
+                                }
+
+                                function deleteTopBanner(element) {
+                                    let nearestImg = $(element).closest('#topBannerBlock').find('#topBannerImage');
+                                    nearestImg.remove();
+                                    $.ajax({
+                                        url: appContextPath + '/admin/cinema/editCinema/deleteTopBanner/' + [[${cinema.id}]],
+                                        method: 'POST',
+                                        processData: false,
+                                        contentType: false,
+                                        success: function (result) {
+                                            showTopBanner();
+                                            console.log("Удаление лого прошло успешно", result);
+                                        },
+                                        error: function () {
+                                            console.log("Ошибка удаления лого")
+                                        }
+                                    })
+                                }
+
+                                function showAllImagesCinema () {
+                                    $.ajax({
+                                        url: appContextPath + '/admin/cinema/editCinema/showAllImagesCinema/' + [[${cinema.id}]],
+                                        method: 'GET',
+                                        dataType: 'JSON',
+                                        success: function (result) {
+                                            console.log("All image");
+                                            drawImages(result)
+                                        },
+                                        error: function (error) {
+                                            console.log("Картинки не отображается");
+                                        }
+                                    })
+                                }
+
+                                function drawImages(result) {
+                                    for (const data of result) {
+                                        $('<div class="col-3">' +
+                                            '<div class="d-flex flex-column" style="max-width: 100%;">' +
+                                            '<img src="' + (data.url != null ? appContextPath  + data.url : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '"' +
+                                            ' id="imagePage' + data.id + '" ' +
+                                            'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
+                                            '<label class="form-label" id="imagePageEdit' + data.id + '" style="max-width: 250px;">' +
+                                            '<input type="file" ' +
+                                            'class="form-control" ' +
+                                            'accept="image/png, image/jpeg" onchange="editImageCinema(this,' + data.id + ')" multiple/>' +
+                                            '</label>' +
+                                            '<label class="form-label" style="max-width: 250px;">' +
+                                            '<button style="width: 250px;" ' +
+                                            'type="button" ' +
+                                            'class="btn btn-danger" ' +
+                                            'onclick="removeImageCinema(this, ' + data.id + ' )">' +
+                                            'Удалить' +
+                                            '</button>' +
+                                            '</label>' +
+                                            '</div>' +
+                                            '</div>').appendTo('#gallery-image');
+
+                                    }
+                                }
+
+                                function addNewImageCinema () {
+                                    $.ajax({
+                                        url: appContextPath + '/admin/cinema/editCinema/createNewImage/' + [[${cinema.id}]],
+                                        method: 'GET',
+                                        dataType: 'JSON',
+                                        success: function (result) {
+                                            console.log('Успешно создана новая картинка кинотеатра', result);
+                                            $('<div class="col-3">' +
+                                                '<div class="d-flex flex-column" style="max-width: 100%;">' +
+                                                '<img src="' + (result.url != null ? appContextPath + result.url : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '"' +
+                                                ' id="imagePage' + result.id + '" ' +
+                                                'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
+                                                '<label class="form-label"  id="imagePageEdit' + result.id + '" style="max-width: 250px;">' +
+                                                '<input type="file" ' +
+                                                'class="form-control"' +
+                                                'accept="image/png, image/jpeg" onchange="editImageCinema(this,' + result.id + ')" multiple/>' +
+                                                '</label>' +
+                                                '<label class="form-label" style="max-width: 250px;">' +
+                                                '<button style="width: 250px;" ' +
+                                                'type="button" ' +
+                                                'class="btn btn-danger" ' +
+                                                'onclick="removeImageCinema(this, ' + result.id + ' )">' +
+                                                'Удалить' +
+                                                '</button>' +
+                                                '</label>' +
+                                                '</div>' +
+                                                '</div>').appendTo('#gallery-image');
+                                        },
+                                        error: function (error) {
+                                            console.log('Не удалось создать новую картинку кинотеатра', error);
+                                        }
+                                    })
+                                }
+                                document.querySelector('#add-image-button').addEventListener('click', addNewImageCinema);
+
+                                function editImageCinema(element, id) {
+                                    let file = element.files[0];
+                                    let formData = new FormData();
+                                    formData.append("file", file);
+                                    $.ajax({
+                                        url: appContextPath + '/admin/cinema/editCinema/editImageCinema/' + id,
+                                        method: 'POST',
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                        success: function (result) {
+                                            console.log("Успешно изменено изображение кинотеатра", result);
+                                            $.ajax({
+                                                url: appContextPath + '/admin/cinema/editCinema/getImageCinema/' + id,
+                                                method: 'GET',
+                                                success: function (result) {
+                                                    console.log("Загрузка обновленного изображения кинотеатра прошла успешно:", result);
+                                                    let block = $(element).closest('.col-3').find('img');
+                                                    $('<img src="' + (result.url != null ? appContextPath + result.url : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '"' +
+                                                        ' id="imagePage' + result.id + '" ' +
+                                                        'class="img-fluid mb-2" ' +
+                                                        'style="max-width: 250px; max-height: 200px;">')
+                                                        .insertBefore($("#imagePageEdit" + result.id));
+                                                    block.remove();
+                                                },
+                                                error: function (error) {
+                                                    console.error("Ошибка при изменении обновленного изображения кинотеатра:", error);
+                                                }
+                                            });
+                                        },
+                                        error: function (error) {
+                                            console.error("Ошибка при изменении изображения кинотеатра:", error);
+                                        }
+                                    });
+                                }
+
+                                function removeImageCinema(element, id) {
+                                    let block = element.closest('.col-3');
+                                    block.remove();
+                                    $.ajax({
+                                        url: appContextPath + '/admin/cinema/editCinema/deleteImageCinema/' + id,
+                                        method: 'GET',
+                                        success: function (result) {
+                                            console.log('Успешно удалено изображение кинотеатра', result);
+                                        },
+                                        error: function (error) {
+                                            console.error("Ошибка при удалении изображения кинотеатра:", error);
+                                        }
+                                    })
+                                }
+
                             </script>
-                            <script th:src="@{/customAssets/js/cinemaEdit.js}"></script>
 
 
                         </div>

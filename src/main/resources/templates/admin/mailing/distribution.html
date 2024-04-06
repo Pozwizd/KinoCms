@@ -101,7 +101,7 @@
             </div>
             <div class="card-body">
                 <form method="post"
-                      action="/admin/distribution/sendMail"
+                      th:action="@{/admin/distribution/sendMail}"
                       class="mail-form"
                       enctype="multipart/form-data"
                       novalidate>
@@ -132,7 +132,7 @@
                             <label class="form-label">Выборочно</label>
                         </div>
                         <a type="button"
-                           href="/admin/distribution/userMailing"
+                           th:href="@{/admin/distribution/userMailing}"
                            class="btn-outline-primary btn col-3 disabled"
                            id="selectUsersButton">
                             Выбрать пользователей
@@ -229,15 +229,17 @@
                             Начать рассылку
                         </button>
                     </div>
-                    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+                    <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+                    <div th:text="${appContextPath}" hidden id="appContextPath"></div>
                     <script>
+                        let appContextPath = document.getElementById("appContextPath").textContent
                         $(document).ready(function () {
                             showAllHtmlTemplate()
                         });
 
                         function showAllHtmlTemplate(){
                             $.ajax({
-                                url: '/admin/distribution/getAllMailTemplate/',
+                                url: appContextPath + '/admin/distribution/getAllMailTemplate/',
                                 method: 'GET',
                                 dataType: 'JSON',
                                 success: function (result) {
@@ -269,7 +271,7 @@
                             formData.append("file", file);
 
                             $.ajax({
-                                url: '/admin/distribution/addMailTemplate/',
+                                url: appContextPath + '/admin/distribution/addMailTemplate/',
                                 method: 'POST',
                                 data: formData,
                                 processData: false,
@@ -282,7 +284,7 @@
                                     }
 
                                     $.ajax({
-                                        url: '/admin/distribution/getMailTemplate/',
+                                        url: appContextPath+ '/admin/distribution/getMailTemplate/',
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
@@ -314,7 +316,7 @@
                         function deleteHtmlTemplate(element, id) {
                             element.closest('.list-group-item').remove();
                             $.ajax({
-                                url: '/admin/distribution/deleteMailTemplate/'+ id,
+                                url: appContextPath+ '/admin/distribution/deleteMailTemplate/'+ id,
                                 method: 'POST',
                                 processData: false,
                                 contentType: false,

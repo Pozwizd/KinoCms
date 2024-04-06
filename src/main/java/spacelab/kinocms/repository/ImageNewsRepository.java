@@ -11,8 +11,5 @@ import java.util.List;
 @Repository
 public interface ImageNewsRepository extends JpaRepository<ImageNews, Long> {
     List<ImageNews> findAllByNews(News news);
-
-//    @Query("SELECT b FROM  b ORDER BY b.id DESC limit 1")
-
-    ImageNews findImageNewsByNewsOrderByIdDesc(News news);
+    ImageNews findTopImageNewsByNewsOrderByIdDesc(News news);
 }

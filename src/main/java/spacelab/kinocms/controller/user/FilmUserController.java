@@ -13,6 +13,10 @@ import spacelab.kinocms.service.BannerBlockService;
 import spacelab.kinocms.service.BannerService;
 import spacelab.kinocms.service.FilmService;
 
+import java.util.Arrays;
+
+import static java.util.Locale.filter;
+
 @Controller
 @AllArgsConstructor
 @RequestMapping("/film/")
@@ -29,6 +33,8 @@ public class FilmUserController {
         model.addAttribute("title", filmService.getFilm(Long.parseLong(id)).getName());
         model.addAttribute("banners", bannerService.getAllBanners());
         Film film = filmService.getFilm(Long.parseLong(id));
+        String result = film.getLinkTrailer().substring(film.getLinkTrailer().lastIndexOf("/") + 1);
+        film.setLinkTrailer(result);
         model.addAttribute("film", film);
 
         return new ModelAndView("user/cardFilm");

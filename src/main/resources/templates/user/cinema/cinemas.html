@@ -26,7 +26,7 @@
                th:each="cinema, i : ${cinemas}"
                th:classappend="${i.first ? 'active' : ''}">
             <a th:href="@{cinema/{id}(id=*{cinema.id})}"  style="width: 1000px; height: 400px">
-              <img class="d-block w-100" th:src="${cinema.logoPath}" alt="First slide"
+              <img class="d-block w-100" th:src="@{${cinema.logoPath == null || cinema.logoPath.isEmpty() ? 'https://via.placeholder.com/250x200.png?text=Нет+Изображения' : cinema.logoPath}}" alt="First slide"
                    style="width: 1000px; height: 400px"/>
             </a>
           </div>
@@ -53,7 +53,7 @@
                       <div class="card h-100 text-center mb-3">
                         <a th:href="@{/cinema/{id}(id=*{cinema.id})}">
                           <img class="card-img-top"
-                               th:src="${cinema.logoPath == null || cinema.logoPath.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : cinema.logoPath}"
+                               th:src="@{${cinema.logoPath == null || cinema.logoPath.isEmpty() ? 'https://via.placeholder.com/250x200.png?text=Нет+Изображения' : cinema.logoPath}}"
                                alt="Card image cap"/>
                         </a>
                         <div class="card-body">

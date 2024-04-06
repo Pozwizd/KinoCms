@@ -80,17 +80,17 @@ public class FilmController {
 
 // Ajax ====================================================================
 
-    @GetMapping("/editFilm/{nothing}/showMainPage/{id}")
+    @GetMapping("/editFilm/showMainPage/{id}")
     @ResponseBody
-    public String showMainImageFilm(Model model, @PathVariable long id, @PathVariable String nothing) {
+    public String showMainImageFilm(Model model, @PathVariable long id) {
         Film film = filmService.getFilm(id);
         return film.getMainImage();
     }
 
-    @PostMapping("/editFilm/{nothing}/editMainPage/{id}")
+    @PostMapping("/editFilm/editMainImage/{id}")
     @ResponseBody
     public ResponseEntity<String> editMainImageFilm(@RequestPart("file") MultipartFile file,
-                                                    @PathVariable Long id, @PathVariable String nothing) {
+                                                    @PathVariable Long id) {
 
         Film film = filmService.getFilm(id);
         film.setMainImage(uploadFile.uploadFile(file, film.getMainImage()));
@@ -98,7 +98,7 @@ public class FilmController {
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
-    @PostMapping("/editFilm/{nothing}/deleteMainPage/{id}")
+    @PostMapping("/editFilm/deleteMainImage/{id}")
     @ResponseBody
     public ResponseEntity<String> deleteImageFilm(Model model, @PathVariable long id) {
         Film film = filmService.getFilm(id);
@@ -108,38 +108,38 @@ public class FilmController {
         return ResponseEntity.ok("Файл успешно удален");
     }
 
-    @GetMapping("/editFilm/{nothing}/showAllImages/{id}")
+    @GetMapping("/editFilm/showAllImageFilm/{id}")
     @ResponseBody
-    public List<ImageFilm> showAllImages(@PathVariable String id, @PathVariable String nothing) {
+    public List<ImageFilm> showAllImages(@PathVariable String id) {
         return imageFilmService.getAllImageFilmByFilm(filmService.getFilm(Long.parseLong(id)));
     }
 
-    @GetMapping("/editFilm/{nothing}/getImage/{id}")
+    @GetMapping("/editFilm/getImage/{id}")
     @ResponseBody
-    public ImageFilm getImage(@PathVariable String id, @PathVariable String nothing) {
+    public ImageFilm getImage(@PathVariable String id) {
         return imageFilmService.getImageFilmById(Long.parseLong(id));
     }
 
-    @GetMapping("/editFilm/{nothing}/deleteImage/{id}")
+    @GetMapping("/editFilm/deleteImage/{id}")
     @ResponseBody
-    public ResponseEntity<String> deleteImage(@PathVariable String id, @PathVariable String nothing) {
+    public ResponseEntity<String> deleteImage(@PathVariable String id) {
         imageFilmService.deleteImageFilm(Long.parseLong(id));
         return ResponseEntity.ok("Image deleted successfully");
     }
 
-    @GetMapping("/editFilm/{nothing}/createNewImage/{id}")
+    @GetMapping("/editFilm/createNewImage/{id}")
     @ResponseBody
-    public ImageFilm createImageFilm(@PathVariable String id, @PathVariable String nothing) {
+    public ImageFilm createImageFilm(@PathVariable String id) {
         ImageFilm imageFilm = new ImageFilm();
         imageFilm.setFilm(filmService.getFilm(Long.parseLong(id)));
         imageFilmService.saveImageFilm(imageFilm);
         return imageFilmService.getLastImageFilmByFilm(filmService.getFilm(Long.parseLong(id)));
     }
 
-    @PostMapping("/editFilm/{nothing}/editImageFilm/{id}")
+    @PostMapping("/editFilm/editImageFilm/{id}")
     @ResponseBody
     public ResponseEntity<String> editImageFilm(@RequestPart("file") MultipartFile file,
-                                                @PathVariable Long id, @PathVariable String nothing) {
+                                                @PathVariable Long id) {
 
         ImageFilm  imageFilm = imageFilmService.getImageFilmById(id);
         imageFilm.setUrl(uploadFile.uploadFile(file,imageFilm.getUrl()));

@@ -37,7 +37,7 @@ public class ImageNewsServiceImp implements ImageNewsService {
     public ImageNews getLastImageNews(String id) {
 
         logger.info("Get last image news");
-        return imageNewsRepository.findImageNewsByNewsOrderByIdDesc(newsService.getNews(Long.parseLong(id)));
+        return imageNewsRepository.findTopImageNewsByNewsOrderByIdDesc(newsService.getNews(Long.parseLong(id)));
     }
 
     @Override

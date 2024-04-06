@@ -65,9 +65,9 @@ class ImageNewsServiceImpTest {
         imageNewsList.add(imageNews);
         imageNewsList.add(imageNews2);
         when(newsService.getNews(1L)).thenReturn(news);
-        when(imageNewsRepository.findImageNewsByNewsOrderByIdDesc(news)).thenReturn(imageNews2);
+        when(imageNewsRepository.findTopImageNewsByNewsOrderByIdDesc(news)).thenReturn(imageNews2);
         ImageNews actualImageNews = imageNewsService.getLastImageNews("1");
-        verify(imageNewsRepository).findImageNewsByNewsOrderByIdDesc(news);
+        verify(imageNewsRepository).findTopImageNewsByNewsOrderByIdDesc(news);
         assertEquals(imageNews2, actualImageNews);
 
 

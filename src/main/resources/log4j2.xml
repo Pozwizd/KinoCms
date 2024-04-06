@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Properties>
-        <Property name="path">/home/slj/projects/KinoCms-R.Miahkykh/logs/</Property>
-<!--        <Property name="path">/home/slj/web/slj.demodev.cc/projects/KinoCms-R.Miahkykh/logs/</Property>-->
-<!--        <Property name="path">/home/slj/web/slj.avada-media-dev2.od.ua/projects/KinoCms-R.Miahkykh/logs/</Property>-->
+<!--        <Property name="path">C:\\Users\\Belwerk\\Downloads\\ProjectFiles\\KinoCms-R.Miahkykh\\logs</Property>-->
+        <Property name="path">/home/slj/projects/KinoCms-R.Miahkykh/logs</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT" follow="true">

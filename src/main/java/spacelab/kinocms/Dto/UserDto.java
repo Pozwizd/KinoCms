@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import spacelab.kinocms.enums.Gender;
 import spacelab.kinocms.enums.Lanquage;
+import spacelab.kinocms.model.Role;
 import spacelab.kinocms.model.User;
 
 import java.io.Serializable;
@@ -35,4 +36,5 @@ public class UserDto implements Serializable {
     String phoneNumber;
     Date dateOfBirth;
     String city;
+    Role role;
 }

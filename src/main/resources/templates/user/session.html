@@ -46,10 +46,12 @@
                             <p>Реклама</p>
                         </div>
                     </div>
-                    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
-                    <script src="/assets/vendor/libs/select2/select2.js"></script>
-                    <script src="/assets/vendor/libs/toastr/toastr.js"></script>
+                    <div th:text="${appContextPath}" hidden id="appContextPath"></div>
+                    <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+                    <script th:src="@{/assets/vendor/libs/select2/select2.js}"></script>
+                    <script th:src="@{/assets/vendor/libs/toastr/toastr.js}"></script>
                     <script>
+                        let appContextPath = document.getElementById("appContextPath").textContent
                         $(document).ready(function () {
                             getSelects();
                         });
@@ -76,7 +78,7 @@
 
                         function getSelects() {
                             $.ajax({
-                                url: '/session/getSessionPageDto',
+                                url: appContextPath + '/session/getSessionPageDto',
                                 type: 'GET',
                                 success: function (response) {
                                     appendSelects(response);
@@ -115,7 +117,7 @@
                             let valueId = $(thisElement).val();
                             $('.hallsCinema').empty();
                             $.ajax({
-                                url: '/session/getHallsByCinema/' + valueId,
+                                url: appContextPath+ '/session/getHallsByCinema/' + valueId,
                                 type: 'GET',
                                 success: function (response) {
                                     let select = '';
@@ -179,7 +181,7 @@
                         }
 
                         function getSessionsBySearch(search) {
-                            let url = 'session/getPageSearch';
+                            let url = '/session/getPageSearch';
                             let isFirstParam = true;
                             let searchField = [
                                 'dateSession',
@@ -205,7 +207,7 @@
                             console.log(url)
                             $.ajax({
                                 type: 'GET',
-                                url: url,
+                                url: appContextPath + url,
                                 dataType: 'json',
                                 success: function (result) {
                                     clearTableLine();
@@ -222,7 +224,7 @@
                         function getAllSessions() {
                             $.ajax({
                                 type: 'GET',
-                                url: 'session/getAllSession',
+                                url: appContextPath + '/session/getAllSession',
                                 dataType: 'json',
                                 success: function (result) {
                                     clearTableLine();

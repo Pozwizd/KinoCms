@@ -26,7 +26,7 @@
                          th:each="newsItem, i : ${news}"
                          th:classappend="${i.first ? 'active' : ''}">
                         <a th:href="@{news/{id}(id=*{newsItem.id})}"  style="width: 1000px; height: 400px">
-                            <img class="d-block w-100" th:src="${newsItem.mainImage}" alt="First slide"
+                            <img class="d-block w-100" th:src="@{${newsItem.mainImage}}" alt="First slide"
                                  style="width: 1000px; height: 400px"/>
                         </a>
                     </div>
@@ -53,7 +53,7 @@
                                             <div class="card h-100 text-center mb-3">
                                                 <a th:href="@{/news/{id}(id=*{newsItem.id})}">
                                                     <img class="card-img-top"
-                                                         th:src="${newsItem.mainImage == null || newsItem.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : newsItem.mainImage}"
+                                                         th:src="@{${newsItem.mainImage == null || newsItem.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : newsItem.mainImage}}"
                                                          alt="Card image cap"/>
                                                 </a>
                                                 <div class="card-body">
