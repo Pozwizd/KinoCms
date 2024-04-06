@@ -34,3 +34,4 @@ spring:
 upload:
   folder:
     path: "/home/slj/projects/KinoCms-R.Miahkykh/uploads"
+
