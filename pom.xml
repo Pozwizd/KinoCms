@@ -17,8 +17,8 @@
     <properties>
         <java.version>17</java.version>
         <project.groupId>spaceLab</project.groupId>
-        <project.artifactId>KinoCms-</project.artifactId>
-        <project.version>R.Miahkykh</project.version>
+        <project.artifactId>KinoCms</project.artifactId>
+        <project.version>latest</project.version>
         <project.packaging>war</project.packaging>
         <project.name>KinoCms</project.name>
         <project.description>KinoCms</project.description>
