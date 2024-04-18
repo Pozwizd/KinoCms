@@ -27,7 +27,7 @@ jobs:
 
       - name: Tomcat Deploy
         env:
-          TOMCAT_MANAGER_URL: https://slj.demodev.cc/manager/text/deploy?path=/kinoCMS&update=true
+          TOMCAT_MANAGER_URL: https://slj.demodev.cc/manager/text/deploy?path=/KinoCms-R.Miahkykh&update=true
           TOMCAT_USERNAME: ${{ secrets.TOMCAT_USERNAME }}
           TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }}
         run: |
