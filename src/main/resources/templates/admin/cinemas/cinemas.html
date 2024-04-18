@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+
+<body>
+<div layout:fragment="content">
+    <div class="d-flex flex-row justify-content-center align-items-center">
+        <h4 class="fw-bold pt-3">Список кинотеатров</h4>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+        <div class="col" th:each="cinema, i : ${cinemas}">
+            <div class="card h-100 text-center mb-3">
+                <a th:if="${i.index} > 0"
+                        type="button"
+                        th:href="@{cinema/removeCinema/{id}(id=*{cinema.id})}"
+                        class="btn rounded-pill btn-icon btn-label-danger position-absolute top-0 end-0">
+                    <span class="fa-solid fa-x"></span>
+                </a>
+                <a th:href="@{cinema/editCinema/{id}(id=*{cinema.id})}">
+                    <img class="card-img-top"
+                         th:src="@{${cinema.logoPath == null || cinema.logoPath .isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : cinema.logoPath}}"
+                         alt="Card image cap"/>
+                </a>
+
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${cinema.name}">Card title</h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row justify-content-center">
+        <div class="d-grid gap-2 col-3 mx-auto mt-3">
+            <a th:href="@{cinema/createCinema}" class="btn btn-outline-primary">Добавить
+            </a>
+        </div>
+    </div>
+    <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+    <script>
+    </script>
+</div>
+</body>
+</html>

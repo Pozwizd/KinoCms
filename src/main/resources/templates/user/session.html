@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="user/template/layout.html">>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="col-lg-12 mb-4 mb-xl-0">
+            <div class="mt-3">
+                <div class="row">
+                    <table class="col-md-10 table">
+                        <thead id="sessionTableHead">
+
+                        </thead>
+                    </table>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10 col-12">
+
+                        <form class="d-flex flex-column justify-content-center align-items-center"
+                              id="sessionForm">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Дата сеанса</th>
+                                        <th>Фильм(Название)</th>
+                                        <th>Кинотеатр</th>
+                                        <th>Номер зала</th>
+                                        <th>Цена</th>
+                                        <th>Цена VIP</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="sessionTableBody">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-2 col-12 mb-3 mb-md-0">
+                        <div class="d-flex justify-content-center align-items-center h-100 border rounded mt-5"
+                             style="max-height: 150px">
+                            <p>Реклама</p>
+                        </div>
+                    </div>
+                    <div th:text="${appContextPath}" hidden id="appContextPath"></div>
+                    <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+                    <script th:src="@{/assets/vendor/libs/select2/select2.js}"></script>
+                    <script th:src="@{/assets/vendor/libs/toastr/toastr.js}"></script>
+                    <script>
+                        let appContextPath = document.getElementById("appContextPath").textContent
+                        $(document).ready(function () {
+                            getSelects();
+                        });
+
+                        function films(films) {
+                            let filmsOptions;
+                            filmsOptions = filmsOptions + '<option value=""></option> ';
+                            films.forEach(function (film) {
+                                filmsOptions = filmsOptions + '<option value="' + film.id + '">' + film.name + '</option>'
+
+                            });
+                            return filmsOptions
+                        }
+
+                        function cinemas(cinemas) {
+                            let cinemasOptions;
+                            cinemasOptions = cinemasOptions + '<option value=""></option> ';
+                            cinemas.forEach(function (cinema) {
+                                cinemasOptions = cinemasOptions + '<option value="' + cinema.id + '">' + cinema.name + '</option>'
+                            });
+
+                            return cinemasOptions
+                        }
+
+                        function getSelects() {
+                            $.ajax({
+                                url: appContextPath + '/session/getSessionPageDto',
+                                type: 'GET',
+                                success: function (response) {
+                                    appendSelects(response);
+                                    initializeSelect2();
+                                }
+                            })
+                        }
+
+                        function appendSelects(response) {
+                            let tableRow = $('<tr></tr>').appendTo('#sessionTableHead');
+                            tableRow.append('<th>2d  <input type="checkbox" onchange="changeSelections()" id="2d" value="true"></th>');
+                            tableRow.append('<th>3d  <input type="checkbox" onchange="changeSelections()" id="3d" value="true"></th>');
+                            tableRow.append('<th>imax  <input type="checkbox" onchange="changeSelections()" id="imax" value="true"></th>');
+                            tableRow.append('<th><input id="dateSession" name="dateSession" onchange="changeSelections()" type="date" class="form-control" placeholder="Дата сеанса"/></th>');
+                            tableRow.append('<th><select id="films" name="films" onchange="changeSelections()" class="select2 form-select form-select-lg" data-allow-clear="true">' + films(response.films) + '</select></th>');
+                            tableRow.append('<th><select id="cinemas" name="cinemas" onchange="changeCinema(this)" data-allow-clear="true"  class="select2 form-select form-select-lg">' + cinemas(response.cinemas) + '</select></th>');
+                            tableRow.append('<th><select id="halls" name="halls" onchange="changeSelections()" class="select2 form-select form-select-lg hallsCinema" data-allow-clear="true"></select></th>');
+                        }
+
+                        function initializeSelect2() {
+                            let select2 = $('.select2');
+                            if (select2.length) {
+                                select2.each(function () {
+                                    let $this = $(this);
+                                    let placeholder = this.id === 'films' ? 'Фильм' : this.id === 'cinemas' ? 'Кинотеатр' : 'Зал';
+                                    $this.wrap('<div class="position-relative dark-style"></div>').select2({
+                                        placeholder: placeholder,
+                                        dropdownParent: $this.parent()
+                                    });
+                                });
+                            }
+                        }
+
+                        function changeCinema(thisElement) {
+                            let valueId = $(thisElement).val();
+                            $('.hallsCinema').empty();
+                            $.ajax({
+                                url: appContextPath+ '/session/getHallsByCinema/' + valueId,
+                                type: 'GET',
+                                success: function (response) {
+                                    let select = '';
+                                    for (let j = 0; j < response.length; j++) {
+                                        let selectOption = '<option value="' + response[j].id + '">' + response[j].hallNumber + '</option>';
+                                        select += selectOption;
+                                    }
+                                    $('.hallsCinema').append(select);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log('Ошибка при получении информации о залах');
+                                }
+                            });
+                            changeSelections();
+                        }
+
+                        $(document).ready(function () {
+                            getSessions();
+                        });
+
+                        let searchText;
+                        let timer;
+
+                        function changeSelections() {
+                            clearTimeout(timer);
+                            searchText = getSearchText();
+                            console.log(searchText)
+                            timer = setTimeout(getSessions(), 500);
+                        }
+
+                        function getSearchText() {
+                            let searchArr = [];
+                            searchArr.push($("#dateSession").val());
+                            searchArr.push($("#films").val());
+                            searchArr.push($("#cinemas").val());
+                            searchArr.push($("#halls").val())
+                            searchArr.push($("#3d").is(':checked'))
+                            searchArr.push($("#2d").is(':checked'))
+                            searchArr.push($("#imax").is(':checked'));
+                            return searchArr;
+                        }
+
+                        function getSessions() {
+                            if ($("#dateSession").val() ||
+                                $("#films").val() ||
+                                $("#cinemas").val() ||
+                                $("#halls").val() ||
+                                $("#3d").is(':checked') ||
+                                $("#2d").is(':checked') ||
+                                $("#imax").is(':checked')) {
+                                // getSessionsBySearch(searchText);
+
+                                console.log("С сортировкой")
+                                getSessionsBySearch(searchText);
+
+                            } else {
+                                getAllSessions();
+                                console.log("Без сортировки")
+                            }
+
+                        }
+
+                        function getSessionsBySearch(search) {
+                            let url = '/session/getPageSearch';
+                            let isFirstParam = true;
+                            let searchField = [
+                                'dateSession',
+                                'films',
+                                'cinemas',
+                                'halls',
+                                '3d',
+                                '2d',
+                                'imax'
+                            ]
+
+                            for (let i = 0; i < search.length; i++) {
+                                if (search[i]) {
+                                    console.log(search[i])
+                                    if (isFirstParam) {
+                                        url += '?' + searchField[i] + '=' + search[i];
+                                        isFirstParam = false;
+                                    } else {
+                                        url += '&' + searchField[i] + '=' + search[i];
+                                    }
+                                }
+                            }
+                            console.log(url)
+                            $.ajax({
+                                type: 'GET',
+                                url: appContextPath + url,
+                                dataType: 'json',
+                                success: function (result) {
+                                    clearTableLine();
+                                    drawTable(result);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(error);
+                                    console.log(xhr);
+                                    console.log('Ошибка при получении информации о сеансах');
+                                }
+                            });
+                        }
+
+                        function getAllSessions() {
+                            $.ajax({
+                                type: 'GET',
+                                url: appContextPath + '/session/getAllSession',
+                                dataType: 'json',
+                                success: function (result) {
+                                    clearTableLine();
+                                    drawTable(result);
+                                }
+                            });
+                        }
+
+                        function drawTable(response) {
+                            $("#sessionTableBody").empty();
+                            console.log(response)
+                            response.forEach(function (session) {
+                                let clonedDate = moment(session.timeSession).clone();
+                                clonedDate.subtract(1, 'month');
+                                let formattedDate = clonedDate.locale('ru').format('DD.MM.YYYY HH:mm');
+                                let tableRow = $('<tr></tr>').appendTo('#sessionTableBody');
+                                tableRow.append('<td>' + formattedDate + '</td>');
+                                tableRow.append('<td>' + session.filmId.name + '</td>');
+                                tableRow.append('<td>' + session.cinemaId.name + '</td>');
+                                tableRow.append('<td>' + session.hallId.hallNumber + '</td>');
+                                tableRow.append('<td>' + session.price + '</td>');
+                                tableRow.append('<td>' + session.priceVip + '</td>');
+                            })
+                        }
+
+                        function clearTableLine() {
+                            $("sessionTableBody").find("tr").each(function () {
+                                this.remove();
+                            });
+                        }
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

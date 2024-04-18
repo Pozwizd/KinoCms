@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="user/template/layout.html">>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center align-items-center mb-5" >
+                    <iframe width="1000" height="400"
+                            th:src="@{'https://www.youtube.com/embed/' + ${film.getLinkTrailer().isEmpty() || film.getLinkTrailer() == null ? 'dQw4w9WgXcQ' : film.getLinkTrailer()}}" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <img class="w-100 m-1"
+                         th:src="@{${film.mainImage == null || film.mainImage == '' ? 'https://via.placeholder.com/250x200&text=Нет изображения' : film.mainImage}}"
+                         alt="Ошибка загрузки">
+                </div>
+                <div class="col-md-6 flex-row">
+                    <h2 class="text-center" th:text="${film.name}">Неоновый демон</h2>
+                    <p th:text="${film.description}">Красочный психологический триллер от обладателя премии Каннского кинофестиваля и автора "Только Бог простит" с Райаном Гослингом и "Бронсон" с Томом Харди.</p>
+                    <div class=" text-center">
+                        <a href="#" class="btn btn-primary">Купить билет</a>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <br>
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <table class="table table-striped table-bordered">
+                                <tbody>
+                                <tr>
+                                    <th scope="row">год</th>
+                                    <td>2016</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">страна</th>
+                                    <td>США, Франция, Дания</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">композитор</th>
+                                    <td>Клифф Мартинез</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">продюсер</th>
+                                    <td>Сидони Дюма</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">режиссер</th>
+                                    <td>Николас Виндинг Рефн</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">сценарист</th>
+                                    <td>Николас Виндинг Рефн</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">продюсер</th>
+                                    <td>Николас Виндинг Рефн</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">оператор</th>
+                                    <td>Наташа Брайер</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">продюсер</th>
+                                    <td>Венсан Мараваль</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">сценарист</th>
+                                    <td>Мэри Лоус</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">сценарист</th>
+                                    <td>Полли Стэнэм</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">жанр</th>
+                                    <td>триллер, ужасы</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">бюджет</th>
+                                    <td>7.00 млн USD</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">возраст</th>
+                                    <td>зрителям, достигшим 18 лет</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">время</th>
+                                    <td>117 мин. / 1:57</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h2 class="text-center">Кадры и постеры</h2>
+                            <div class="row">
+                                <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+
+                                        <div th:each="imageCinema, i : ${film.imagesFilm}" th:classappend="${i.first ? 'active' : ''}"
+                                             class="carousel-item"
+                                             th:data-bs-interval="5000"
+                                             style="height: 50vh;">
+                                            <div class="position-relative d-flex justify-content-center align-items-center">
+                                                <img class="d-block justify-content-center align-items-center"
+                                                     alt="" style="width: 50vh; height: 50vh;"
+                                                     th:src="@{${imageCinema.url == null || imageCinema.url == '' ? 'https://via.placeholder.com/250x200&text=Нет изображения' : imageCinema.url }}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

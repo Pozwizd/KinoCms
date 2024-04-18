@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="user/template/layout.html">>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center align-items-center mb-5">
+                    <img class="img-fluid" alt="" style="max-height: 100%; max-width: 100%; object-fit: contain;"
+                         th:src="@{${page.mainImage}}"/>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-9">
+                        <h4 class="card-title text-center" th:text="${page.name}"></h4>
+                        <br/>
+                        <p class="card-text" th:text="${page.description}"></p>
+                        <h4 class="card-title text-center"
+                            th:if="${page.imagesAboutCinema.size() > 0 || !page.imagesAboutCinema.isEmpty()}">Фотогалерея</h4>
+                        <br/>
+                        <div class="row" th:if="${page.imagesAboutCinema.size() > 0 || !page.imagesAboutCinema.isEmpty()}">
+                            <div class="d-flex justify-content-center ">
+                                <div id="carouselExample" class="carousel slide col-md-12"
+                                     style="width: 800px; height: 400px"
+                                     data-bs-ride="carousel">
+                                    <ol class="carousel-indicators">
+                                        <li data-bs-target="#carouselExample"
+
+                                            class="active"
+                                            th:each="image, i : ${page.imagesAboutCinema}"
+                                            th:data-bs-slide-to="${i.index}"
+                                            th:classappend="${i.first ? 'active' : ''}"></li>
+                                    </ol>
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item"
+                                             th:each="image, i : ${page.imagesAboutCinema}"
+                                             th:classappend="${i.first ? 'active' : ''}">
+                                            <img class="d-block w-100" th:src="@{${image.url}}" alt="First slide"
+                                                 style="width: 1000px; height: 400px"/>
+                                        </div>
+                                    </div>
+                                    <a class="carousel-control-prev" href="#carouselExample" role="button" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carouselExample" role="button" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <img
+
+                                class="card-img-top"
+                                src="https://picsum.photos/80/300"
+                                alt="https://picsum.photos/80/300"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+
+<body>
+<div layout:fragment="content">
+    <!-- Multi Column with Form Separator -->
+    <div class="card mb-4">
+        <form class="card-body needs-validation" novalidate
+              th:action="@{/admin/users/{id}(id=${user.id})}"
+              method="post"
+              th:object="${userDto}"
+              id="user-form">
+            <div class="row">
+                <div class="col">
+                    <div hidden="hidden" th:field="*{id}"></div>
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Имя</label>
+                        <div class="col-sm-8">
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="Введите ваше имя"
+                                   id="name"
+                                   th:field="*{name}"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="last-name" class="col-sm-4 col-form-label">Фамилия</label>
+                        <div class="col-sm-8">
+                            <input type="text"
+                                   class="form-control"
+                                   id="last-name"
+                                   placeholder="Введите вашу фамилию"
+                                   th:field="*{surname}"
+                            >
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="alias" class="col-sm-4 col-form-label">Псевдоним</label>
+                        <div class="col-sm-8">
+                            <input type="text"
+                                   class="form-control"
+                                   id="alias"
+                                   placeholder="Введите псевдоним"
+                                   th:field="*{nickname}">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="email" class="col-sm-4 col-form-label">E-mail</label>
+                        <div class="col-sm-8">
+                            <input type="email"
+                                   class="form-control"
+                                   id="email"
+                                   placeholder="Введите E-mail"
+                                   th:field="*{email}"
+                                   required >
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="address" class="col-sm-4 col-form-label">Адрес</label>
+                        <div class="col-sm-8">
+                            <input type="text"
+                                   class="form-control"
+                                   id="address"
+                                   placeholder="Введите адрес"
+                                   th:field="*{address}">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="password" class="col-sm-4 col-form-label">Пароль</label>
+                        <div class="col-sm-8">
+                            <input type="password"
+                                   class="form-control"
+                                   id="password"
+                                   placeholder="Введите пароль"
+                                   th:field="*{password}"
+                                   required >
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="card-number" class="col-sm-4 col-form-label">Номер карты</label>
+                        <div class="col-sm-8">
+                            <input type="text"
+                                   class="form-control"
+                                   id="card-number"
+                                   placeholder="Введите номер карты"
+                                   th:field="*{cardNumber}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Язык</label>
+                        <div class="col-sm-8">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="language"
+                                       id="russian"
+                                       th:field="*{language}"
+                                       value="Русский">
+                                <label class="form-check-label" for="russian">Русский</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="language"
+                                       id="ukrainian"
+                                       th:field="*{language}"
+                                       value="Українська">
+                                <label class="form-check-label" for="ukrainian">Украинский</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Пол</label>
+                        <div class="col-sm-8">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       id="male"
+                                       th:field="*{gender}"
+                                       value="MALE">
+                                <label class="form-check-label" for="male">Мужской</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       id="female"
+                                       th:field="*{gender}"
+                                       value="FEMALE">
+                                <label class="form-check-label" for="female">Женский</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="phone" class="col-sm-4 col-form-label">Телефон</label>
+                        <div class="col-sm-8">
+                            <input type="tel"
+                                   class="form-control"
+                                   id="phone"
+                                   placeholder="Введите номер телефона"
+                                   th:field="*{phoneNumber}">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="dob" class="col-sm-4 col-form-label">Дата рождения</label>
+                        <div class="col-sm-8">
+                            <input type="date"
+                                   class="form-control"
+                                   id="dob"
+                                   placeholder="Введите дату рождения"
+                                   th:field="*{dateOfBirth}"
+                                   name="dateOfBirth">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="city" class="col-sm-4 col-form-label">Город</label>
+                        <div class="col-sm-8">
+                            <select class="form-select" id="city" th:field="*{city}">
+                                <option value="Kharkiv">Харьков</option>
+                                <option value="Kiev">Киев</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="confirmPassword" class="col-sm-4 col-form-label">Повторите пароль</label>
+                        <div class="col-sm-8">
+                            <input type="password"
+                                   class="form-control"
+                                   id="confirmPassword"
+                                   placeholder="Повторите пароль"
+                                   name="confirmPassword"
+                                   required >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+
+
+    <script >
+        document.addEventListener('DOMContentLoaded', function (e) {
+            (function () {
+                const formValidationExamples = document.getElementById('user-form');
+                const fv = FormValidation.formValidation(formValidationExamples, {
+                    fields: {
+                        name: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Пожалуйста, введите ваше имя'
+                                },
+                                regexp: {
+                                    regexp: /^[а-яА-ЯёЁa-zA-Z0-9]+$/,
+                                }
+                            }
+                        },
+                        email: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Пожалуйста, введите ваш email'
+                                },
+                                emailAddress: {
+                                    message: 'Введите корректный адрес электронной почты'
+                                }
+                            }
+                        },
+                        password: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Пожалуйста, введите пароль'
+                                },
+                                regexp: {
+                                    regexp: /^(?=.*[a-z])(?=.*[A-Z]).*$/,
+                                    message: 'Пароль должен содержать хотя бы одну строчную и одну заглавную букву'
+                                },
+                            },
+                            results: {
+                                regexp: {
+                                    message: 'Пароль должен содержать хотя бы одну строчную и одну заглавную букву'
+                                }
+                            }
+
+
+                        },
+                        confirmPassword: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Пожалуйста, введите повторный пароль'
+                                },
+                                identical: {
+                                    compare: function () {
+                                        return document.getElementById('password').value;
+                                    },
+                                    message: 'Пароли не совпадают'
+                                }
+                            }
+                        }
+                    },
+
+                    plugins: {
+                        trigger: new FormValidation.plugins.Trigger(),
+                        bootstrap5: new FormValidation.plugins.Bootstrap5({
+                            eleValidClass: '',
+                            rowSelector: '.row',
+                        }),
+                        submitButton: new FormValidation.plugins.SubmitButton(),
+                        defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+                        autoFocus: new FormValidation.plugins.AutoFocus()
+                    },
+                    init: instance => {
+                        instance.on('plugins.message.placed', function (e) {
+                            if (e.element.parentElement.classList.contains('input-group')) {
+
+                                e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                            }
+                            if (e.element.parentElement.parentElement.classList.contains('custom-option')) {
+                                e.element.closest('.row').insertAdjacentElement('afterend', e.messageElement);
+                            }
+                        });
+                    }
+                });
+            })();
+        });
+    </script>
+</div>
+
+</body>
+</html>

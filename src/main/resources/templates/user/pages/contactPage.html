@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="user/template/layout.html">>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container d-flex flex-grow-1">
+        <div class="container d-flex flex-column min-vh-100">
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center align-items-center mb-5">
+                    <img class="img-fluid" alt="" style="max-height: 100%; max-width: 100%; object-fit: contain;"
+                         src="https://picsum.photos/300/300"/>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div th:each="contact : ${contactsCinemas}" th:if="${contact.status != false}">
+                            <div class="row w-100 border rounded p-4">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <h5 class="card-title" th:text="${contact.name}">Text</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 d-flex justify-content-center align-items-center ">
+                                                <img th:src="@{${contact.logo != null ? contact.logo : 'https://picsum.photos/300/150'}}"
+                                                     class="card-img-top"
+                                                     alt="Photo"
+                                                     style="max-height: 85px ; max-width: 100%; object-fit: contain;"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <img th:src="@{${contact.logo != null ? contact.logo : 'https://picsum.photos/300/150'}}"
+                                                class="card-img-top"
+                                                alt="Photo"
+                                                style="max-height: 200px ; max-width: 100%; object-fit: contain;"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <p class="card-text" th:text="${contact.address}">
+                                                Content for the text section goes here.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div data-location style="display: none" th:text="${contact.location}"></div>
+                                    <div class="leaflet-map card mb-3 map" th:id="@{basicMap + ${contact.id}}"  style="width: 100%; height: 150px;" >
+
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                            <br/>
+                        </div>
+                        <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+
+                        <script>
+                            let allLocation = document.querySelectorAll("div[data-location]");
+                            let allMap = document.querySelectorAll(".map");
+                            for (var i = 0; i < allLocation.length; i++) {
+                                let location = allLocation[i].textContent.split(',');
+                                let map = allMap[i].id;
+                                if (location.length === 2){
+                                    let basicMap = L.map(map).setView(location, 10);
+                                    L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+                                        maxZoom: 18
+                                    }).addTo(basicMap);
+                                    const marker = L.marker(location).addTo(basicMap);
+                                } else {
+                                    allMap[i].remove()
+                                }
+
+                            }
+                        </script>
+                    </div>
+                    <div class="col-md-3">
+                        <img
+
+                                class="card-img-top"
+                                src="https://picsum.photos/80/100"
+                                alt="https://picsum.photos/80/100"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <script th:src="@{/assets/vendor/libs/leaflet/leaflet.js}"></script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

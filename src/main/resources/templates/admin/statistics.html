@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-xxl flex-grow-1 container-p-y">
+
+        <div class="row">
+            <!-- View sales -->
+            <div class="col-xl-4 mb-4 col-lg-5 col-12">
+                <div class="card">
+                    <div class="d-flex align-items-center row">
+                        <div class="col-7">
+                            <div class="card-body text-nowrap">
+                                <h5 class="card-title mb-0">Фильмов</h5>
+                                <p class="mb-2">
+                                    <span class="text-primary h3"> 4 </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-5 text-center text-sm-left">
+                            <div class="card-body pb-0 px-0 px-md-4">
+                                <img
+                                        th:src="@{/assets/img/illustrations/card-advance-sale.png}"
+                                        height="140"
+                                        alt="view sales"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 mb-4 col-lg-5 col-12">
+                <div class="card">
+                    <div class="d-flex align-items-center row">
+                        <div class="col-7">
+                            <div class="card-body text-nowrap">
+                                <h5 class="card-title mb-0">Кинотеатров</h5>
+                                <p class="mb-2">
+                                    <span class="text-primary h3"> 3 </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-5 text-center text-sm-left">
+                            <div class="card-body pb-0 px-0 px-md-4">
+                                <img
+                                        th:src="@{/assets/img/illustrations/card-advance-sale.png}"
+                                        height="140"
+                                        alt="view sales"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 mb-4 col-lg-5 col-12">
+                <div class="card">
+                    <div class="d-flex align-items-center row">
+                        <div class="col-7">
+                            <div class="card-body text-nowrap">
+                                <h5 class="card-title mb-0">Зарегистрировано</h5>
+                                <p class="mb-2">
+                                    <span class="text-primary h3"> 9 </span>
+                                    Пользователей
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-5 text-center text-sm-left">
+                            <div class="card-body pb-0 px-0 px-md-4">
+                                <img
+                                        th:src="@{/assets/img/illustrations/card-advance-sale.png}"
+                                        height="140"
+                                        alt="view sales"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div id="lineChart"></div>
+        </div>
+
+        <div>
+            <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+            <script th:src="@{/assets/vendor/libs/apex-charts/apexcharts.js}"></script>
+            <script th:src="@{/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js}"></script>
+            <script th:src="@{/assets/js/dashboards-ecommerce.js}"></script>
+            <script th:src="@{/assets/js/dashboards-crm.js}"></script>
+            <script>
+                // Получаем текущую дату
+                var currentDate = new Date();
+                // Получаем текущий месяц (от 0 до 11)
+                var currentMonth = currentDate.getMonth();
+                // Создаем массив с названиями месяцев на русском языке
+                var months = [
+                    "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+                    "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+                ];
+                // Получаем подмассив последних восьми месяцев
+                var startIndex = currentMonth - 7;
+                if (startIndex < 0) {
+                    startIndex += 12;
+                }
+                var categories = [];
+                for (var i = 0; i < 8; i++) {
+                    var index = (startIndex + i) % 12;
+                    categories.push(months[index]);
+                }
+
+                var sessionStatisticsArray = [[${sessionStatistics}]];
+                console.log(sessionStatisticsArray)
+                var options1 = {
+                    series: [
+                        {
+                            name: "Inflation",
+                            data: sessionStatisticsArray // Добавляем массив countFilms в опции графика
+                        },
+                    ],
+                    chart: {
+                        height: 350,
+                        type: "bar",
+                        background: '#333', // Задаем цвет фона для темной темы
+                        foreColor: '#fff' // Задаем цвет шрифта для темной темы
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 10,
+                            dataLabels: {
+                                position: "top", // top, center, bottom
+                            },
+                        },
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val) {
+                            return val;
+                        },
+                        offsetY: -20,
+                        style: {
+                            fontSize: "12px",
+                            colors: ["#fff"], // Задаем цвет шрифта для темной темы
+                        },
+                    },
+                    xaxis: {
+                        categories: categories,
+                        position: "top",
+                        axisBorder: {
+                            show: false,
+                        },
+                        axisTicks: {
+                            show: false,
+                        },
+                        crosshairs: {
+                            fill: {
+                                type: "gradient",
+                                gradient: {
+                                    colorFrom: "#D8E3F0",
+                                    colorTo: "#BED1E6",
+                                    stops: [0, 100],
+                                    opacityFrom: 0.4,
+                                    opacityTo: 0.5,
+                                },
+                            },
+                        },
+                        tooltip: {
+                            enabled: true,
+                        },
+                        labels: {
+                            style: {
+                                colors: ["#fff"], // Задаем цвет шрифта для темной темы
+                            },
+                        },
+                    },
+                    yaxis: {
+                        axisBorder: {
+                            show: false,
+                        },
+                        axisTicks: {
+                            show: false,
+                        },
+                        labels: {
+                            show: false,
+                            formatter: function (val) {
+                                return val + "%";
+                            },
+                            style: {
+                                colors: ["#fff"], // Задаем цвет шрифта для темной темы
+                            },
+                        },
+                    },
+                    title: {
+                        text: "Количество сеансов в месяце",
+                        floating: true,
+                        offsetY: 330,
+                        align: "center",
+                        style: {
+                            color: "#fff", // Задаем цвет шрифта для темной темы
+                        },
+                    },
+                };
+
+                var chart1 = new ApexCharts(
+                    document.querySelector("#lineChart"),
+                    options1
+                );
+                chart1.render();
+            </script>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <form th:method="post"
+              th:object="${news}"
+              th:action="@{{id}(id=${news.id})}"
+              enctype="multipart/form-data">
+            <div class="row justify-content-end">
+                <div class="flex justify-content-end row">
+                    <div class="card-header">
+                        <ul class="nav nav-pills card-header-pills" role="tablist"
+                            style="display: flex; justify-content: flex-end;">
+                            <div class="form-check form-switch form-check-inline col-1 my-auto">
+                                <label>
+                                    <input class="form-check-input" type="checkbox" th:field="*{status}"/>
+                                </label>
+                            </div>
+                            <li class="nav-item ml-auto">
+                                <button
+                                        type="button"
+                                        class="nav-link active"
+                                        role="tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#navs-pills-within-card-active"
+                                        aria-controls="navs-pills-within-card-active"
+                                        aria-selected="true"
+                                >
+                                    Русский
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button
+                                        type="button"
+                                        class="nav-link disabled"
+                                        role="tab"
+                                        data-bs-toggle="tab"
+                                        aria-selected="false"
+                                >
+                                    English
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="tab-content p-0 pt-4">
+                    <div class="tab-pane fade show active" id="navs-pills-within-card-active" role="tabpanel">
+                        <div class="row mb-4">
+                            <label class="col-sm-1 col-form-label-sm">Название</label>
+                            <div class="col-sm-5">
+
+                                    <input type="text"
+                                           class="form-control form-control-sm"
+                                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                                           th:field="*{name}">
+
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+
+                            </div>
+                            <label for="datePosting" class="col-sm-2 col-form-label">Дата публикации</label>
+                            <div class="col-sm-3">
+                                <input type="date"
+                                       class="form-control"
+                                       th:classappend="${#fields.hasErrors('datePosting')} ? 'is-invalid'"
+                                       id="datePosting"
+                                       th:field="*{datePosting}">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('datePosting')}">
+                                    Укажите дату публикации
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <label class="col-sm-1 col-form-label-sm">Описание</label>
+                            <div class="col-sm-11">
+                                <div class="card-body">
+                                    <label for="autosize-demo"></label>
+                                    <textarea id="autosize-demo"
+                                              data-autosize
+                                              class="form-control"
+                                              th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"
+                                              th:field="*{description}">
+                                    </textarea>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
+                                         th:errors="*{description}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4" id="mainImageBigBlock">
+                            <div class="row align-items-center">
+                                <div class="col-6" id="mainImageBlock">
+                                    <label class="col-form-label col-sm-2">
+                                        Главная картинка
+                                    </label>
+
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">
+                                        <input type="file"
+                                               class="form-control"
+                                               accept="image/png, image/jpeg"
+                                               name="mainImagePage"
+                                               onchange="changeMainPage(this)"/>
+                                    </label>
+                                    <label class="form-label">
+                                        <a>
+                                            <button
+                                                    type="button"
+                                                    class="btn btn-danger"
+                                                    onclick="deleteMainImage(this)">
+                                                Удалить
+                                            </button>
+                                        </a>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label>Галерея картинок</label>
+                            <div class="col-12">
+                                <div class="row align-items-center" id="gallery-image">
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
+                            </div>
+                            <div th:text="${appContextPath}" hidden id="appContextPath"></div>
+                            <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+                            <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js}"></script>
+                            <script>
+                                let appContextPath = document.getElementById("appContextPath").textContent
+                                const textarea = document.querySelectorAll('[data-autosize]');
+                                $(document).ready(function () {
+                                    showMainImage();
+                                    showAllImages();
+                                    autosize(textarea);
+                                });
+
+
+                                showMainImage = () => {
+                                    $.ajax({
+                                        url: appContextPath + '/admin/news/editNews/showMainPage/' + [[${news.id}]],
+                                        method: 'GET',
+                                        dataType: 'JSON',
+                                        success: function (result) {
+                                            console.log(result)
+                                            $('<img src="' +
+                                                (result.mainImage == null ? 'https://via.placeholder.com/250x200&text=Empty' : appContextPath + result.mainImage)
+                                                + '"' +
+                                                ' class="img-fluid"\n' +
+                                                ' id="mainImage" \n' +
+                                                ' style="max-width: 250px;' +
+                                                ' max-height: 200px;">').appendTo('#mainImageBlock');
+
+                                        },
+                                        error: function (error) {
+                                            console.log(error);
+                                        }
+                                    })
+                                }
+
+                                function changeMainPage(element) {
+                                    let file = element.files[0];
+                                    let formData = new FormData();
+                                    formData.append("file", file);
+                                    $.ajax({
+                                        url: appContextPath + '/admin/news/editNews/editMainPage/' + [[${news.id}]],
+                                        method: 'POST',
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                        success: function (result) {
+                                            console.log("Выгрузка файла прошла успешно");
+                                            let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
+                                            nearestImg.remove();
+                                            showMainImage();
+                                        },
+                                        error: function (error) {
+                                            console.error("Ошибка при загрузке файла:", error);
+                                        }
+                                    });
+                                }
+
+                                function deleteMainImage(element) {
+                                    let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
+                                    nearestImg.remove();
+                                    $.ajax({
+                                        url: appContextPath + '/admin/news/editNews/deleteMainPage/' + [[${news.id}]],
+                                        method: 'POST',
+                                        processData: false,
+                                        contentType: false,
+                                        success: function (result) {
+                                            console.log(result);
+                                            showMainImage();
+                                        },
+                                        error: function () {
+                                            console.log("Error delete mainPage")
+                                        }
+                                    })
+
+                                }
+
+                                showAllImages = () => {
+                                    $.ajax({
+                                        url: appContextPath + '/admin/news/editNews/showAllImages/' + [[${news.id}]],
+                                        method: 'GET',
+                                        dataType: 'JSON',
+                                        success: function (result) {
+                                            console.log(result);
+                                            drawImages(result)
+                                        },
+                                        error: function (error) {
+                                            console.log(error);
+                                        }
+                                    })
+                                }
+
+                                function drawImages(result) {
+                                    for (const data of result) {
+                                        $('<div class="col-3">' +
+                                            '<div class="d-flex flex-column" style="max-width: 100%;">' +
+                                            '<img src="' + (data.url != null ? appContextPath + data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
+                                            ' id="imagePage' + data.id + '" ' +
+                                            'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
+                                            '<label class="form-label" id="imagePageEdit' + data.id + '" style="max-width: 250px;">' +
+                                            '<input type="file" ' +
+                                            'class="form-control" ' +
+                                            'accept="image/png, image/jpeg" onchange="editImagePage(this,' + data.id + ')" multiple/>' +
+                                            '</label>' +
+                                            '<label class="form-label" style="max-width: 250px;">' +
+                                            '<button style="width: 250px;" ' +
+                                            'type="button" ' +
+                                            'class="btn btn-danger" ' +
+                                            'onclick="removeBlock(this, ' + data.id + ' )">' +
+                                            'Удалить' +
+                                            '</button>' +
+                                            '</label>' +
+                                            '</div>' +
+                                            '</div>').appendTo('#gallery-image');
+
+                                    }
+                                }
+
+                                const addBlock = () => {
+                                    $.ajax({
+                                        url: appContextPath + '/admin/news/editNews/createNewImage/' + [[${news.id}]],
+                                        method: 'GET',
+                                        dataType: 'JSON',
+                                        success: function (result) {
+                                            console.log(result)
+                                            $('<div class="col-3">' +
+                                                '<div class="d-flex flex-column" style="max-width: 100%;">' +
+                                                '<img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"' +
+                                                ' id="imagePage"' + result.id + ' ' +
+                                                'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
+                                                '<label class="form-label"  id="imagePageEdit' + result.id + '" style="max-width: 250px;">' +
+                                                '<input type="file" ' +
+                                                'class="form-control"' +
+                                                'accept="image/png, image/jpeg" onchange="editImagePage(this,' + result.id + ')" multiple/>' +
+                                                '</label>' +
+                                                '<label class="form-label" style="max-width: 250px;">' +
+                                                '<button style="width: 250px;" ' +
+                                                'type="button" ' +
+                                                'class="btn btn-danger" ' +
+                                                'onclick="removeBlock(this, ' + result.id + ' )">' +
+                                                'Удалить' +
+                                                '</button>' +
+                                                '</label>' +
+                                                '</div>' +
+                                                '</div>').appendTo('#gallery-image');
+                                        },
+                                        error: function (error) {
+                                            console.log("Проблема при создании файла:", error);
+                                        }
+                                    })
+                                }
+                                document.querySelector('#add-image-button').addEventListener('click', addBlock);
+
+
+                                function editImagePage(element, id) {
+                                    let file = element.files[0];
+                                    let formData = new FormData();
+                                    formData.append("file", file);
+                                    $.ajax({
+                                        url: appContextPath + '/admin/news/editNews/editImageNews/' + id,
+                                        method: 'POST',
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                        success: function (result) {
+                                            $.ajax({
+                                                url: appContextPath + '/admin/news/editNews/getImage/' + id,
+                                                method: 'GET',
+                                                success: function (result) {
+                                                    let block = $(element).closest('.col-3').find('img');
+                                                    $('<img src="' + appContextPath + result.url + '" ' +
+                                                        'id="imagePage' + result.id + '" ' +
+                                                        'class="img-fluid mb-2" ' +
+                                                        'style="max-width: 250px; max-height: 200px;">')
+                                                        .insertBefore($("#imagePageEdit" + result.id));
+                                                    block.remove();
+                                                },
+                                                error: function (error) {
+                                                    console.error("Ошибка при загрузке файла:", error);
+                                                }
+                                            });
+                                        },
+                                        error: function (error) {
+                                            console.error("Ошибка при загрузке файла:", error);
+                                        }
+                                    });
+                                }
+
+
+                                function removeBlock(element, id) {
+                                    let block = element.closest('.col-3');
+                                    block.remove();
+                                    $.ajax({
+                                        url: appContextPath + '/admin/news/editNews/deleteImage/' + id,
+                                        method: 'GET',
+                                        dataType: 'JSON',
+                                        success: function (result) {
+                                            console.log(result);
+                                        }
+                                    })
+                                }
+                            </script>
+                        </div>
+                        <div class="row mb-4">
+                            <label class="col-sm-2 col-form-label-sm">Ссылка на видео</label>
+                            <div class="col-sm-9">
+                                <label></label>
+                                    <input type="text"
+                                           placeholder="Ссылка на видео"
+                                           class="form-control form-control-sm"
+                                           th:classappend="${#fields.hasErrors('linkVideo')} ? 'is-invalid' : ''"
+                                           th:field="*{linkVideo}">
+
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('linkVideo')}"
+                                     th:errors="*{linkVideo}"></div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-2">
+                                <label class="col-form-label-sm">SEO блок</label>
+                            </div>
+                            <div class="col-10">
+                                <div class="seo_block col-sm-10">
+                                    <div class="row">
+                                        <label for="seoUrl"
+                                               class="col-sm-2 col-form-label-sm justify-content-end">Url:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text"
+                                                   id="seoUrl"
+                                                   class="form-control form-control-sm col-sm-8"
+                                                   placeholder="seoUrl"
+                                                   th:classappend="${#fields.hasErrors('seoUrl')} ? 'is-invalid' : ''"
+                                                   th:field="*{seoUrl}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoUrl')}"
+                                                 th:errors="*{seoUrl}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 mt-2">
+                                    <div class="row">
+                                        <label for="seoTitle" class="col-sm-2 col-form-label-sm justify-content-end">Title:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="seoTitle"
+                                                   class="form-control"
+                                                   placeholder="seoTitle"
+                                                   th:classappend="${#fields.hasErrors('seoTitle')} ? 'is-invalid' : ''"
+                                                   th:field="*{seoTitle}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoTitle')}"
+                                                 th:errors="*{seoTitle}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 mt-2">
+                                    <div class="row">
+                                        <label for="seoKeywords" class="col-sm-2 col-form-label-sm justify-content-end">Keywords:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="seoKeywords"
+                                                   class="form-control"
+                                                   th:classappend="${#fields.hasErrors('seoKeywords')} ? 'is-invalid' : ''"
+                                                   th:field="*{seoKeywords}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoKeywords')}"
+                                                 th:errors="*{seoKeywords}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 mt-2">
+                                    <div class="row">
+                                        <label for="seoDescription"
+                                               class="col-sm-2 col-form-label-sm justify-content-end">Description:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="seoDescription"
+                                                   class="form-control"
+                                                   th:classappend="${#fields.hasErrors('seoDescription')} ? 'is-invalid' : ''"
+                                                   th:field="*{seoDescription}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoDescription')}"
+                                                 th:errors="*{seoDescription}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="d-grid gap-2 col-3 mx-auto mt-3">
+                                    <button type="submit" class="btn btn-outline-primary">Сохранить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

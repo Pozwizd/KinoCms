@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <form action=""
+          method="post"
+          enctype="multipart/form-data"
+          onsubmit=""
+          th:object="${contactPage}"
+          th:action="@{/admin/pages/contactPage/}">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="col-12" id="contactsCinema">
+                <div th:each="contact, cont : ${contactPage.contactCinemas}">
+                    <div class="card" data-contact-block>
+                        <div class="card-body">
+                            <div class="row mb-4">
+                                <label class="col-sm-auto col-form-label-sm">Название</label>
+                                <div class="col-sm-6">
+                                    <label>
+                                        <input type=hidden
+                                               th:field="*{contactCinemas[__${cont.index}__].id}"
+                                               class="form-control form-control-sm"
+                                        >
+                                        <input type="text"
+                                               th:field="*{contactCinemas[__${cont.index}__].name}"
+                                               class="form-control form-control-sm"
+                                               th:classappend="${#fields.hasErrors('contactCinemas[__${cont.index}__].name')} ? 'is-invalid'">
+                                    </label>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('contactCinemas[__${cont.index}__].name')}"
+                                         th:errors="*{contactCinemas[__${cont.index}__].name}"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-check form-switch form-check-inline col-1 my-auto">
+                                        <label>
+                                            <input class="form-check-input"
+                                                   type="checkbox"
+                                                   th:field="*{contactCinemas[__${cont.index}__].status}"
+                                            />
+                                        </label>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <label class="col-sm-3 col-form-label-sm">Описание</label>
+                                <div class="col-sm-11">
+                                    <div class="card-body">
+                                        <textarea rows="3"
+                                                  data-autosize
+                                                  th:field="*{contactCinemas[__${cont.index}__].address}"
+                                                  class="form-control"
+                                                  th:classappend="${#fields.hasErrors('contactCinemas[__${cont.index}__].address')} ? 'is-invalid'">
+                                        </textarea>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('contactCinemas[__${cont.index}__].address')}"
+                                             th:errors="*{contactCinemas[__${cont.index}__].address}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-auto">
+                                <label class="col-sm-auto col-form-label-sm">Координаты для карты</label>
+                                <div class="col-sm-6">
+                                    <label>
+                                        <input type="text"
+                                               th:field="*{contactCinemas[__${cont.index}__].location}"
+                                               class="form-control form-control-sm"
+                                        th:classappend="${#fields.hasErrors('contactCinemas[__${cont.index}__].location')} ? 'is-invalid'">
+                                    </label>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('contactCinemas[__${cont.index}__].location')}"
+                                         th:errors="*{contactCinemas[__${cont.index}__].location}"></div>
+                                </div>
+                            </div>
+                            <div class="row mb-4" id="mainImageBigBlock">
+                                <div class="row align-items-center">
+                                    <div class="col-6" id="mainImageBlock">
+                                        <label class="col-form-label col-sm-2">
+                                            Главная картинка
+                                        </label>
+                                        <img
+                                                th:src="@{{logoImage}(logoImage=
+                                                            *{!#strings.isEmpty(contactCinemas[__${cont.index}__].logo)}
+                                                ? ${appContextPath} + *{contactCinemas[__${cont.index}__].logo}
+                                                : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения')}"
+                                                alt=""
+                                                style="max-width: 250px; max-height: 200px;"
+                                        >
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">
+                                            <input type="file"
+                                                   th:field="*{contactCinemas[__${cont.index}__].logo}"
+                                                   class="form-control"
+                                                   accept="image/png, image/jpeg"
+                                                   multiple
+                                                   onchange=""/>
+                                        </label>
+                                        <label class="form-label">
+                                            <a th:href="@{/admin/pages/contactPage/deleteImage/{id}(id=${contacts.get(cont.index).id})}"
+                                               class="btn btn-danger">
+                                                Удалить
+                                            </a>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <hr/>
+                </div>
+            </div>
+            <div class="col-11 text-center">
+                <button type="button"
+                        id="add-image-button"
+                        class="btn btn-primary"
+                        onclick="createNewContact()">Добавить
+                </button>
+                <button type="button"
+                        id=""
+                        class="btn btn-primary"
+                        onclick="deleteLastContact()">Удалить
+                </button>
+
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-2">
+                <label class="col-form-label-sm">SEO блок</label>
+            </div>
+            <div class="col-10">
+                <div class="col-sm-10">
+                    <div class="row">
+                        <label for="seoUrl"
+                               class="col-sm-2 col-form-label-sm justify-content-end">Url:</label>
+                        <div class="col-sm-10">
+                            <input type="text"
+                                   id="seoUrl"
+                                   class="form-control form-control-sm col-sm-8"
+                                   th:classappend="${#fields.hasErrors('seoUrl')} ? 'is-invalid'"
+                                   th:field="*{seoUrl}">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoUrl')}" th:errors="*{seoUrl}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10 mt-2">
+                    <div class="row">
+                        <label for="seoTitle" class="col-sm-2 col-form-label-sm justify-content-end">Title:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="seoTitle"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('seoTitle')} ? 'is-invalid'"
+                                   th:field="*{seoTitle}">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoTitle')}" th:errors="*{seoTitle}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10 mt-2">
+                    <div class="row">
+                        <label for="seoKeywords"
+                               class="col-sm-2 col-form-label-sm justify-content-end">Keywords:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="seoKeywords"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('seoKeywords')} ? 'is-invalid'"
+                                   th:field="*{seoKeywords}">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoKeywords')}" th:errors="*{seoKeywords}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10 mt-2">
+                    <div class="row">
+                        <label for="seoDescription"
+                               class="col-sm-2 col-form-label-sm justify-content-end">Description:</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="seoDescription"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('seoDescription')} ? 'is-invalid'"
+                                   th:field="*{seoDescription}">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoDescription')}" th:errors="*{seoDescription}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="d-grid gap-2 col-3 mx-auto mt-3">
+                <button type="submit" class="btn btn-outline-primary">Сохранить
+                </button>
+
+            </div>
+        </div>
+    </form>
+    <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+
+    <script>
+        $(document).ready(function () {
+            const textarea = document.querySelectorAll('[data-autosize]');
+            autosize(textarea);
+        });
+
+        let index = (document.querySelectorAll('[data-contact-block]').length) + 1;
+
+        function createNewContact() {
+            $('<div>\n' +
+                '                    <div class="card" data-contact-block>\n' +
+                '                        <div class="card-body">\n' +
+                '                            <div class="row mb-4">\n' +
+                '                                <label class="col-sm-auto col-form-label-sm">Название</label>\n' +
+                '                                <div class="col-sm-6">\n' +
+                '                                    <label>\n' +
+                '                                        <input type=hidden\n' +
+                '                                               name="contactCinemas[' + index + '].id"\n' +
+                '                                               value="' + index + '"\n' +
+                '                                               class="form-control form-control-sm">' +
+                '                                        <input type="text"\n' +
+                '                                               name="contactCinemas[' + index + '].name"\n' +
+                '                                               class="form-control form-control-sm">\n' +
+                '                                    </label>\n' +
+                '                                </div>\n' +
+                '                                <div class="col-sm-3">\n' +
+                '                                    <div class="form-check form-switch form-check-inline col-1 my-auto">\n' +
+                '                                        <label>\n' +
+                '                                            <input class="form-check-input" type="checkbox"\n' +
+                '                                                   name="contactCinemas[' + index + '].status"\n' +
+                '                                            />\n' +
+                '                                        </label>\n' +
+                '                                    </div>\n' +
+                '                                </div>\n' +
+                '                            </div>\n' +
+                '                            <div class="row mb-4">\n' +
+                '                                <label class="col-sm-3 col-form-label-sm">Описание</label>\n' +
+                '                                <div class="col-sm-11">\n' +
+                '                                    <div class="card-body">\n' +
+                '                                        <textarea id="autosize-demo"\n' +
+                '                                                  rows="3"\n' +
+                '                                                  name="contactCinemas[' + index + '].address"\n' +
+                '                                                  class="form-control"></textarea>\n' +
+                '                                    </div>\n' +
+                '                                </div>\n' +
+                '                            </div>\n' +
+                '                            <div class="row mb-auto">\n' +
+                '                                <label class="col-sm-auto col-form-label-sm">Координаты для карты</label>\n' +
+                '                                <div class="col-sm-6">\n' +
+                '                                    <input type="text"\n' +
+                '                                           name="contactCinemas[' + index + '].location"\n' +
+                '                                           class="form-control form-control-sm">\n' +
+                '                                </div>\n' +
+                '                            </div>\n' +
+                '                            <div class="row mb-4" id="mainImageBigBlock">\n' +
+                '                                <div class="row align-items-center">\n' +
+                '                                    <div class="col-6" id="mainImageBlock">\n' +
+                '                                        <label class="col-form-label col-sm-2">\n' +
+                '                                            Главная картинка\n' +
+                '                                        </label>\n' +
+                '                                        <img alt="">\n' +
+                '                                    </div>\n' +
+                '                                    <div class="col-6">\n' +
+                '                                        <label class="form-label">\n' +
+                '                                            <input type="file"\n' +
+                '                                                   class="form-control"\n' +
+                '                                                   accept="image/png, image/jpeg"\n' +
+                '                                                   name="contactCinemas[' + index + '].logo"' +
+                '                                                   onchange=""/> \n' +
+                '                                        </label>\n' +
+                '                                        <label class="form-label">\n' +
+                '                                            <a  class="btn btn-danger" ' +
+                '                                                href="admin/pages/contactPage/deleteImage/' + index + '"> Удалить\n' +
+                '                                            </a>\n' +
+                '                                        </label>\n' +
+                '                                    </div>\n' +
+                '                                </div>\n' +
+                '                            </div>\n' +
+                '                        </div>\n' +
+                '                    </div>\n' +
+                '                    <br/>\n' +
+                '                    <hr/>\n' +
+                '                </div>').appendTo('#contactsCinema');
+            index++;
+        }
+
+        function deleteLastContact() {
+            let index = document.querySelectorAll('[data-contact-block]')
+            let lastElement = index.item(index.length - 1);
+            lastElement.remove();
+        }
+
+    </script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,165 @@
+  <!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="user/template/layout.html">>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-center ">
+            <div th:if="${bannerBlocks.status && banners.size() > 0}" id="carouselExample" class="carousel slide col-md-12"
+                 style="width: 1000px; height: 400px"
+                 data-bs-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-bs-target="#carouselExample"
+
+                        class="active"
+                        th:each="bannerBlocks, i : ${banners}"
+                        th:data-bs-slide-to="${i.index}"
+                        th:classappend="${i.first ? 'active' : ''}"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item"
+                         th:each="banner, i : ${banners}"
+                         th:classappend="${i.first ? 'active' : ''}"
+                         th:data-bs-interval="${bannerBlocks.timeChange}*1000">
+                        <a th:href="@{/{id}(id=*{banner.url})}"  style="width: 1000px; height: 400px">
+                            <img class="d-block w-100"
+                                 th:src="@{${banner.pathImage == null||banner.pathImage == '' ? 'https://via.placeholder.com/400x200&text=Нет изображения' : banner.pathImage}}" alt="First slide"
+
+                                 style="width: 1000px; height: 400px"/>
+                        </a>
+                        <div class="carousel-caption d-none d-md-block">
+                            <p th:text="${banner.title}">Eos mutat malis maluisset et, agam ancillae quo te, in vim congue pertinacia.</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExample" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExample" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </a>
+            </div>
+        </div>
+
+
+        <div th:if="${currentFilm.size()} > 0" class="d-flex flex-row justify-content-center align-items-center">
+            <h4 class="fw-bold pt-3">Смотрите сегодня
+                <span id="date"></span>
+            </h4>
+
+            <script>
+                var options = { day: 'numeric', month: 'long' };
+                var russianDate = new Date().toLocaleDateString('ru-RU', options);
+                document.getElementById('date').textContent = russianDate;
+            </script>
+        </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            <div class="col" th:each="film, i : ${currentFilm}">
+                <div class="card h-100 text-center mb-3">
+                    <a  th:href="@{/film/{id}(id=*{film.id})}">
+                        <img class="card-img-top"
+                             th:src="@{${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}}"
+                             alt="Card image cap"/>
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${film.name}">Card title</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${futureFilm.size()} > 0" class="d-flex flex-row justify-content-center align-items-center">
+            <h4 class="fw-bold pt-3">Смотрите скоро</h4>
+        </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            <div class="col" th:each="film, i : ${futureFilm}">
+                <div class="card h-100 text-center mb-3">
+                    <a th:href="@{/film/{id}(id=*{film.id})}">
+                        <img class="card-img-top"
+                             th:src="@{${film.mainImage == null || film.mainImage.isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : film.mainImage}}"
+                             alt="Card image cap"/>
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${film.name}">Card title</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="d-flex flex-row justify-content-center align-items-center"
+             th:if="${bannerBlockForNewsAndStocks.statusBlockBannerForNewsAndStocks && bannerForNewsAndStocks.size() > 0}">
+            <h4 class="fw-bold pt-3">Новости и Акции</h4>
+        </div>
+
+        <div th:if="${bannerBlockForNewsAndStocks.statusBlockBannerForNewsAndStocks && bannerForNewsAndStocks.size() > 0}" class="d-flex justify-content-center ">
+            <div id="carouselExample2" class="carousel slide col-md-12"
+                 style="width: 1000px; height: 400px"
+                 data-bs-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-bs-target="#carouselExample2"
+
+                        class="active"
+                        th:each="bannerBlocks, i : ${bannerForNewsAndStocks}"
+                        th:data-bs-slide-to="${i.index}"
+                        th:classappend="${i.first ? 'active' : ''}"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item"
+                         th:each="banner, i : ${bannerForNewsAndStocks}"
+                         th:classappend="${i.first ? 'active' : ''}"
+                         th:data-bs-interval="${bannerBlockForNewsAndStocks.timeChangeBlockBannerForNewsAndStocks}*1000">
+                        <a th:href="@{films/editFilm/{id}(id=*{banner.url})}"  style="width: 1000px; height: 400px">
+                            <img class="d-block w-100" th:src="@{${banner.pathImage == null || banner.pathImage.isEmpty() ? 'https://via.placeholder.com/1000x400&text=Нет изображения' : banner.pathImage}}" alt="First slide"
+                                 style="width: 1000px; height: 400px"/>
+                        </a>
+                        <div class="carousel-caption d-none d-md-block">
+                            <p th:text="${banner.title}">Eos mutat malis maluisset et, agam ancillae quo te, in vim congue pertinacia.</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExample2" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExample2" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </a>
+            </div>
+        </div>
+
+        <!--        Горизонтальный блок рекламы-->
+        <div class="mt-3 mb-3">
+            <div class="card">
+                <img class="card-img-top" alt="..." src="https://via.placeholder.com/800x150"/>
+            </div>
+        </div>
+
+        <!--        Сео текст блок-->
+        <div class="d-flex flex-row justify-content-center align-items-center">
+            <h5 class="fw-bold pt-3">СЕО текст</h5>
+        </div>
+        <div>
+            <div class="mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

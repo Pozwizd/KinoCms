@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/template/layout.html">
+
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <!--        Блок смс-->
+        <div class="card">
+            <div class="card-header d-flex justify-content-center">
+                <h3>SMS</h3>
+            </div>
+            <div class="card-body">
+                <div class="row flex-wrap">
+                    <label class="col-3"
+                    >Выбрать пользователей кому слать:
+                    </label>
+                    <div class="col-3">
+                        <input
+                                type="radio"
+                                class="form-check-input"
+                                name="optional"
+                                checked
+                        />
+                        <label class="form-label">Все пользователи</label>
+                    </div>
+                    <div class="col-2">
+                        <input
+                                type="radio"
+                                class="form-check-input"
+                        />
+                        <label class="form-label">Выборочно</label>
+                    </div>
+                    <button
+                            type="button"
+                            class="btn-outline-primary btn col-3"
+                    >
+                        Выбрать пользователей
+                    </button>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-6">
+                        <div
+                                class="row d-flex flex-row justify-content-between"
+                        >
+                            <label class="col-form-label-sm col-4"
+                            >Текст SMS</label
+                            >
+                            <label class="col-form-label-sm col-4"
+                            >Символов: 0</label
+                            >
+                        </div>
+                        <div class="form-group">
+                          <textarea
+                                  class="col form-control"
+                                  rows="6"
+                                  name="text-sms"
+                          >
+                          </textarea>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row col-8 d-flex flex-row mt-5">
+                            <label class="form-label col-5">Кол-во SMS </label>
+                            <label class="form-label col-5">
+                                1000
+                            </label
+                            >
+                        </div>
+                        <div class="row d-flex flex-row">
+                            <label class="form-label col-5"
+                            >Рассылка выполнена на:
+                            </label>
+                            <label
+                                    class="form-label col-3 text-success">
+                                45%
+                            </label
+                            >
+                            <label class="form-label col-3 ms-3">
+                                20 000
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row d-flex justify-content-center">
+                    <button
+                            type="button"
+                            class="btn btn-outline-primary col-3">
+                        Начать рассылку
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!--        Блок Email-->
+        <div class="card">
+            <div class="card-header d-flex justify-content-center">
+                <span class="h3">E-mail</span>
+            </div>
+            <div class="card-body">
+                <form method="post"
+                      th:action="@{/admin/distribution/sendMail}"
+                      class="mail-form"
+                      enctype="multipart/form-data"
+                      novalidate>
+                    <div class="row d-flex flex-row justify-content-between align-items">
+                        <label class="form-label col-2">
+                            Выбрать пользователей кому слать:
+                        </label>
+                        <div class="col-3 form-check form-check-inline">
+                            <input
+                                    type="radio"
+                                    name="choiceUsers"
+                                    class="form-check-input"
+                                    id="allUsersRadio"
+                                    value="true"
+                                    th:checked="${choiceUser} ? 'checked' : null"
+                            />
+                            <label class="form-label">Все пользователи</label>
+                        </div>
+                        <div class="col-2 form-check form-check-inline">
+                            <input
+                                    type="radio"
+                                    name="choiceUsers"
+                                    value="false"
+                                    class="form-check-input"
+                                    id="selectiveUsersRadio"
+                                    th:checked="${choiceUser} ? null: 'checked' "
+                            />
+                            <label class="form-label">Выборочно</label>
+                        </div>
+                        <a type="button"
+                           th:href="@{/admin/distribution/userMailing}"
+                           class="btn-outline-primary btn col-3 disabled"
+                           id="selectUsersButton">
+                            Выбрать пользователей
+                        </a>
+                    </div>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const selectiveUsersRadio = document.getElementById('selectiveUsersRadio');
+                            const allUsersRadio = document.getElementById('allUsersRadio');
+                            const selectUsersButton = document.getElementById('selectUsersButton');
+
+                            selectiveUsersRadio.addEventListener('change', function () {
+                                if (selectiveUsersRadio.checked) {
+                                    selectUsersButton.classList.remove('disabled');
+                                }
+                            });
+                            allUsersRadio.addEventListener('change', function () {
+                                if (allUsersRadio.checked) {
+                                    selectUsersButton.classList.add('disabled');
+                                }
+                            });
+                        });
+                    </script>
+
+                    <br>
+
+
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <div class="row d-flex flex-row justify-content-between">
+                                <label class="col-form-label-sm w-auto">Загрузить HTML-письмо
+                                    <input
+                                            type="file"
+                                            id="file-html"
+                                            name="htmlTemplate"
+                                            onchange="addHtmlTemplate(this)"
+                                            class="file-input"
+                                            accept=".html"/>
+                                </label>
+                            </div>
+                            <div class="row d-flex flex-row col-sm-auto mt-4">
+                                <label class="col-form-label-sm col">
+                                    Загружен файл
+                                </label>
+                                <label class="col-form-label-sm col text-blue"
+                                       id="show-upload">
+                                    файл
+                                </label>
+                            </div>
+                            <div class="row d-flex flex-row col-sm-auto">
+                                <label class="col-form-label-sm col">
+                                    Шаблон используемый в текущей рассылке:
+                                </label>
+                                <label class="col-form-label-sm col">
+
+                                </label>
+                            </div>
+                            <div class="col mt-5">
+                                <div class="row d-flex flex-row justify-content-md-start">
+                                    <label class="form-label w-auto"
+                                    >Кол-во писем:
+                                    </label>
+                                    <label class="form-label text-blue w-auto">
+                                        1
+                                    </label>
+
+                                    <label class="form-label w-auto">
+                                        Рассылка выполнена на:
+                                    </label>
+                                    <label class="form-label text-blue w-auto">
+                                        1%
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <label class="form-label">
+                                        Список последних загруженных шаблонов
+                                    </label>
+                                    <div class="list-group" id="mailTemplateList">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-center mt-4">
+                        <button
+                                type="submit"
+                                class="btn btn-outline-primary col-3">
+                            Начать рассылку
+                        </button>
+                    </div>
+                    <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+                    <div th:text="${appContextPath}" hidden id="appContextPath"></div>
+                    <script>
+                        let appContextPath = document.getElementById("appContextPath").textContent
+                        $(document).ready(function () {
+                            showAllHtmlTemplate()
+                        });
+
+                        function showAllHtmlTemplate(){
+                            $.ajax({
+                                url: appContextPath + '/admin/distribution/getAllMailTemplate/',
+                                method: 'GET',
+                                dataType: 'JSON',
+                                success: function (result) {
+                                    console.log("Загружено");
+                                    for (let data of result) {
+                                        $('<div class="list-group-item d-flex justify-content-around" id="mailTemplate">\n' +
+                                            '      <input\n' +
+                                            '              value="' + data.id + '"\n' +
+                                            '              name="selectedMailTemplate"\n' +
+                                            '              class="form-check-input me-1"\n' +
+                                            '              type="checkbox"\n' +
+                                            '              />\n' +
+                                            '      <label>\n' +
+                                            '' + data.name + '' +
+                                            '      </label>\n' +
+                                            '      <a onclick="deleteHtmlTemplate(this, ' + data.id + ')"><span>Удалить</span></a>\n' +
+                                            '  </div>').appendTo("#mailTemplateList");
+                                    }
+                                },
+                                error: function (error) {
+                                    console.error("Ошибка при загрузке файла:", error);
+                                }
+                            });
+                        }
+
+                        function addHtmlTemplate(element) {
+                            let file = element.files[0];
+                            let formData = new FormData();
+                            formData.append("file", file);
+
+                            $.ajax({
+                                url: appContextPath + '/admin/distribution/addMailTemplate/',
+                                method: 'POST',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function (result) {
+                                    console.log(result)
+                                    if (result === '2') {
+                                        let lastElement = $('[id="mailTemplate"]').last();
+                                        lastElement.remove();
+                                    }
+
+                                    $.ajax({
+                                        url: appContextPath+ '/admin/distribution/getMailTemplate/',
+                                        method: 'GET',
+                                        dataType: 'JSON',
+                                        success: function (result) {
+                                            console.log("Загружено", result);
+                                            $('#mailTemplateList input[type="checkbox"]').prop('checked', false);
+                                            $('<div class="list-group-item d-flex justify-content-around" id="mailTemplate">\n' +
+                                                '      <input\n' +
+                                                '              value="' + result.id + '"\n' +
+                                                '              name="selectedMailTemplate"\n' +
+                                                '              class="form-check-input me-1"\n' +
+                                                '              type="checkbox"\n' +
+                                                '              checked/>\n' + result.name +
+                                                '      </label>\n' +
+                                                '      <a onclick="deleteHtmlTemplate(this, ' + result.id + ')"><span>Удалить</span></a>\n' +
+                                                '  </div>').prependTo("#mailTemplateList");
+
+                                        },
+                                        error: function (error) {
+                                            console.error("Ошибка при загрузке файла:", error);
+                                        }
+                                    });
+                                },
+                                error: function (error) {
+                                    console.error("Ошибка при загрузке файла:", error);
+                                }
+                            });
+
+                        }
+                        function deleteHtmlTemplate(element, id) {
+                            element.closest('.list-group-item').remove();
+                            $.ajax({
+                                url: appContextPath+ '/admin/distribution/deleteMailTemplate/'+ id,
+                                method: 'POST',
+                                processData: false,
+                                contentType: false,
+                                success: function (result) {
+                                    console.log("html template deleted")
+                                },
+                                error: function (error) {
+                                    console.error("Ошибка при загрузке файла:", error);
+                                }
+                            });
+                        }
+                    </script>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
