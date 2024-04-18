@@ -2,18 +2,18 @@ server:
   servlet:
     context-path: /myapp
 
-#spring:
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/slj_kinocms
-#    username: slj_kinocms
-#    password: UC7w3mEt57
-
-
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/kino_cms
-    username: root
-    password: "0000"
+    url: jdbc:mysql://localhost:3306/slj_kinocms
+    username: slj_kinocms
+    password: UC7w3mEt57
+
+
+#spring:
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/kino_cms
+#    username: root
+#    password: "0000"
   jpa:
     show-sql: true
     properties:
@@ -30,21 +30,21 @@ spring:
 
 
 
-upload:
-  folder:
-    path: "C:\\Users\\Belwerk\\Downloads\\ProjectFiles\\KinoCms-R.Miahkykh\\uploads"
 #upload:
 #  folder:
-#    path: "/home/slj/projects/KinoCms-R.Miahkykh/uploads"
+#    path: "C:\\Users\\Belwerk\\Downloads\\ProjectFiles\\KinoCms-R.Miahkykh\\uploads"
+upload:
+  folder:
+    path: "/home/slj/projects/KinoCms-R.Miahkykh/uploads"
 
 
 logging:
   pattern:
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
-  file:
-    name: "C:\\Users\\Belwerk\\Downloads\\ProjectFiles\\KinoCms-R.Miahkykh\\logs\\kino_cms.log"
 #  file:
-#    name: "/home/slj/projects/KinoCms-R.Miahkykh/logs/kino_cms.log"
+#    name: "C:\\Users\\Belwerk\\Downloads\\ProjectFiles\\KinoCms-R.Miahkykh\\logs\\kino_cms.log"
+  file:
+    name: "/home/slj/projects/KinoCms-R.Miahkykh/logs/kino_cms.log"
   level:
     file: "INFO"
