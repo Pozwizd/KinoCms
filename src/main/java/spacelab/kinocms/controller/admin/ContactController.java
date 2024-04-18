@@ -52,11 +52,11 @@ public class ContactController {
                                 BindingResult bindingResult,
                                 Model model) {
 
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("title", "Редактирование страницы " + contactPage.getName());
-            model.addAttribute("pageActive", "pages");
-            return new ModelAndView("admin/page/editContactPage");
-        }
+//        if (bindingResult.hasErrors()) {
+//            model.addAttribute("title", "Редактирование страницы " + contactPage.getName());
+//            model.addAttribute("pageActive", "pages");
+//            return new ModelAndView("admin/page/editContactPage");
+//        }
 
 
         contactService.saveContactPage(contactPage);
