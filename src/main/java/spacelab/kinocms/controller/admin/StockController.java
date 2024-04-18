@@ -1,26 +1,26 @@
 package spacelab.kinocms.controller.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.Dto.StockDto;
+import spacelab.kinocms.Mapper.StockMapper;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.ImagesEntity.ImageStock;
 import spacelab.kinocms.model.Stock;
 import spacelab.kinocms.service.ImageStockService;
 import spacelab.kinocms.service.StockService;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("admin/stocks")
@@ -30,6 +30,7 @@ public class StockController {
     private final StockService stockService;
     private final UploadFile uploadFile;
     private final ImageStockService imageStockService;
+    private final StockMapper stockMapper;
 
 
     @GetMapping({"/", ""})
@@ -53,15 +54,20 @@ public class StockController {
     }
 
     @PostMapping("/editStock/{id}")
-    public ModelAndView editBasicPage(@ModelAttribute Stock stock) {
-
-        stockService.updateStock(stock);
+    public ModelAndView editBasicPage(@Valid @ModelAttribute("stock") StockDto stock,
+                                      BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("title", "Страница акции: " + stockService.getStock(stock.getId()).getName());
+            model.addAttribute("pageActive", "Stocks");
+            return new ModelAndView("admin/stock/editStock");
+        }
+        stockService.updateStock(stockMapper.toEntity(stock));
         return new ModelAndView("redirect:/admin/stocks");
     }
 
 
     @GetMapping("/createStock")
-    public ModelAndView createNewPage(Model model,HttpServletRequest request) {
+    public ModelAndView createNewPage(Model model, HttpServletRequest request) {
         Stock stock = new Stock();
         stock.setDateCreated(Date.valueOf(LocalDate.now()));
         stock.setName("Новая акция");

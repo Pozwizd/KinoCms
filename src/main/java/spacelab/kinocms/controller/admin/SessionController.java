@@ -15,6 +15,8 @@ import spacelab.kinocms.service.CinemaService;
 import spacelab.kinocms.service.FilmService;
 import spacelab.kinocms.service.HallService;
 import spacelab.kinocms.service.SessionService;
+import spacelab.kinocms.validator.SessionValid;
+import spacelab.kinocms.validator.SessionValidator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +30,7 @@ public class SessionController {
     private final FilmService filmService;
     private final CinemaService cinemaService;
     private final HallService hallService;
+    private final SessionValidator sessionValidator;
 
     private final SessionMapper sessionMapper;
 
@@ -48,6 +51,7 @@ public class SessionController {
         sessionPageDto.setSessions(sessionService.getAllSession());
         return sessionPageDto;
     }
+
     @GetMapping("/getHallsByCinema/{id}")
     @ResponseBody
     public List<Hall> getHallId(@PathVariable String id) {
@@ -67,15 +71,22 @@ public class SessionController {
 
     @PostMapping("/saveSessions")
     @ResponseBody
-    public ResponseEntity<String> handleFormSubmission(@RequestBody List<SessionDto> sessions) {
+    public ResponseEntity<String> saveSessions(@RequestBody List<SessionDto> sessions) {
+
+        List<String> sessionDtosWithErrors = sessionValidator.validate(sessions);
+
+        if (!sessionDtosWithErrors.isEmpty()) {
+            return ResponseEntity.badRequest().body(sessionDtosWithErrors.toString());
+        }
 
         for (SessionDto item : sessions) {
-
             Session session = sessionMapper.toEntity(item);
             sessionService.createSession(session);
         }
+
         return ResponseEntity.ok("ok");
     }
+
 
     @GetMapping("/delete/{id}")
     @ResponseBody

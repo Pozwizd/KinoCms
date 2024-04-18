@@ -10,7 +10,7 @@
 <div layout:fragment="content">
     <div class="container">
         <div class="d-flex justify-content-center ">
-            <div id="carouselExample" class="carousel slide col-md-12"
+            <div th:if="${bannerBlocks.status && banners.size() > 0}" id="carouselExample" class="carousel slide col-md-12"
                  style="width: 1000px; height: 400px"
                  data-bs-ride="carousel">
                 <ol class="carousel-indicators">
@@ -28,7 +28,7 @@
                          th:data-bs-interval="${bannerBlocks.timeChange}*1000">
                         <a th:href="@{/{id}(id=*{banner.url})}"  style="width: 1000px; height: 400px">
                             <img class="d-block w-100"
-                                 th:src="@{${banner.pathImage}}" alt="First slide"
+                                 th:src="@{${banner.pathImage == null||banner.pathImage == '' ? 'https://via.placeholder.com/400x200&text=Нет изображения' : banner.pathImage}}" alt="First slide"
 
                                  style="width: 1000px; height: 400px"/>
                         </a>
@@ -94,11 +94,12 @@
 
 
 
-        <div class="d-flex flex-row justify-content-center align-items-center">
+        <div class="d-flex flex-row justify-content-center align-items-center"
+             th:if="${bannerBlockForNewsAndStocks.statusBlockBannerForNewsAndStocks && bannerForNewsAndStocks.size() > 0}">
             <h4 class="fw-bold pt-3">Новости и Акции</h4>
         </div>
 
-        <div class="d-flex justify-content-center ">
+        <div th:if="${bannerBlockForNewsAndStocks.statusBlockBannerForNewsAndStocks && bannerForNewsAndStocks.size() > 0}" class="d-flex justify-content-center ">
             <div id="carouselExample2" class="carousel slide col-md-12"
                  style="width: 1000px; height: 400px"
                  data-bs-ride="carousel">
@@ -106,17 +107,17 @@
                     <li data-bs-target="#carouselExample2"
 
                         class="active"
-                        th:each="bannerBlocks, i : ${banners}"
+                        th:each="bannerBlocks, i : ${bannerForNewsAndStocks}"
                         th:data-bs-slide-to="${i.index}"
                         th:classappend="${i.first ? 'active' : ''}"></li>
                 </ol>
                 <div class="carousel-inner">
                     <div class="carousel-item"
-                         th:each="banner, i : ${banners}"
+                         th:each="banner, i : ${bannerForNewsAndStocks}"
                          th:classappend="${i.first ? 'active' : ''}"
-                         th:data-bs-interval="${bannerBlocks.timeChange}*1000">
+                         th:data-bs-interval="${bannerBlockForNewsAndStocks.timeChangeBlockBannerForNewsAndStocks}*1000">
                         <a th:href="@{films/editFilm/{id}(id=*{banner.url})}"  style="width: 1000px; height: 400px">
-                            <img class="d-block w-100" th:src="@{${banner.pathImage}}" alt="First slide"
+                            <img class="d-block w-100" th:src="@{${banner.pathImage == null || banner.pathImage.isEmpty() ? 'https://via.placeholder.com/1000x400&text=Нет изображения' : banner.pathImage}}" alt="First slide"
                                  style="width: 1000px; height: 400px"/>
                         </a>
                         <div class="carousel-caption d-none d-md-block">

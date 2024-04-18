@@ -15,6 +15,8 @@ public class MainPageController {
 
     private final BannerService bannerService;
     private final BannerBlockService bannerBlockService;
+    private final BannerForNewsAndStocksService bannerForNewsAndStocksService;
+    private final BannerBlockForNewsAndStocksService bannerBlockForNewsAndStocksService;
     private final FilmService filmService;
     private final BannerBackgroundService bannerBackgroundService;
     private final MainPageService mainPageService;
@@ -23,9 +25,10 @@ public class MainPageController {
     public ModelAndView index(Model model) {
         model.addAttribute("title", "Главная");
         model.addAttribute("mainPage", mainPageService.getMainPage());
-
         model.addAttribute("banners", bannerService.getAllBanners());
         model.addAttribute("bannerBlocks", bannerBlockService.getBannerBlock(1L));
+        model.addAttribute("bannerForNewsAndStocks", bannerForNewsAndStocksService.getAllBannerForNewsAndStocks());
+        model.addAttribute("bannerBlockForNewsAndStocks", bannerBlockForNewsAndStocksService.getBannerBlockForNewsAndStocks(1L));
         model.addAttribute("bannerBackground", bannerBackgroundService.getBannerBackground(1L));
         model.addAttribute("currentFilm", filmService.getAllCurrentFilm());
         model.addAttribute("futureFilm", filmService.getAllFutureFilm());

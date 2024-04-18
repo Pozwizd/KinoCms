@@ -10,10 +10,11 @@
         <form class="card-body needs-validation" novalidate
               th:action="@{/admin/users/{id}(id=${user.id})}"
               method="post"
-              th:object="${user}"
+              th:object="${userDto}"
               id="user-form">
             <div class="row">
                 <div class="col">
+                    <div hidden="hidden" th:field="*{id}"></div>
                     <div class="mb-3 row">
                         <label class="col-sm-4 col-form-label">Имя</label>
                         <div class="col-sm-8">
@@ -111,7 +112,6 @@
                                        value="Українська">
                                 <label class="form-check-label" for="ukrainian">Украинский</label>
                             </div>
-                            <!-- Добавьте другие варианты языка -->
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -162,7 +162,6 @@
                             <select class="form-select" id="city" th:field="*{city}">
                                 <option value="Kharkiv">Харьков</option>
                                 <option value="Kiev">Киев</option>
-                                <!-- Добавьте другие варианты городов -->
                             </select>
                         </div>
                     </div>
@@ -185,11 +184,11 @@
         </form>
     </div>
 
-    <script>
+
+    <script >
         document.addEventListener('DOMContentLoaded', function (e) {
             (function () {
                 const formValidationExamples = document.getElementById('user-form');
-
                 const fv = FormValidation.formValidation(formValidationExamples, {
                     fields: {
                         name: {
@@ -220,8 +219,15 @@
                                 regexp: {
                                     regexp: /^(?=.*[a-z])(?=.*[A-Z]).*$/,
                                     message: 'Пароль должен содержать хотя бы одну строчную и одну заглавную букву'
+                                },
+                            },
+                            results: {
+                                regexp: {
+                                    message: 'Пароль должен содержать хотя бы одну строчную и одну заглавную букву'
                                 }
                             }
+
+
                         },
                         confirmPassword: {
                             validators: {
@@ -237,6 +243,7 @@
                             }
                         }
                     },
+
                     plugins: {
                         trigger: new FormValidation.plugins.Trigger(),
                         bootstrap5: new FormValidation.plugins.Bootstrap5({
@@ -262,9 +269,6 @@
             })();
         });
     </script>
-
-
-
 </div>
 
 </body>

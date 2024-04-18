@@ -75,7 +75,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
         return userRepository
                 .findUserByEmail(name)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("Username " + name + " not found"));
+                        () -> new UsernameNotFoundException(null));
     }
 
     @Override

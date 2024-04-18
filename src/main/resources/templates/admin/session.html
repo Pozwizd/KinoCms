@@ -47,7 +47,7 @@
                     <div class="me-auto fw-semibold">Ошибка</div>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
-                <div class="toast-body">Произошла ошибка, перезагрузите страницу и повторите попытку</div>
+                <div class="toast-body">Заполните указанные поля</div>
             </div>
         </div>
         <br/>
@@ -57,7 +57,7 @@
                 <div>
                     <form class="d-flex flex-column justify-content-center align-items-center"
                           id="sessionForm">
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="overflow-x: visible; max-width: 100%;">
                             <table class="table">
                                 <thead>
                                 <tr>
@@ -146,22 +146,22 @@
                                         let row = '<tr>' +
                                             '<input type="hidden" value="' + response.sessions[i].id + '" name="id" />' +
                                             '<td>' +
-                                            '<input class="form-control"' +
+                                            '<input class="form-control "' +
                                             ' type="datetime-local"' +
-                                            ' value="'+formattedDate+'" name="timeSession"/>' +
+                                            ' value="'+formattedDate+'" name="timeSession'+ response.sessions[i].id +'" data-timeSession/>' +
                                             '</td>' +
                                             '<td>' +
-                                            '<select class="select2 form-select form-select-lg" name="filmId" data-allow-clear="true">' +
+                                            '<select class="select2 form-select form-select-lg" name="filmId'+ response.sessions[i].id +'" data-filmId data-allow-clear="true">' +
                                             films(response.sessions[i].filmId === null || response.sessions[i].filmId === undefined ? -1 : response.sessions[i].filmId.id) +
                                             '</select>' +
                                             '</td>' +
                                             '<td>' +
-                                            '<select class="select2 form-select form-select-lg" onchange="changeCinema(this)" data-index="' + i + '" name="cinemaId" data-allow-clear="true" >' +
+                                            '<select class="select2 form-select form-select-lg" onchange="changeCinema(this)" data-index="' + i + '" name="cinemaId'+ response.sessions[i].id +'" data-cinemaId data-allow-clear="true" >' +
                                             cinemas(response.sessions[i].cinemaId === null || response.sessions[i].cinemaId === undefined ? -1 : response.sessions[i].cinemaId.id) +
                                             '</select>' +
                                             '</td>' +
                                             '<td>' +
-                                            '<select class="select2 form-select form-select-lg" id="hallId' + i + '" name="hallId" data-allow-clear="true">' +
+                                            '<select class="select2 form-select form-select-lg" id="hallId' + i + '" name="hallId'+ response.sessions[i].id +'" data-hallId data-allow-clear="true">' +
                                             halls(response.sessions[i].hallId === null || response.sessions[i].hallId === undefined ? -1 : response.sessions[i].hallId.id, response.sessions[i].cinemaId === null || response.sessions[i].cinemaId === undefined ? -2 : response.sessions[i].cinemaId.id) +
                                             '</select>' +
                                             '</td>' +
@@ -219,6 +219,16 @@
                             });
                         }
 
+                        function showError(errors) {
+                            for (let i = 0; i < errors.length; i++) {
+                                if (errors[i][0] === 't') {
+                                    $('input[name="'+errors[i]+'"]').addClass('is-invalid');
+                                    continue;
+                                }
+                                $('select[name="'+errors[i]+'"]').addClass('is-invalid');
+                            }
+                        }
+
                     </script>
                     <script>
                         $('#sessionForm').submit(function (event) {
@@ -227,10 +237,10 @@
                             let entities = [];
                             $('input[name="id"]').each(function (index) {
                                 let id = $(this).val();
-                                let timeSession = $('input[name="timeSession"]').eq(index).val();
-                                let cinemaId = $('select[name="cinemaId"]').eq(index).val();
-                                let filmId = $('select[name="filmId"]').eq(index).val();
-                                let hallId = $('select[name="hallId"]').eq(index).val();
+                                let timeSession = $('[data-timeSession]').eq(index).val();
+                                let cinemaId = $('[data-cinemaId]').eq(index).val();
+                                let filmId = $('[data-filmId]').eq(index).val();
+                                let hallId = $('[data-hallId]').eq(index).val();
                                 let price = $('input[name="price"]').eq(index).val();
                                 let priceVip = $('input[name="priceVip"]').eq(index).val();
 
@@ -263,9 +273,9 @@
                                     toastAnimation = new bootstrap.Toast(toastAnimationExample);
                                     toastAnimation.show();
                                 },
-                                error: function (xhr, status, error) {
+                                error: function (error) {
                                     console.log('Ошибка при отправке формы');
-                                    let toastAnimationExample = document.querySelector('.toast-ex-error')
+                                    let toastAnimationExample = document.querySelector('.toast-ex-error');
                                     let toastAnimation, selectedType, selectedAnimation;
                                     selectedType = 'text-danger';
                                     selectedAnimation = 'animate__zoomIn';
@@ -273,6 +283,16 @@
                                     toastAnimationExample.querySelector('.ti').classList.add(selectedType);
                                     toastAnimation = new bootstrap.Toast(toastAnimationExample);
                                     toastAnimation.show();
+
+                                    console.log(error);
+                                    console.log(error.responseText);
+                                    let errorArray = error.responseText.split(",").map(item => item.trim().replace(/[\[\]]/g, ''));
+                                    for (let i = 0; i < errorArray.length; i++) {
+                                        console.log(errorArray[i]);
+                                    }
+                                    showError(errorArray);
+
+
                                 }
                             });
                         });

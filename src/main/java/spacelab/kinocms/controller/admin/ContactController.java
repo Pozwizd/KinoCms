@@ -1,8 +1,10 @@
 package spacelab.kinocms.controller.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.Dto.Page.ContactPageDto;
@@ -46,12 +48,18 @@ public class ContactController {
     }
 
     @PostMapping("admin/pages/contactPage/")
-    public ModelAndView contact(@ModelAttribute ContactPageDto contactPage,
-                                HttpServletRequest request) {
+    public ModelAndView contact(@Valid @ModelAttribute("contactPage") ContactPageDto contactPage,
+                                BindingResult bindingResult,
+                                Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("title", "Редактирование страницы " + contactPage.getName());
+            model.addAttribute("pageActive", "pages");
+            return new ModelAndView("admin/page/editContactPage");
+        }
+
 
         contactService.saveContactPage(contactPage);
-
-        String referer = request.getHeader("Referer");
         return new ModelAndView("redirect:/admin/pages");
     }
 

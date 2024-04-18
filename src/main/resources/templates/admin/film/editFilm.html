@@ -53,23 +53,36 @@
                             <div class="col-sm-4">
                                 <input type="text"
                                        class="form-control form-control-sm"
+                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
                                        th:field="*{name}">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
+                                     th:errors="*{name}"></div>
                             </div>
                             <label class="col-sm-2 col-form-label-sm">Период проката:</label>
                             <div class="col-sm-2">
                                 <input type="date"
                                        class="form-control"
-                                       placeholder="Введите дату рождения"
+                                       th:classappend="${#fields.hasErrors('startPremiereDate')} ? 'is-invalid' : ''"
+                                       placeholder="Выберите дату"
                                        th:field="*{startPremiereDate}"
                                        name="dateOfBirth">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('startPremiereDate')}"
+                                     >
+                                    Укажите дату начала проката
+                                </div>
                             </div>
 
                             <div class="col-sm-2">
                                 <input type="date"
                                        class="form-control"
+                                       th:classappend="${#fields.hasErrors('endPremiereDate')} ? 'is-invalid' : ''"
                                        placeholder="Введите дату рождения"
                                        th:field="*{endPremiereDate}"
                                        name="dateOfBirth">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('endPremiereDate')}"
+                                     >
+                                    Укажите дату окончания проката
+                                </div>
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -82,10 +95,14 @@
                             <div class="col-sm-11">
                                 <div class="card-body">
                                     <textarea id="autosize-demo"
+                                              data-autosize
                                               rows="3"
                                               class="form-control"
+                                              th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"
                                               th:field="*{description}">
                                     </textarea>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
+                                         th:errors="*{description}"></div>
                                 </div>
                             </div>
                         </div>
@@ -133,8 +150,11 @@
 
                                 let baseUrl = window.location.href;
                                 $(document).ready(function () {
+                                    const textarea = document.querySelectorAll('[data-autosize]');
+                                    autosize(textarea);
                                     showMainImage();
                                     showAllImageFilm();
+
                                 });
 
 
@@ -332,7 +352,9 @@
                             <div class="col-sm-9">
                                 <input type="text"
                                        class="form-control form-control-sm"
+                                       th:classappend="${#fields.hasErrors('linkTrailer')} ? 'is-invalid'"
                                        th:field="*{linkTrailer}">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('linkTrailer')}" th:errors="*{linkTrailer}"></div>
                             </div>
                         </div>
 
@@ -340,19 +362,20 @@
                             <label class="col-sm-2 col-form-label-sm">Тип кино</label>
                             <div class="col-sm-1">
                                 <input type="checkbox" class="form-check-input" name="filmTypes" value="Threedimensional"
-                                       th:checked="${film.typeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).Threedimensional)}">
+                                       th:checked="${filmTypeFilm != null && filmTypeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).Threedimensional)}">
                                 <label class="form-label ml-2">3D</label>
                             </div>
                             <div class="col-sm-1">
                                 <input type="checkbox" class="form-check-input" name="filmTypes" value="Twodimensional"
-                                       th:checked="${film.typeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).Twodimensional)}">
+                                       th:checked="${filmTypeFilm != null && filmTypeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).Twodimensional)}">
                                 <label class="form-label ml-2"> 2D </label>
                             </div>
                             <div class="col-sm-1">
                                 <input type="checkbox" class="form-check-input" name="filmTypes" value="IMAX"
-                                       th:checked="${film.typeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).IMAX)}">
+                                       th:checked="${filmTypeFilm != null && filmTypeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).IMAX)}">
                                 <label class="form-label ml-2"> IMAX </label>
                             </div>
+                            <div class="invalid-feedback" th:if="${typeFilmError}">Необходимо указать хотя бы один тип кино</div>
                         </div>
                         <div class="row mb-4">
                             <div class="col-2">
@@ -367,7 +390,10 @@
                                             <input type="text"
                                                    id="seoUrl"
                                                    class="form-control form-control-sm col-sm-8"
+                                                   th:classappend="${#fields.hasErrors('seoUrl')} ? 'is-invalid' : ''"
                                                    th:field="*{seoUrl}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoUrl')}"
+                                                 th:errors="*{seoUrl}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -377,8 +403,10 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoTitle"
                                                    class="form-control"
-                                                   th:field="*{seoTitle}"
-                                            >
+                                                   th:classappend="${#fields.hasErrors('seoTitle')} ? 'is-invalid' : ''"
+                                                   th:field="*{seoTitle}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoTitle')}"
+                                                 th:errors="*{seoTitle}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -388,8 +416,10 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoKeywords"
                                                    class="form-control"
-                                                   th:field="*{seoKeywords}"
-                                            >
+                                                   th:classappend="${#fields.hasErrors('seoKeywords')} ? 'is-invalid' : ''"
+                                                   th:field="*{seoKeywords}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoKeywords')}"
+                                                 th:errors="*{seoKeywords}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -400,8 +430,10 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoDescription"
                                                    class="form-control"
+                                                   th:classappend="${#fields.hasErrors('seoDescription')} ? 'is-invalid' : ''"
                                                    th:field="*{seoDescription}">
-
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoDescription')}"
+                                                 th:errors="*{seoDescription}"></div>
                                         </div>
                                     </div>
                                 </div>

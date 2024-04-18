@@ -17,18 +17,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.service.UserService;
 
 @Controller
 public class LoginController {
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
-    public LoginController(AuthenticationManager authenticationManager) {
+    public LoginController(AuthenticationManager authenticationManager, UserService userService) {
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
     }
 
     @GetMapping("/login")
     public ModelAndView login(Model model){
         model.addAttribute("title", "Вход в систему");
+        model.addAttribute("admin", userService.getUser(1L));
+        model.addAttribute("user", userService.getUser(2L));
+
         return new ModelAndView("admin/login");
     }
 

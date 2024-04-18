@@ -20,19 +20,19 @@ public class BannerBackgroundServiceImp implements BannerBackgroundService {
 
     @Override
     public BannerBackground getBannerBackground(Long id) {
-        logger.info("Get banner background by id: " + id);
+        logger.info("Get banner background by id: {}", id);
         return bannerBackgroundRepository.findById(id).orElse(null);
     }
 
     @Override
     public void saveBannerBackground(BannerBackground bannerBackground) {
-        logger.info("Save banner background: " + bannerBackground);
+        logger.info("Save banner background: {}", bannerBackground);
         bannerBackgroundRepository.save(bannerBackground);
     }
 
     @Override
     public void deleteBannerBackground(Long id) {
-        logger.info("Delete banner background by id: " + id);
+        logger.info("Delete banner background by id: {}", id);
         bannerBackgroundRepository.deleteById(id);
     }
 

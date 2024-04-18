@@ -20,8 +20,8 @@
             <div class="row">
                 <div class="col-md-6">
                     <img class="w-100 m-1"
-                            th:src="${film.mainImage}"
-                         alt="https://picsum.photos/400/400">
+                         th:src="@{${film.mainImage == null || film.mainImage == '' ? 'https://via.placeholder.com/250x200&text=Нет изображения' : film.mainImage}}"
+                         alt="Ошибка загрузки">
                 </div>
                 <div class="col-md-6 flex-row">
                     <h2 class="text-center" th:text="${film.name}">Неоновый демон</h2>
@@ -114,7 +114,9 @@
                                              th:data-bs-interval="5000"
                                              style="height: 50vh;">
                                             <div class="position-relative d-flex justify-content-center align-items-center">
-                                                <img class=" d-block justify-content-center align-items-center" alt="" style="height: 50vh;" th:src="${imageCinema.url}"/>
+                                                <img class="d-block justify-content-center align-items-center"
+                                                     alt="" style="width: 50vh; height: 50vh;"
+                                                     th:src="@{${imageCinema.url == null || imageCinema.url == '' ? 'https://via.placeholder.com/250x200&text=Нет изображения' : imageCinema.url }}"/>
                                             </div>
                                         </div>
                                     </div>

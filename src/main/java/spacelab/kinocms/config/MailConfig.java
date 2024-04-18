@@ -21,8 +21,6 @@ public class MailConfig {
         mailSender.setUsername("romanmiahkykh@gmail.com");
         mailSender.setPassword("inebtcnqrhmyrvrn");
 
-//        mailSender.setUsername("glyuchnoglaz21@gmail.com");
-//        mailSender.setPassword("kkbwjocltntaktys");
 
         mailSender.setDefaultEncoding("UTF-8");
 

@@ -1,8 +1,6 @@
 package spacelab.kinocms.Dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import spacelab.kinocms.enums.Gender;
 import spacelab.kinocms.enums.Lanquage;
@@ -16,10 +14,10 @@ import java.sql.Date;
  * DTO for {@link User}
  */
 @Data
-public class UserDto implements Serializable {
+public class UserDto{
     Long id;
     @NotEmpty(message = "Пожалуйста, введите ваше имя")
-    @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z0-9]+$", message = "Имя может содержать только буквы и цифры")
+    @Size(min=2, max=30)
     String name;
     String surname;
     String nickname;
@@ -27,8 +25,9 @@ public class UserDto implements Serializable {
     @NotEmpty(message = "Пожалуйста, введите ваш email")
     String email;
     String address;
-    @Pattern(message = "Пароль должен содержать хотя бы одну строчную и одну заглавную букву", regexp = "^(?=.*[a-z])(?=.*[A-Z]).*$")
-    @NotEmpty(message = "Пожалуйста, введите пароль")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z]).*$",
+            message = "Пароль должен содержать хотя бы одну строчную и одну заглавную букву")
+    @NotEmpty
     String password;
     String cardNumber;
     Lanquage language;

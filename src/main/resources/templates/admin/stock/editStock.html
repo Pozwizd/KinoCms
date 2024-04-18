@@ -57,15 +57,20 @@
                             <div class="col-sm-6">
                                 <input type="text"
                                        class="form-control form-control-sm"
+                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
                                        th:field="*{name}">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                             </div>
                             <label for="datePosting" class="col-sm-2 col-form-label">Дата публикации</label>
                             <div class="col-sm-3">
                                 <input type="date"
                                        class="form-control"
+                                       th:classappend="${#fields.hasErrors('datePosting')} ? 'is-invalid'"
                                        id="datePosting"
-                                       placeholder="Введите дату рождения"
                                        th:field="*{datePosting}">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('datePosting')}">
+                                    Укажите дату публикации
+                                </div>
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -74,9 +79,11 @@
                                 <div class="card-body">
                                     <textarea id="autosize-demo"
                                               class="form-control"
+                                              th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"
                                               data-autosize
                                               th:field="*{description}">
                                     </textarea>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
                                 </div>
                             </div>
                         </div>
@@ -321,7 +328,9 @@
                             <div class="col-sm-9">
                                 <input type="text"
                                        class="form-control form-control-sm"
+                                       th:classappend="${#fields.hasErrors('linkVideo')} ? 'is-invalid'"
                                        th:field="*{linkVideo}">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('linkVideo')}" th:errors="*{linkVideo}"></div>
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -337,7 +346,9 @@
                                             <input type="text"
                                                    id="seoUrl"
                                                    class="form-control form-control-sm col-sm-8"
+                                                   th:classappend="${#fields.hasErrors('seoUrl')} ? 'is-invalid'"
                                                    th:field="*{seoUrl}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoUrl')}" th:errors="*{seoUrl}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -347,8 +358,9 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoTitle"
                                                    class="form-control"
-                                                   th:field="*{seoTitle}"
-                                            >
+                                                   th:classappend="${#fields.hasErrors('seoTitle')} ? 'is-invalid'"
+                                                   th:field="*{seoTitle}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoTitle')}" th:errors="*{seoTitle}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -358,8 +370,9 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoKeywords"
                                                    class="form-control"
-                                                   th:field="*{seoKeywords}"
-                                            >
+                                                   th:classappend="${#fields.hasErrors('seoKeywords')} ? 'is-invalid'"
+                                                   th:field="*{seoKeywords}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoKeywords')}" th:errors="*{seoKeywords}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -370,8 +383,9 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoDescription"
                                                    class="form-control"
+                                                   th:classappend="${#fields.hasErrors('seoDescription')} ? 'is-invalid'"
                                                    th:field="*{seoDescription}">
-
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoDescription')}" th:errors="*{seoDescription}"></div>
                                         </div>
                                     </div>
                                 </div>

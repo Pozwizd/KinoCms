@@ -123,9 +123,6 @@
                         <div class="mb-3 form-password-toggle">
                             <div class="d-flex justify-content-between">
                                 <label class="form-label" for="password">Password</label>
-                                <a href="auth-forgot-password-basic.html">
-                                    <small>Forgot Password?</small>
-                                </a>
                             </div>
                             <div class="input-group input-group-merge">
                                 <input
@@ -136,37 +133,21 @@
                                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                                         aria-describedby="password"
                                 />
-                                <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+                            </div>
+                            <br/>
+                            <hr/>
+                            <div>
+                                <p>Admin <span th:text="${admin.getEmail()}"></span> <span th:text="${admin.getPassword()}"></span></p>
+
+                                <p>User <span th:text="${user.getEmail()}"></span> <span th:text="${user.getPassword()}"></span></p>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="remember-me"/>
-                                <label class="form-check-label" for="remember-me"> Remember Me </label>
-                            </div>
-                        </div>
+
                         <div class="mb-3">
                             <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                         </div>
                     </form>
 
-                    <div class="divider my-4">
-                        <div class="divider-text">or</div>
-                    </div>
-
-                    <div class="d-flex justify-content-center">
-                        <a href="javascript:;" class="btn btn-icon btn-label-facebook me-3">
-                            <i class="tf-icons fa-brands fa-facebook-f fs-5"></i>
-                        </a>
-
-                        <a href="javascript:;" class="btn btn-icon btn-label-google-plus me-3">
-                            <i class="tf-icons fa-brands fa-google fs-5"></i>
-                        </a>
-
-                        <a href="javascript:;" class="btn btn-icon btn-label-twitter">
-                            <i class="tf-icons fa-brands fa-twitter fs-5"></i>
-                        </a>
-                    </div>
                 </div>
             </div>
             <!-- /Register -->

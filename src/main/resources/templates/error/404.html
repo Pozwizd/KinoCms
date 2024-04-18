@@ -31,29 +31,29 @@
     />
 
     <!-- Icons -->
-    <link rel="stylesheet" href="/assets/vendor/fonts/fontawesome.css" />
-    <link rel="stylesheet" href="/assets/vendor/fonts/tabler-icons.css" />
-    <link rel="stylesheet" href="/assets/vendor/fonts/flag-icons.css" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/fonts/fontawesome.css}" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/fonts/tabler-icons.css}" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/fonts/flag-icons.css}" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="/assets/vendor/css/rtl/core.css" />
-    <link rel="stylesheet" href="/assets/vendor/css/rtl/theme-default.css" />
-    <link rel="stylesheet" href="/assets/css/demo.css" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/css/rtl/core.css}" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/css/rtl/theme-default.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/demo.css}" />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-    <link rel="stylesheet" href="/assets/vendor/libs/node-waves/node-waves.css" />
-    <link rel="stylesheet" href="/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/libs/node-waves/node-waves.css}" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/libs/typeahead-js/typeahead.css}" />
 
     <!-- Page CSS -->
     <!-- Page -->
-    <link rel="stylesheet" href="/assets/vendor/css/pages/page-misc.css" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/css/pages/page-misc.css}" />
     <!-- Helpers -->
-    <script src="/assets/vendor/js/helpers.js"></script>
+    <script th:src="@{/assets/vendor/js/helpers.js}"></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="/assets/js/config.js"></script>
+    <script th:src="@{/assets/js/config.js}"></script>
 </head>
 
 <body>
@@ -67,7 +67,7 @@
         <a href="javascript:history.back()" class="btn btn-primary mb-4">Back to home</a>
         <div class="mt-4">
             <img
-                    src="/assets/img/illustrations/page-misc-error.png"
+                    th:src="@{/assets/img/illustrations/page-misc-error.png}"
                     alt="page-misc-error"
                     width="225"
                     class="img-fluid"
@@ -77,7 +77,7 @@
 </div>
 <div class="container-fluid misc-bg-wrapper">
     <img
-            src="/assets/img/illustrations/bg-shape-image-light.png"
+            th:src="@{/assets/img/illustrations/bg-shape-image-light.png}"
             alt="page-misc-error"
             data-app-light-img="illustrations/bg-shape-image-light.png"
             data-app-dark-img="illustrations/bg-shape-image-dark.png"
@@ -89,23 +89,23 @@
 
 <!-- Core JS -->
 <!-- build:js assets/vendor/js/core.js -->
-<script src="/assets/vendor/libs/jquery/jquery.js"></script>
-<script src="/assets/vendor/libs/popper/popper.js"></script>
-<script src="/assets/vendor/js/bootstrap.js"></script>
-<script src="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-<script src="/assets/vendor/libs/node-waves/node-waves.js"></script>
+<script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+<script th:src="@{/assets/vendor/libs/popper/popper.js}"></script>
+<script th:src="@{/assets/vendor/js/bootstrap.js}"></script>
+<script th:src="@{/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js}"></script>
+<script th:src="@{/assets/vendor/libs/node-waves/node-waves.js}"></script>
 
-<script src="/assets/vendor/libs/hammer/hammer.js"></script>
-<script src="/assets/vendor/libs/i18n/i18n.js"></script>
-<script src="/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+<script th:src="@{/assets/vendor/libs/hammer/hammer.js}"></script>
+<script th:src="@{/assets/vendor/libs/i18n/i18n.js}"></script>
+<script th:src="@{/assets/vendor/libs/typeahead-js/typeahead.js}"></script>
 
-<script src="/assets/vendor/js/menu.js"></script>
+<script th:src="@{/assets/vendor/js/menu.js}"></script>
 <!-- endbuild -->
 
 <!-- Vendors JS -->
 
 <!-- Main JS -->
-<script src="/assets/js/main.js"></script>
+<script th:src="@{/assets/js/main.js}"></script>
 
 <!-- Page JS -->
 </body>

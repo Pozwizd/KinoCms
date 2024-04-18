@@ -23,5 +23,5 @@ public interface PageService {
     public void deletePage(Page page);
     public void updatePage(Page page);
 
-    void editPage(Page page, MultipartFile mainImagePage);
+    void editPage(Page page);
 }

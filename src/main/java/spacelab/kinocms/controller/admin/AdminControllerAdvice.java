@@ -23,7 +23,7 @@ public class AdminControllerAdvice {
     private final PageService pageService;
     private final NewsService newsService;
     private final UserRepository userRepository;
-    UserService userService;
+    private final UserService userService;
 
     @ModelAttribute
     public void addCommonAttributes(Model model, Principal principal, HttpServletRequest request) {

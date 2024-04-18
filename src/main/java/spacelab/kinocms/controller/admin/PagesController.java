@@ -1,14 +1,18 @@
 package spacelab.kinocms.controller.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.Dto.Page.MainPageDto;
+import spacelab.kinocms.Dto.Page.PageDto;
 import spacelab.kinocms.Mapper.MainPageMapper;
+import spacelab.kinocms.Mapper.PageMapper;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.page.ImagePage;
 import spacelab.kinocms.model.page.Page;
@@ -29,14 +33,15 @@ public class PagesController {
     private final MainPageService mainPageService;
     private final PageService pageService;
     private final ContactService contactService;
-
+    private final PageMapper pageMapper;
     private final UploadFile uploadFile;
 
-    public PagesController(ImagePageService imagePageService, MainPageService mainPageService, PageService pageService, ContactService contactService, UploadFile uploadFile) {
+    public PagesController(ImagePageService imagePageService, MainPageService mainPageService, PageService pageService, ContactService contactService, PageMapper pageMapper, UploadFile uploadFile) {
         this.imagePageService = imagePageService;
         this.mainPageService = mainPageService;
         this.pageService = pageService;
         this.contactService = contactService;
+        this.pageMapper = pageMapper;
         this.uploadFile = uploadFile;
     }
 
@@ -63,10 +68,17 @@ public class PagesController {
     }
 
     @PostMapping("/editMainPage/{id}")
-    public ModelAndView editMainPage(@ModelAttribute MainPageDto mainPageDto, HttpServletRequest request) {
+    public ModelAndView editMainPage(@Valid @ModelAttribute("mainPage") MainPageDto mainPageDto,
+                                     BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("title", "Редактирование cтраницы " + mainPageService.getMainPage().getName());
+            model.addAttribute("pageActive", "pages");
+            return new ModelAndView("admin/page/editMainPage");
+        }
+
         mainPageService.saveMainPage(MainPageMapper.toEntity(mainPageDto));
 
-        String referer = request.getHeader("Referer");
         return new ModelAndView("redirect:/admin/pages");
 
     }
@@ -75,18 +87,23 @@ public class PagesController {
     public ModelAndView editBasicPage(Model model, @PathVariable long id) {
         model.addAttribute("title", "Редактирование cтраницы " + pageService.getPage(id).getName());
         model.addAttribute("pageActive", "pages");
-        model.addAttribute("pageCommon", pageService.getPage(id));
+        model.addAttribute("pageCommon", pageMapper.toDto(pageService.getPage(id)));
 
         return new ModelAndView("admin/page/editPage");
     }
 
     @PostMapping("/editPage/{id}")
-    public ModelAndView editBasicPage(@ModelAttribute Page page,
-                                      @PathVariable String id,
-                                      @RequestParam(name = "mainImagePage", required = false) MultipartFile mainImagePage
-    ) {
+    public ModelAndView editBasicPage(@Valid @ModelAttribute("pageCommon") PageDto pageCommon,
+                                      BindingResult bindingResult, Model model) {
 
-        pageService.editPage(page, mainImagePage);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("title", "Редактирование cтраницы " + pageService.getPage(pageCommon.getId()).getName());
+            model.addAttribute("pageActive", "pages");
+            return new ModelAndView("admin/page/editPage");
+        }
+
+
+        pageService.editPage(pageMapper.toEntity(pageCommon));
         return new ModelAndView("redirect:/admin/pages");
     }
 
@@ -122,13 +139,12 @@ public class PagesController {
     @ResponseBody
     public ResponseEntity<String> editMainPage(@RequestPart("file") MultipartFile file,
                                                @PathVariable Long id) {
-
-
+        
         Page page = pageService.getPage(id);
         page.setMainImage(uploadFile.uploadFile(file, page.getMainImage()));
         pageService.savePage(page);
-
         return ResponseEntity.ok("Файл успешно загружен");
+
     }
 
     @PostMapping("/editPage/deleteMainPage/{id}")

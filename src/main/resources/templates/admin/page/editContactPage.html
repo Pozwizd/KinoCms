@@ -25,19 +25,25 @@
                                     <label>
                                         <input type=hidden
                                                th:field="*{contactCinemas[__${cont.index}__].id}"
-                                               class="form-control form-control-sm">
+                                               class="form-control form-control-sm"
+                                        >
                                         <input type="text"
                                                th:field="*{contactCinemas[__${cont.index}__].name}"
-                                               class="form-control form-control-sm">
+                                               class="form-control form-control-sm"
+                                               th:classappend="${#fields.hasErrors('contactCinemas[__${cont.index}__].name')} ? 'is-invalid'">
                                     </label>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('contactCinemas[__${cont.index}__].name')}"
+                                         th:errors="*{contactCinemas[__${cont.index}__].name}"></div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-check form-switch form-check-inline col-1 my-auto">
                                         <label>
-                                            <input class="form-check-input" type="checkbox"
+                                            <input class="form-check-input"
+                                                   type="checkbox"
                                                    th:field="*{contactCinemas[__${cont.index}__].status}"
                                             />
                                         </label>
+
                                     </div>
                                 </div>
                             </div>
@@ -48,17 +54,25 @@
                                         <textarea rows="3"
                                                   data-autosize
                                                   th:field="*{contactCinemas[__${cont.index}__].address}"
-                                                  class="form-control">
+                                                  class="form-control"
+                                                  th:classappend="${#fields.hasErrors('contactCinemas[__${cont.index}__].address')} ? 'is-invalid'">
                                         </textarea>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('contactCinemas[__${cont.index}__].address')}"
+                                             th:errors="*{contactCinemas[__${cont.index}__].address}"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-auto">
                                 <label class="col-sm-auto col-form-label-sm">Координаты для карты</label>
                                 <div class="col-sm-6">
-                                    <input type="text"
-                                           th:field="*{contactCinemas[__${cont.index}__].location}"
-                                           class="form-control form-control-sm">
+                                    <label>
+                                        <input type="text"
+                                               th:field="*{contactCinemas[__${cont.index}__].location}"
+                                               class="form-control form-control-sm"
+                                        th:classappend="${#fields.hasErrors('contactCinemas[__${cont.index}__].location')} ? 'is-invalid'">
+                                    </label>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('contactCinemas[__${cont.index}__].location')}"
+                                         th:errors="*{contactCinemas[__${cont.index}__].location}"></div>
                                 </div>
                             </div>
                             <div class="row mb-4" id="mainImageBigBlock">
@@ -73,7 +87,6 @@
                                                 ? ${appContextPath} + *{contactCinemas[__${cont.index}__].logo}
                                                 : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения')}"
                                                 alt=""
-
                                                 style="max-width: 250px; max-height: 200px;"
                                         >
                                     </div>
@@ -129,7 +142,9 @@
                             <input type="text"
                                    id="seoUrl"
                                    class="form-control form-control-sm col-sm-8"
+                                   th:classappend="${#fields.hasErrors('seoUrl')} ? 'is-invalid'"
                                    th:field="*{seoUrl}">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoUrl')}" th:errors="*{seoUrl}"></div>
                         </div>
                     </div>
                 </div>
@@ -139,7 +154,9 @@
                         <div class="col-sm-10">
                             <input type="text" id="seoTitle"
                                    class="form-control"
+                                   th:classappend="${#fields.hasErrors('seoTitle')} ? 'is-invalid'"
                                    th:field="*{seoTitle}">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoTitle')}" th:errors="*{seoTitle}"></div>
                         </div>
                     </div>
                 </div>
@@ -150,7 +167,9 @@
                         <div class="col-sm-10">
                             <input type="text" id="seoKeywords"
                                    class="form-control"
+                                   th:classappend="${#fields.hasErrors('seoKeywords')} ? 'is-invalid'"
                                    th:field="*{seoKeywords}">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoKeywords')}" th:errors="*{seoKeywords}"></div>
                         </div>
                     </div>
                 </div>
@@ -161,7 +180,9 @@
                         <div class="col-sm-10">
                             <input type="text" id="seoDescription"
                                    class="form-control"
+                                   th:classappend="${#fields.hasErrors('seoDescription')} ? 'is-invalid'"
                                    th:field="*{seoDescription}">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoDescription')}" th:errors="*{seoDescription}"></div>
                         </div>
                     </div>
                 </div>

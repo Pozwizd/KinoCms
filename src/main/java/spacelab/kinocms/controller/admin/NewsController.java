@@ -1,26 +1,26 @@
 package spacelab.kinocms.controller.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.Dto.NewsDto;
+import spacelab.kinocms.Mapper.NewsMapper;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.ImagesEntity.ImageNews;
 import spacelab.kinocms.model.News;
 import spacelab.kinocms.service.ImageNewsService;
 import spacelab.kinocms.service.NewsService;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("admin/news")
@@ -30,6 +30,7 @@ public class NewsController {
     private final NewsService newsService;
     private final UploadFile uploadFile;
     private final ImageNewsService imageNewsService;
+    private final NewsMapper newsMapper;
 
 
 
@@ -54,9 +55,16 @@ public class NewsController {
     }
 
     @PostMapping("/editNews/{id}")
-    public ModelAndView editBasicPage(@ModelAttribute News news) {
+    public ModelAndView editBasicPage(@Valid @ModelAttribute("news") NewsDto news,
+                                      BindingResult bindingResult, Model model) {
 
-        newsService.updateNews(news);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("title", "Редактирование новости " + newsService.getNews(news.getId()).getName());
+            model.addAttribute("pageActive", "News");
+            return new ModelAndView("admin/news/editNews");
+        }
+
+        newsService.updateNews(newsMapper.toEntity(news));
         return new ModelAndView("redirect:/admin/news");
     }
 

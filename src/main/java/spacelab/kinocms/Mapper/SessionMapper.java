@@ -53,13 +53,13 @@ public class SessionMapper {
             session.setHallId(hallService.getHall(Long.valueOf(sessionDto.getHallId())));
         }
 
-        if (sessionDto.getPrice() == null || sessionDto.getPrice().isEmpty()) {
+        if (sessionDto.getPrice() == null || sessionDto.getPrice().isNaN()) {
             session.setPrice((double) 0);
         } else {
             session.setPrice(Double.valueOf(sessionDto.getPrice()));
         }
 
-        if (sessionDto.getPriceVip() == null || sessionDto.getPriceVip().isEmpty()) {
+        if (sessionDto.getPriceVip() == null || sessionDto.getPriceVip().isNaN()) {
             session.setPriceVip((double) 0);
         } else {
             session.setPriceVip(Double.valueOf(sessionDto.getPriceVip()));
@@ -75,8 +75,8 @@ public class SessionMapper {
         sessionDto.setFilmId(String.valueOf(session.getFilmId().getId()));
         sessionDto.setCinemaId(String.valueOf(session.getCinemaId().getId()));
         sessionDto.setHallId(String.valueOf(session.getHallId().getId()));
-        sessionDto.setPrice(String.valueOf(session.getPrice()));
-        sessionDto.setPriceVip(String.valueOf(session.getPriceVip()));
+        sessionDto.setPrice(Double.valueOf(String.valueOf(session.getPrice())));
+        sessionDto.setPriceVip(Double.valueOf(String.valueOf(session.getPriceVip())));
         return sessionDto;
     }
 }

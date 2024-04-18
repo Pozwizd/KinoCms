@@ -35,8 +35,8 @@ public class PageServiceImp implements PageService {
 
     @Override
     public Page getPage(long id) {
-        logger.info("Get page by id: " + id);
-        return pageRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Page not found"));
+        logger.info("Get page by id: {}", id);
+        return pageRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -59,29 +59,21 @@ public class PageServiceImp implements PageService {
 
     @Override
     public void deletePage(Page page) {
-        logger.info("Delete page: " + page);
+        logger.info("Delete page: {}", page);
         pageRepository.delete(page);
     }
 
     @Override
     public void updatePage(Page page) {
-        logger.info("Update page: " + page);
+        logger.info("Update page: {}", page);
         pageRepository.save(page);
     }
 
     @Override
-    public void editPage(Page page, MultipartFile mainImagePage) {
-
-        if (mainImagePage.getOriginalFilename() != null && mainImagePage.getOriginalFilename() != "" && mainImagePage.getSize() > 0){
-            page.setMainImage(uploadFile.uploadFile(mainImagePage,
-                    pageRepository.findById(page.getId()).get().getMainImage()));
-        } else {
-            page.setMainImage(pageRepository.findById(page.getId()).get().getMainImage());
-        }
+    public void editPage(Page page) {
 
         page.setDateOfCreated(pageRepository.findById(page.getId()).get().getDateOfCreated());
-
-        logger.info("Update page: " + page);
+        logger.info("Update page: {}", page);
         pageRepository.save(page);
     }
 

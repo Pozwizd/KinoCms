@@ -22,7 +22,7 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
     private AuthenticationManager authenticationManager;
-    private final int pageSize = 1;
+    private final int pageSize = 5;
 
 
     @GetMapping({"/", ""})
@@ -35,31 +35,33 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ModelAndView viewUserDetails(@PathVariable Long userId, Model model) {
-        UserDto user = userMapper.toDto(userService.getUser(userId));
+        UserDto userDto = userMapper.toDto(userService.getUser(userId));
         model.addAttribute("title", "Пользователи");
         model.addAttribute("pageActive", "users");
-        model.addAttribute("user", user);
+        model.addAttribute("userDto", userDto);
         return new ModelAndView("admin/user/userEdit");
     }
 
     @PostMapping("/{userId}")
-    public ModelAndView editUserDetails(@ModelAttribute @Valid UserDto user,
-                                        @RequestParam("confirmPassword") String confirmPassword,
-                                        BindingResult result, Model model, @PathVariable Long  userId) {
+    public ModelAndView editUserDetails(@Valid @ModelAttribute("userDto") UserDto userDto,
+                                  BindingResult bindingResult,
+                                  @PathVariable Long userId) {
 
-        // Проверка ошибок валидации
-        if (result.hasErrors()) {
-            model.addAttribute("title", "Пользователи");
-            model.addAttribute("pageActive", "users");
-            model.addAttribute("user", user);
-            return new ModelAndView("redirect:/admin/users/" + userId);
+
+        if (bindingResult.hasErrors()||
+                (userService.getUserByEmail(userDto.getEmail()) != null)
+        && (!userService.getUserByEmail(userDto.getEmail()).getId().equals(userId))) {
+            return new ModelAndView("admin/user/userEdit");
         }
-
+        userDto.setId(userId);
+        User user = userMapper.toEntity(userDto);
         user.setId(userId);
-        userService.saveUser(userMapper.toEntity(user));
+        userService.saveUser(user);
+
 
         return new ModelAndView("redirect:/admin/users");
     }
+
 
 
     @GetMapping("/getPage")

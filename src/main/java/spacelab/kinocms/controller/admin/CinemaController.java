@@ -1,15 +1,19 @@
 package spacelab.kinocms.controller.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.Mapper.CinemaMapper;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.Cinema;
+import spacelab.kinocms.model.CinemaDto;
 import spacelab.kinocms.model.ImagesEntity.ImageCinema;
 import spacelab.kinocms.service.CinemaService;
 import spacelab.kinocms.service.HallService;
@@ -26,6 +30,7 @@ public class CinemaController {
     private final HallService hallService;
     private final ImageCinemaService imageCinemaService;
     private final UploadFile uploadFile;
+    private final CinemaMapper cinemaMapper;
 
     @GetMapping({"/", ""})
     public ModelAndView index(Model model){
@@ -39,21 +44,31 @@ public class CinemaController {
     public ModelAndView editCinema(Model model, @PathVariable String id){
         model.addAttribute("title", "Кинотеатр");
         model.addAttribute("pageActive", "cinema");
-        model.addAttribute("cinema", cinemaService.getCinema(Long.parseLong(id)));
+        CinemaDto cinema =  cinemaMapper
+                .toDto(cinemaService.getCinema(Long.parseLong(id)));
+        model.addAttribute("cinema", cinema );
         return new ModelAndView("admin/cinemas/cinemaEdit");
     }
 
 
 
     @PostMapping("/editCinema/{id}")
-    public ModelAndView editBasicPage(@ModelAttribute Cinema cinema,
-                                      @PathVariable String id) {
+    public ModelAndView editBasicPage(Model model, @Valid @ModelAttribute("cinema") CinemaDto cinema,
+                                      BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("title", "Кинотеатр" + cinemaService.getCinema(Long.parseLong(String.valueOf(cinema.getId()))).getName());
+            model.addAttribute("pageActive", "cinema");
+            cinema.setHalls(hallService.getHallByCinema(
+                    cinemaService
+                            .getCinema(Long.parseLong(String.valueOf(cinema.getId())))));
+            return new ModelAndView("admin/cinemas/cinemaEdit");
+        }
 
-        cinemaService.saveCinemaDto(cinema);
+        cinemaService.saveCinemaDto(cinemaMapper.toEntity(cinema));
         return new ModelAndView("redirect:/admin/cinema");
     }
 
-    @GetMapping({"/createCinema",})
+    @GetMapping({"/createCinema", "/createCinema/"})
     public ModelAndView createNewCinema(Model model, HttpServletRequest  request) {
 
         Cinema cinema = new Cinema();

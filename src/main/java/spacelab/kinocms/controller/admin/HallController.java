@@ -1,13 +1,17 @@
 package spacelab.kinocms.controller.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.Dto.HallDto;
+import spacelab.kinocms.Mapper.HallMapper;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.Hall;
 import spacelab.kinocms.model.ImagesEntity.ImageHall;
@@ -30,27 +34,32 @@ public class HallController {
     private final ImageCinemaService imageCinemaService;
     private final ImageHallService imageHallService;
     private final UploadFile uploadFile;
-
+    private final HallMapper hallMapper;
 
 
     @GetMapping("/editHall/{id}")
-    public ModelAndView editHall(Model model, @PathVariable String id){
+    public ModelAndView editHall(Model model, @PathVariable String id) {
         model.addAttribute("hall", hallService.getHall(Long.parseLong(id)));
         return new ModelAndView("admin/cinemas/hallEdit");
     }
 
 
-
     @PostMapping("/editHall/{id}")
-    public ModelAndView editHall(@ModelAttribute Hall hall,
-                                      @PathVariable String id) {
+    public ModelAndView editHall(@Valid @ModelAttribute("hall") HallDto hall,
+                                 BindingResult bindingResult, Model model) {
 
-        hallService.saveHallPage(hall);
-        return new ModelAndView("redirect:/admin/cinema/editCinema/"+ hall.getCinema().getId());
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("title", "Редактирование зала " + hallService.getHall(hall.getId()).getHallNumber());
+            model.addAttribute("pageActive", "cinema");
+            return new ModelAndView("admin/cinemas/hallEdit");
+        }
+
+        hallService.saveHallPage(hallMapper.toEntity(hall));
+        return new ModelAndView("redirect:/admin/cinema/editCinema/" + hall.getId());
     }
 
     @GetMapping("/createHall/{id}")
-    public ModelAndView createHall(Model model, HttpServletRequest  request, @PathVariable String id) {
+    public ModelAndView createHall(Model model, HttpServletRequest request, @PathVariable String id) {
         Hall hall = new Hall();
         hall.setDateCreated(Date.valueOf(LocalDate.now()));
         hall.setCinema(cinemaService.getCinema(Long.parseLong(id)));
@@ -78,11 +87,11 @@ public class HallController {
     @PostMapping("/editHall/editSchemeHall/{id}")
     @ResponseBody
     public ResponseEntity<String> editSchemeHall(@RequestPart("file") MultipartFile file,
-                                               @PathVariable Long id) {
+                                                 @PathVariable Long id) {
 
 
         Hall hall = hallService.getHall(id);
-        hall.setUrlSchemeImageHall(uploadFile.uploadFile(file,hall.getUrlSchemeImageHall()));
+        hall.setUrlSchemeImageHall(uploadFile.uploadFile(file, hall.getUrlSchemeImageHall()));
         hallService.saveHall(hall);
         return ResponseEntity.ok("Файл успешно загружен");
     }
@@ -112,7 +121,7 @@ public class HallController {
                                                 @PathVariable Long id) {
 
         Hall hall = hallService.getHall(id);
-        hall.setTopBanner(uploadFile.uploadFile(file,hall.getTopBanner()));
+        hall.setTopBanner(uploadFile.uploadFile(file, hall.getTopBanner()));
         hallService.saveHall(hall);
         return ResponseEntity.ok("Файл успешно загружен");
     }
@@ -130,7 +139,7 @@ public class HallController {
     @GetMapping("/editHall/showAllImages/{id}")
     @ResponseBody
     public List<ImageHall> showAllImages(@PathVariable String id) {
-        Hall  hall = hallService.getHall(Long.parseLong(id));
+        Hall hall = hallService.getHall(Long.parseLong(id));
         return imageHallService.getAllImageHallByHall(hall);
     }
 
@@ -163,7 +172,7 @@ public class HallController {
     public ResponseEntity<String> editImageHall(@RequestPart("file") MultipartFile file,
                                                 @PathVariable Long id) {
         ImageHall imageHall = imageHallService.getImageHall(id);
-        imageHall.setUrl(uploadFile.uploadFile(file,imageHall.getUrl()));
+        imageHall.setUrl(uploadFile.uploadFile(file, imageHall.getUrl()));
         imageHallService.saveImageHall(imageHall);
         return ResponseEntity.ok("Файл успешно загружен");
     }

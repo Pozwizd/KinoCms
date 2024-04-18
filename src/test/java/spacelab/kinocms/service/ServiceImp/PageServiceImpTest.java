@@ -111,43 +111,22 @@ class PageServiceImpTest {
         verify(pageRepository).save(page);
     }
 
+
     @Test
-    public void editPageTest() {
-        // Arrange
+    public void test_updatePageWithProvidedData() {
         Long pageId = 1L;
         Page existingPage = new Page();
         existingPage.setId(pageId);
         existingPage.setMainImage("existing-image.jpg");
-
         Page updatedPage = new Page();
         updatedPage.setId(pageId);
-
-        MultipartFile newMainImage = new MockMultipartFile("new-image.jpg", "new-image.jpg", "image/jpeg", "test data".getBytes());
-
+        updatedPage.setMainImage("new-image.jpg");
         when(pageRepository.findById(pageId)).thenReturn(Optional.of(existingPage));
-        when(uploadFile.uploadFile(newMainImage, existingPage.getMainImage())).thenReturn("new-image.jpg");
-
-        pageService.editPage(updatedPage, newMainImage);
-
+        pageService.editPage(updatedPage);
         ArgumentCaptor<Page> pageCaptor = ArgumentCaptor.forClass(Page.class);
         verify(pageRepository, times(1)).save(pageCaptor.capture());
-
         Page savedPage = pageCaptor.getValue();
         assertEquals("new-image.jpg", savedPage.getMainImage());
         assertEquals(existingPage.getDateOfCreated(), savedPage.getDateOfCreated());
-    }
-    @Test
-    void testEditPageWithoutNewImage() {
-        long id = 1L;
-        Page existingPage = new Page();
-        existingPage.setId(id);
-        existingPage.setMainImage("/old/image.jpg");
-        when(pageRepository.findById(id)).thenReturn(Optional.of(existingPage));
-        Page updatedPage = new Page();
-        updatedPage.setId(id);
-        MultipartFile mockFile = new MockMultipartFile("file", new byte[0]);
-        pageService.editPage(updatedPage, mockFile);
-        verify(pageRepository, times(2)).findById(id);
-        verify(pageRepository).save(argThat(page -> page.getMainImage().equals("/old/image.jpg")));
     }
 }

@@ -22,9 +22,10 @@
                         <h4 class="card-title text-center" th:text="${page.name}"></h4>
                         <br/>
                         <p class="card-text" th:text="${page.description}"></p>
-                        <h4 class="card-title text-center">Фотогалерея</h4>
+                        <h4 class="card-title text-center"
+                            th:if="${page.imagesAboutCinema.size() > 0 || !page.imagesAboutCinema.isEmpty()}">Фотогалерея</h4>
                         <br/>
-                        <div class="row">
+                        <div class="row" th:if="${page.imagesAboutCinema.size() > 0 || !page.imagesAboutCinema.isEmpty()}">
                             <div class="d-flex justify-content-center ">
                                 <div id="carouselExample" class="carousel slide col-md-12"
                                      style="width: 800px; height: 400px"

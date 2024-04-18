@@ -71,12 +71,17 @@
                             for (var i = 0; i < allLocation.length; i++) {
                                 let location = allLocation[i].textContent.split(',');
                                 let map = allMap[i].id;
-                                let basicMap = L.map(map).setView(location, 10);
-                                L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
-                                    maxZoom: 18
-                                }).addTo(basicMap);
-                                const marker = L.marker(location).addTo(basicMap);
+                                if (location.length === 2){
+                                    let basicMap = L.map(map).setView(location, 10);
+                                    L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+                                        maxZoom: 18
+                                    }).addTo(basicMap);
+                                    const marker = L.marker(location).addTo(basicMap);
+                                } else {
+                                    allMap[i].remove()
+                                }
+
                             }
                         </script>
                     </div>

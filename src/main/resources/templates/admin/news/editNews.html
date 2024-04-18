@@ -55,17 +55,26 @@
                         <div class="row mb-4">
                             <label class="col-sm-1 col-form-label-sm">Название</label>
                             <div class="col-sm-5">
-                                <input type="text"
-                                       class="form-control form-control-sm"
-                                       th:field="*{name}">
+
+                                    <input type="text"
+                                           class="form-control form-control-sm"
+                                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                                           th:field="*{name}">
+
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+
                             </div>
                             <label for="datePosting" class="col-sm-2 col-form-label">Дата публикации</label>
                             <div class="col-sm-3">
                                 <input type="date"
                                        class="form-control"
+                                       th:classappend="${#fields.hasErrors('datePosting')} ? 'is-invalid'"
                                        id="datePosting"
-                                       placeholder="Введите дату рождения"
                                        th:field="*{datePosting}">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('datePosting')}">
+                                    Укажите дату публикации
+                                </div>
                             </div>
                         </div>
 
@@ -73,11 +82,15 @@
                             <label class="col-sm-1 col-form-label-sm">Описание</label>
                             <div class="col-sm-11">
                                 <div class="card-body">
+                                    <label for="autosize-demo"></label>
                                     <textarea id="autosize-demo"
-                                              rows="3"
+                                              data-autosize
                                               class="form-control"
+                                              th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"
                                               th:field="*{description}">
                                     </textarea>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
+                                         th:errors="*{description}"></div>
                                 </div>
                             </div>
                         </div>
@@ -124,14 +137,15 @@
                             <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js}"></script>
                             <script>
                                 let appContextPath = document.getElementById("appContextPath").textContent
+                                const textarea = document.querySelectorAll('[data-autosize]');
                                 $(document).ready(function () {
                                     showMainImage();
-                                    // Загружаем страницу и требуем все картинки
                                     showAllImages();
+                                    autosize(textarea);
                                 });
 
 
-                                showMainImage = () =>{
+                                showMainImage = () => {
                                     $.ajax({
                                         url: appContextPath + '/admin/news/editNews/showMainPage/' + [[${news.id}]],
                                         method: 'GET',
@@ -147,13 +161,13 @@
                                                 ' max-height: 200px;">').appendTo('#mainImageBlock');
 
                                         },
-                                        error: function ( error ) {
+                                        error: function (error) {
                                             console.log(error);
                                         }
                                     })
                                 }
 
-                                function changeMainPage(element){
+                                function changeMainPage(element) {
                                     let file = element.files[0];
                                     let formData = new FormData();
                                     formData.append("file", file);
@@ -175,8 +189,7 @@
                                     });
                                 }
 
-                                function deleteMainImage(element){
-// Получение ближайшего элемента img от текущего элемента
+                                function deleteMainImage(element) {
                                     let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
                                     nearestImg.remove();
                                     $.ajax({
@@ -188,7 +201,7 @@
                                             console.log(result);
                                             showMainImage();
                                         },
-                                        error: function (){
+                                        error: function () {
                                             console.log("Error delete mainPage")
                                         }
                                     })
@@ -209,7 +222,7 @@
                                         }
                                     })
                                 }
-                                // Рисуем картинки
+
                                 function drawImages(result) {
                                     for (const data of result) {
                                         $('<div class="col-3">' +
@@ -217,7 +230,7 @@
                                             '<img src="' + (data.url != null ? appContextPath + data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
                                             ' id="imagePage' + data.id + '" ' +
                                             'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                            '<label class="form-label" id="imagePageEdit' +data.id+'" style="max-width: 250px;">' +
+                                            '<label class="form-label" id="imagePageEdit' + data.id + '" style="max-width: 250px;">' +
                                             '<input type="file" ' +
                                             'class="form-control" ' +
                                             'accept="image/png, image/jpeg" onchange="editImagePage(this,' + data.id + ')" multiple/>' +
@@ -235,7 +248,7 @@
 
                                     }
                                 }
-                                // Добавляем картинку
+
                                 const addBlock = () => {
                                     $.ajax({
                                         url: appContextPath + '/admin/news/editNews/createNewImage/' + [[${news.id}]],
@@ -246,12 +259,12 @@
                                             $('<div class="col-3">' +
                                                 '<div class="d-flex flex-column" style="max-width: 100%;">' +
                                                 '<img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"' +
-                                                ' id="imagePage"'+ result.id +' ' +
+                                                ' id="imagePage"' + result.id + ' ' +
                                                 'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                                '<label class="form-label"  id="imagePageEdit'+ result.id +'" style="max-width: 250px;">' +
+                                                '<label class="form-label"  id="imagePageEdit' + result.id + '" style="max-width: 250px;">' +
                                                 '<input type="file" ' +
                                                 'class="form-control"' +
-                                                'accept="image/png, image/jpeg" onchange="editImagePage(this,'+ result.id +')" multiple/>' +
+                                                'accept="image/png, image/jpeg" onchange="editImagePage(this,' + result.id + ')" multiple/>' +
                                                 '</label>' +
                                                 '<label class="form-label" style="max-width: 250px;">' +
                                                 '<button style="width: 250px;" ' +
@@ -271,7 +284,7 @@
                                 }
                                 document.querySelector('#add-image-button').addEventListener('click', addBlock);
 
-                                // Изменяем картинку
+
                                 function editImagePage(element, id) {
                                     let file = element.files[0];
                                     let formData = new FormData();
@@ -283,7 +296,6 @@
                                         processData: false,
                                         contentType: false,
                                         success: function (result) {
-                                            console.log("Выгрузка файла прошла успешно");
                                             $.ajax({
                                                 url: appContextPath + '/admin/news/editNews/getImage/' + id,
                                                 method: 'GET',
@@ -308,7 +320,6 @@
                                 }
 
 
-                                // Удаляем картинку
                                 function removeBlock(element, id) {
                                     let block = element.closest('.col-3');
                                     block.remove();
@@ -326,9 +337,15 @@
                         <div class="row mb-4">
                             <label class="col-sm-2 col-form-label-sm">Ссылка на видео</label>
                             <div class="col-sm-9">
-                                <input type="text"
-                                       class="form-control form-control-sm"
-                                       th:field="*{linkVideo}">
+                                <label></label>
+                                    <input type="text"
+                                           placeholder="Ссылка на видео"
+                                           class="form-control form-control-sm"
+                                           th:classappend="${#fields.hasErrors('linkVideo')} ? 'is-invalid' : ''"
+                                           th:field="*{linkVideo}">
+
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('linkVideo')}"
+                                     th:errors="*{linkVideo}"></div>
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -344,7 +361,11 @@
                                             <input type="text"
                                                    id="seoUrl"
                                                    class="form-control form-control-sm col-sm-8"
+                                                   placeholder="seoUrl"
+                                                   th:classappend="${#fields.hasErrors('seoUrl')} ? 'is-invalid' : ''"
                                                    th:field="*{seoUrl}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoUrl')}"
+                                                 th:errors="*{seoUrl}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -354,8 +375,11 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoTitle"
                                                    class="form-control"
-                                                   th:field="*{seoTitle}"
-                                            >
+                                                   placeholder="seoTitle"
+                                                   th:classappend="${#fields.hasErrors('seoTitle')} ? 'is-invalid' : ''"
+                                                   th:field="*{seoTitle}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoTitle')}"
+                                                 th:errors="*{seoTitle}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -365,8 +389,10 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoKeywords"
                                                    class="form-control"
-                                                   th:field="*{seoKeywords}"
-                                            >
+                                                   th:classappend="${#fields.hasErrors('seoKeywords')} ? 'is-invalid' : ''"
+                                                   th:field="*{seoKeywords}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoKeywords')}"
+                                                 th:errors="*{seoKeywords}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -377,8 +403,10 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoDescription"
                                                    class="form-control"
+                                                   th:classappend="${#fields.hasErrors('seoDescription')} ? 'is-invalid' : ''"
                                                    th:field="*{seoDescription}">
-
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoDescription')}"
+                                                 th:errors="*{seoDescription}"></div>
                                         </div>
                                     </div>
                                 </div>

@@ -11,11 +11,14 @@
     <div class="container">
         <div class="col-lg-12 mb-4 mb-xl-0">
             <div class="mt-3">
-                <table class="table">
-                    <thead id="sessionTableHead">
+                <div class="row">
+                    <table class="col-md-10 table">
+                        <thead id="sessionTableHead">
 
-                    </thead>
-                </table>
+                        </thead>
+                    </table>
+                </div>
+
                 <div class="row">
                     <div class="col-md-10 col-12">
 
@@ -89,15 +92,13 @@
 
                         function appendSelects(response) {
                             let tableRow = $('<tr></tr>').appendTo('#sessionTableHead');
-                            tableRow.append('<th>2d<input type="checkbox" onchange="changeSelections()" id="2d" value="true"></th>');
-                            tableRow.append('<th>3d<input type="checkbox" onchange="changeSelections()" id="3d" value="true"></th>');
-                            tableRow.append('<th>imax<input type="checkbox" onchange="changeSelections()" id="imax" value="true"></th>');
+                            tableRow.append('<th>2d  <input type="checkbox" onchange="changeSelections()" id="2d" value="true"></th>');
+                            tableRow.append('<th>3d  <input type="checkbox" onchange="changeSelections()" id="3d" value="true"></th>');
+                            tableRow.append('<th>imax  <input type="checkbox" onchange="changeSelections()" id="imax" value="true"></th>');
                             tableRow.append('<th><input id="dateSession" name="dateSession" onchange="changeSelections()" type="date" class="form-control" placeholder="Дата сеанса"/></th>');
                             tableRow.append('<th><select id="films" name="films" onchange="changeSelections()" class="select2 form-select form-select-lg" data-allow-clear="true">' + films(response.films) + '</select></th>');
                             tableRow.append('<th><select id="cinemas" name="cinemas" onchange="changeCinema(this)" data-allow-clear="true"  class="select2 form-select form-select-lg">' + cinemas(response.cinemas) + '</select></th>');
                             tableRow.append('<th><select id="halls" name="halls" onchange="changeSelections()" class="select2 form-select form-select-lg hallsCinema" data-allow-clear="true"></select></th>');
-                            tableRow.append('<th></th>');
-                            tableRow.append('<th></th>');
                         }
 
                         function initializeSelect2() {
@@ -105,8 +106,9 @@
                             if (select2.length) {
                                 select2.each(function () {
                                     let $this = $(this);
+                                    let placeholder = this.id === 'films' ? 'Фильм' : this.id === 'cinemas' ? 'Кинотеатр' : 'Зал';
                                     $this.wrap('<div class="position-relative dark-style"></div>').select2({
-                                        placeholder: 'Select value',
+                                        placeholder: placeholder,
                                         dropdownParent: $this.parent()
                                     });
                                 });

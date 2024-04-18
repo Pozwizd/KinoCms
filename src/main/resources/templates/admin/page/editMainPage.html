@@ -53,7 +53,10 @@
                             <label for="phoneNumber" class="col-sm-1 col-form-label-sm">Телефон</label>
                             <div class="col-sm-3">
                                 <input type="text" th:field="*{phoneNumber}"
-                                       id="phoneNumber" class="form-control form-control-sm">
+                                       id="phoneNumber" class="form-control form-control-sm"
+                                th:classappend="${#fields.hasErrors('phoneNumber')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('phoneNumber')}"
+                                     th:errors="*{phoneNumber}"></div>
                                 <input type="text" th:field="*{phoneNumber2}"
                                        class="form-control form-control-sm mt-2">
                             </div>
@@ -66,8 +69,11 @@
                                         type="text"
                                         id="seoText"
                                         class="form-control"
+                                        th:classappend="${#fields.hasErrors('seoText')} ? 'is-invalid'"
                                         th:field="*{seoText}">
                                 </textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('seoText')}"
+                                     th:errors="*{seoText}"></div>
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -79,7 +85,11 @@
                                     <div class="row">
                                         <label for="seoUrl" class="col-sm-2 col-form-label-sm justify-content-end">Url:</label>
                                         <div class="col-sm-10">
-                                            <input type="text" id="seoUrl" class="form-control form-control-sm col-sm-8" th:field="*{seoUrl}">
+                                            <input type="text" id="seoUrl" class="form-control form-control-sm col-sm-8"
+                                                   th:classappend="${#fields.hasErrors('seoUrl')} ? 'is-invalid'"
+                                                   th:field="*{seoUrl}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoUrl')}"
+                                                 th:errors="*{seoUrl}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -87,8 +97,12 @@
                                     <div class="row">
                                         <label for="seoTitle" class="col-sm-2 col-form-label-sm justify-content-end">Title:</label>
                                         <div class="col-sm-10">
-                                            <input type="text" id="seoTitle" class="form-control form-control-sm col-sm-8"
+                                            <input type="text" id="seoTitle"
+                                                   class="form-control form-control-sm col-sm-8"
+                                                   th:classappend="${#fields.hasErrors('seoTitle')} ? 'is-invalid'"
                                                    th:field="*{seoTitle}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoTitle')}"
+                                                 th:errors="*{seoTitle}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -105,8 +119,12 @@
                                     <div class="row">
                                         <label for="seoDescription" class="col-sm-2 col-form-label-sm justify-content-end">Description:</label>
                                         <div class="col-sm-10">
-                                            <input type="text" id="seoDescription" class="form-control form-control-lg col-sm-8"
+                                            <input type="text" id="seoDescription"
+                                                   class="form-control form-control-lg col-sm-8"
+                                                   th:classappend="${#fields.hasErrors('seoDescription')} ? 'is-invalid'"
                                                    th:field="*{seoDescription}">
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoDescription')}"
+                                                 th:errors="*{seoDescription}"></div>
                                         </div>
                                     </div>
                                 </div>

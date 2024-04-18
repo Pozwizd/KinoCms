@@ -1,10 +1,12 @@
 package spacelab.kinocms.controller.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,21 +46,39 @@ public class FilmController {
 
     @GetMapping("/editFilm/{id}")
     public ModelAndView editFilm(Model model, @PathVariable String id) {
+
         Film film = filmService.getFilm(Long.parseLong(id));
         model.addAttribute("title", "Редактирование фильма " + film.getName());
         model.addAttribute("pageActive", "film");
-        model.addAttribute("film", film);
+        model.addAttribute("film", filmMapper.toDto(film));
+        model.addAttribute("filmTypeFilm", film.getTypeFilm());
+
         List<TypeFilm> filmType = List.of(TypeFilm.Twodimensional, TypeFilm.Threedimensional, TypeFilm.IMAX);
         model.addAttribute("typeFilm", filmType);
+
         return new ModelAndView("admin/film/editFilm");
 
     }
 
     @PostMapping("/editFilm/{id}")
-    public ModelAndView editFilm(@ModelAttribute FilmDto filmDto,
-                                      @PathVariable String id, @RequestParam List<TypeFilm> filmTypes) {
-        filmDto.setTypeFilm(filmTypes);
-        filmService.updateFilm(filmMapper.toEntity(filmDto));
+    public ModelAndView editFilm(@Valid @ModelAttribute("film") FilmDto film,
+                                 BindingResult bindingResult,
+                                 @RequestParam("filmTypes") List<TypeFilm> filmTypes, Model model) {
+        if (bindingResult.hasErrors()||filmTypes.isEmpty()) {
+            model.addAttribute("title", "Редактирование фильма " + filmService.getFilm(film.getId()).getName());
+            model.addAttribute("pageActive", "film");
+            model.addAttribute("filmTypeFilm", filmService.getFilm(film.getId()).getTypeFilm());
+            List<TypeFilm> filmType = List.of(TypeFilm.Twodimensional, TypeFilm.Threedimensional, TypeFilm.IMAX);
+            model.addAttribute("typeFilm", filmType);
+            model.addAttribute("typeFilmError",
+                    true);
+            return new ModelAndView("admin/film/editFilm");
+        }
+
+        film.setTypeFilm(filmTypes);
+
+
+        filmService.updateFilm(filmMapper.toEntity(film));
         return new ModelAndView("redirect:/admin/films");
     }
 
