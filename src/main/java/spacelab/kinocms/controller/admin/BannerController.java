@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -94,11 +95,20 @@ public class BannerController {
     @ResponseBody
     public ResponseEntity<String> editMainBanner(@RequestPart("file") MultipartFile file,
                                                  @PathVariable Long id) {
-
         Banner banner = bannerService.getBanner(id);
-        banner.setPathImage(uploadFile.uploadFile(file, banner.getPathImage()));
-        bannerService.saveBanner(banner);
-        return ResponseEntity.ok("Файл успешно загружен");
+
+
+        if (isAllowedImageType(file.getContentType())) {
+            banner.setPathImage(uploadFile.uploadFile(file, banner.getPathImage()));
+            bannerService.saveBanner(banner);
+            return ResponseEntity.ok("Файл успешно загружен");
+        } else {
+            return ResponseEntity.badRequest().body("Недопустимый тип файла");
+        }
+    }
+
+    private boolean isAllowedImageType(String fileType) {
+        return StringUtils.hasText(fileType) && StringUtils.startsWithIgnoreCase(fileType, "image/");
     }
 
     @PostMapping("/editAllMainBanners/")

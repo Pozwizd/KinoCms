@@ -29,23 +29,25 @@
                 </div>
                 <hr class="line"/>
                 <div class="col-12 d-flex justify-content-around">
-                    <div class="col-1">
-                        <select class="form-select form-select-sm"
-                                name="timeChange" th:field="${bannerBlock.timeChange}">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                        </select>
+                    <div class="col-2">
+                        <label class="form-inline">Скорость вращения
+                            <select class="form-select form-select-sm"
+                                    name="timeChange" th:field="${bannerBlock.timeChange}">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </label>
 
                     </div>
-                    <div class="col-1">
+                    <div class="col-2">
                         <button type="button"
                                 class="btn btn-primary"
                                 onclick="addBlockMainBanner()">
                             Добавить
                         </button>
                     </div>
-                    <div class="col-1">
+                    <div class="col-2">
                         <button type="submit"
                                 class="btn btn-primary btn-form-block-multiple"
                                 id="saveButtonBanner">
@@ -143,23 +145,25 @@
                 </div>
                 <hr class="line"/>
                 <div class="col-12 d-flex justify-content-around">
-                    <div class="col-1">
-                        <select class="form-select form-select-sm"
-                                th:field="${bannerBlockForNewsAndStocks.timeChangeBlockBannerForNewsAndStocks}"
-                                name="timeChangeBlockBannerForNewsAndStocks">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                        </select>
+                    <div class="col-2">
+                        <label class="form-inline">Скорость вращения
+                            <select class="form-select form-select-sm"
+                                    th:field="${bannerBlockForNewsAndStocks.timeChangeBlockBannerForNewsAndStocks}"
+                                    name="timeChangeBlockBannerForNewsAndStocks">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </label>
                     </div>
-                    <div class="col-1">
+                    <div class="col-2">
                         <button type="button"
                                 class="btn btn-primary"
                                 onclick="addBlockBannerForNewsAndStocks()">
                             Добавить
                         </button>
                     </div>
-                    <div class="col-1">
+                    <div class="col-2">
                         <button type="submit" class="btn btn-primary btn-form-block-multiple"
                                 id="saveButtonBannerForNewsAndStocks">
                             Сохранить
@@ -209,7 +213,7 @@
                     '          <span class="fa-solid fa-x">\n' +
                     '          </span>\n' +
                     '          </a>\n' +
-                    '          <img class="card-img-top"\n' +
+                    '          <img style=" height: 200px;"  class="card-img-top"\n' +
                     '               id="imageBanner' + data.id + '"\n' +
                     '               src="' + (data.pathImage != null ? appContextPath +  data.pathImage : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '"' +
                     '               alt="Card image cap"/>\n' +
@@ -242,6 +246,10 @@
                 contentType: false,
                 success: function (result) {
                     console.log("Баннер успешно изменен", result);
+                    if ($(element).hasClass("is-invalid")){
+                        $(element).removeClass("is-invalid");
+                    }
+                    element.addClass("is-valid");
                     $.ajax({
                         url: appContextPath+'/admin/banners/getMainBanner/' + id,
                         method: 'GET',
@@ -258,11 +266,25 @@
                             console.error("Ошибка при получении нового главного баннера", error);
                         }
                     });
+
                 },
                 error: function (error) {
+                    invalidateMainBanner(element,id);
                     console.error("Ошибка при изменении главного баннера:", error);
                 }
             });
+
+        }
+
+        function invalidateMainBanner(element, id) {
+            let form = $(element);
+            let block = form.parent();
+            if (!form.hasClass("is-invalid")) {
+                block.append('<div data-invalid class="invalid-feedback">Неверное формат</div>');
+                form.addClass("is-invalid");
+            }
+
+
 
         }
 

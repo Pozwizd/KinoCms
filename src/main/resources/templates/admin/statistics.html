@@ -19,7 +19,7 @@
                             <div class="card-body text-nowrap">
                                 <h5 class="card-title mb-0">Фильмов</h5>
                                 <p class="mb-2">
-                                    <span class="text-primary h3"> 4 </span>
+                                    <span class="text-primary h3" ер>4</span>
                                 </p>
                             </div>
                         </div>
@@ -94,16 +94,14 @@
             <script th:src="@{/assets/js/dashboards-ecommerce.js}"></script>
             <script th:src="@{/assets/js/dashboards-crm.js}"></script>
             <script>
-                // Получаем текущую дату
+
                 var currentDate = new Date();
-                // Получаем текущий месяц (от 0 до 11)
                 var currentMonth = currentDate.getMonth();
-                // Создаем массив с названиями месяцев на русском языке
                 var months = [
                     "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
                     "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
                 ];
-                // Получаем подмассив последних восьми месяцев
+
                 var startIndex = currentMonth - 7;
                 if (startIndex < 0) {
                     startIndex += 12;
@@ -120,20 +118,20 @@
                     series: [
                         {
                             name: "Inflation",
-                            data: sessionStatisticsArray // Добавляем массив countFilms в опции графика
+                            data: sessionStatisticsArray
                         },
                     ],
                     chart: {
                         height: 350,
                         type: "bar",
-                        background: '#333', // Задаем цвет фона для темной темы
-                        foreColor: '#fff' // Задаем цвет шрифта для темной темы
+                        background: '#333',
+                        foreColor: '#fff'
                     },
                     plotOptions: {
                         bar: {
                             borderRadius: 10,
                             dataLabels: {
-                                position: "top", // top, center, bottom
+                                position: "top",
                             },
                         },
                     },
@@ -145,7 +143,7 @@
                         offsetY: -20,
                         style: {
                             fontSize: "12px",
-                            colors: ["#fff"], // Задаем цвет шрифта для темной темы
+                            colors: ["#fff"],
                         },
                     },
                     xaxis: {
@@ -174,7 +172,7 @@
                         },
                         labels: {
                             style: {
-                                colors: ["#fff"], // Задаем цвет шрифта для темной темы
+                                colors: ["#fff"],
                             },
                         },
                     },
@@ -191,17 +189,17 @@
                                 return val + "%";
                             },
                             style: {
-                                colors: ["#fff"], // Задаем цвет шрифта для темной темы
+                                colors: ["#fff"],
                             },
                         },
                     },
                     title: {
-                        text: "Количество сеансов в месяце",
+                        text: "Количество сеансов по месяцам",
                         floating: true,
                         offsetY: 330,
                         align: "center",
                         style: {
-                            color: "#fff", // Задаем цвет шрифта для темной темы
+                            color: "#fff",
                         },
                     },
                 };
