@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import spacelab.kinocms.enums.TypeFilm;
+import spacelab.kinocms.model.ImagesEntity.ImageCinema;
 import spacelab.kinocms.model.ImagesEntity.ImageFilm;
 
 import java.sql.Date;
@@ -34,9 +35,13 @@ public class Film {
 
     String mainImage;
 
-    @OneToMany(mappedBy = "film", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "film", fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<ImageFilm> imagesFilm = new ArrayList<>();
+
+    @OneToMany(mappedBy = "filmId", fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Session> sessions = new ArrayList<>();
 
     @Lob
     @Column(columnDefinition = "TEXT")

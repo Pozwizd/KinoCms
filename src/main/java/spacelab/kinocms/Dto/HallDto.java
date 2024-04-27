@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import spacelab.kinocms.model.Cinema;
 import spacelab.kinocms.model.Hall;
 
 import java.io.Serializable;
@@ -24,4 +25,5 @@ public class HallDto implements Serializable {
     String seoTitle;
     String seoKeywords;
     String seoDescription;
+    Cinema cinema;
 }

@@ -2,23 +2,21 @@ package spacelab.kinocms.controller.admin;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import spacelab.kinocms.Dto.BannerForNewsAndStockBlockDto;
-import spacelab.kinocms.Dto.BannerForNewsAndStocksItemDto;
-import spacelab.kinocms.Dto.MainBannersBlockDto;
-import spacelab.kinocms.Dto.MainBannersItemDto;
+import spacelab.kinocms.Dto.*;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.banners.*;
 import spacelab.kinocms.service.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,183 +45,169 @@ public class BannerController {
         model.addAttribute("bannerBlock", bannerBlockService.getBannerBlock(1L));
         model.addAttribute("bannerBlockForNewsAndStocks", bannerBlockForNewsAndStocksService
                 .getBannerBlockForNewsAndStocks(1L));
-        String contextPath = request.getContextPath();
-        String currentUrl = request.getRequestURI();
-        String currentUrlW = request.getRequestURI();
-        String context =  Arrays.stream(currentUrlW.split("/"))
-                .skip(2)
-                .collect(Collectors.joining("/"));
-        System.out.println(contextPath);
+
         return new ModelAndView("admin/banners");
     }
 
 
     //  AJAX  ==========================================
 //  Main banner
-    @GetMapping("/showAllMainBanner/")
+
+    @PostMapping("/editBlockMainBanners/")
     @ResponseBody
-    public List<Banner> showAllMailBanner() {
-        return bannerService.getAllBanners();
-    }
-
-    @GetMapping("/getMainBanner/{id}")
-    @ResponseBody
-    public Banner getMainBanner(@PathVariable String id) {
-        Banner banner = bannerService.getBanner(Long.parseLong(id));
-        return banner;
-    }
-
-    @GetMapping("/deleteMainBanner/{id}")
-    @ResponseBody
-    public ResponseEntity<String> deleteMainBanner(@PathVariable String id) {
-        Banner banner = bannerService.getBanner(Long.parseLong(id));
-        uploadFile.deleteFile(banner.getPathImage());
-        bannerService.deleteBanner(Long.parseLong(id));
-        return ResponseEntity.ok("Image deleted successfully");
-    }
-
-    @GetMapping("/createMainBanner/")
-    @ResponseBody
-    public List<Banner> createMainBanner() {
-        Banner banner = new Banner();
-        banner.setBannerBlock(bannerBlockService.getBannerBlock(1L));
-        bannerService.saveBanner(banner);
-        return List.of(bannerService.getLastBannerByBannerBlock(bannerBlockService.getBannerBlock(1L)));
-    }
-
-    @PostMapping("/editMainBanner/{id}")
-    @ResponseBody
-    public ResponseEntity<String> editMainBanner(@RequestPart("file") MultipartFile file,
-                                                 @PathVariable Long id) {
-        Banner banner = bannerService.getBanner(id);
-
-
-        if (isAllowedImageType(file.getContentType())) {
-            banner.setPathImage(uploadFile.uploadFile(file, banner.getPathImage()));
-            bannerService.saveBanner(banner);
-            return ResponseEntity.ok("Файл успешно загружен");
-        } else {
-            return ResponseEntity.badRequest().body("Недопустимый тип файла");
+    public ResponseEntity<?> editMainBannerBlock(@ModelAttribute("bannerBlock")
+                                                 @Valid BannerBlockUpdateDTO bannerBlockUpdateDTO,
+                                                 BindingResult bindingResult) {
+        List<Banner> banners = bannerService.getAllBanners();
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
-    }
 
-    private boolean isAllowedImageType(String fileType) {
-        return StringUtils.hasText(fileType) && StringUtils.startsWithIgnoreCase(fileType, "image/");
-    }
-
-    @PostMapping("/editAllMainBanners/")
-    @ResponseBody
-    public ResponseEntity<String> editMainBannerBlock(@RequestBody MainBannersBlockDto mainBannersBlockDto) {
         BannerBlock bannerBlock = bannerBlockService.getBannerBlock(1L);
-        bannerBlock.setTimeChange(mainBannersBlockDto.getTimeChange().toString());
-        bannerBlock.setStatus(mainBannersBlockDto.getStatus());
-        bannerBlockService.saveBannerBlock(bannerBlock);
-        for(MainBannersItemDto mainBannersItemDto : mainBannersBlockDto.getMainBannersItemDto()) {
-            Banner banner = bannerService.getBanner(mainBannersItemDto.getId());
-            banner.setUrl(mainBannersItemDto.getUrl());
-            banner.setTitle(mainBannersItemDto.getText());
-            bannerService.saveBanner(banner);
+        bannerBlock.setStatus(bannerBlockUpdateDTO.getStatus());
+        bannerBlock.setTimeChange(String.valueOf(bannerBlockUpdateDTO.getTimeChange()));
+
+        if (bannerBlockUpdateDTO.getBanners() != null) {
+            bannerBlockUpdateDTO.getBanners().removeIf(bannerUpdateDTO -> bannerUpdateDTO.getId() == null);
+            for (BannerUpdateDTO bannerUpdateDTO : bannerBlockUpdateDTO.getBanners()) {
+                if (isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())
+                        && !banners.stream().map(Banner::getId).collect(Collectors.toList()).contains(Long.parseLong(bannerUpdateDTO.getId()))) {
+                    return ResponseEntity.badRequest().body("Недопустимый тип файла");
+                }
+            }
+
+
+            // Удалить баннера айди которых нет в списке
+            List<Long> ids = bannerBlockUpdateDTO
+                    .getBanners()
+                    .stream()
+                    .map(BannerUpdateDTO::getId)
+                    .map(Long::parseLong).collect(Collectors.toList());
+
+
+
+            banners.stream().filter(banner -> !ids.contains(banner.getId()))
+                    .forEach(bannerService::deleteBanner);
+
+            for (BannerUpdateDTO bannerUpdateDTO : bannerBlockUpdateDTO.getBanners()) {
+                if (bannerUpdateDTO.getId() == null) {
+                    continue;
+                }
+                Banner banner = bannerService.getBanner(Long.parseLong(bannerUpdateDTO.getId()));
+                banner.setBannerBlock(bannerBlock);
+                banner.setId(Long.parseLong(bannerUpdateDTO.getId()));
+                banner.setUrl(bannerUpdateDTO.getUrl());
+                banner.setTitle(bannerUpdateDTO.getTitle());
+                if (!bannerUpdateDTO.getPathImage().isEmpty()) {
+                    banner.setPathImage(uploadFile.uploadFile(bannerUpdateDTO.getPathImage(), banner.getPathImage()));
+                }
+                bannerService.saveBanner(banner);
+            }
+
+            return ResponseEntity.ok("Файл успешно загружен");
+        }
+        for (Banner banner : banners) {
+            bannerService.deleteBanner(banner.getId());
         }
 
         return ResponseEntity.ok("Файл успешно загружен");
-    }
 
-    //  Background banner
-
-    @GetMapping("/getBackgroundBanner/")
-    @ResponseBody
-    public BannerBackground getBackgroundBanner() {
-        return bannerBackgroundService.getBannerBackground(1L);
     }
 
 
     @PostMapping("/editBackgroundBanner/")
     @ResponseBody
-    public ResponseEntity<String> editBackgroundBanner(@RequestPart("file") MultipartFile file) {
+    public ResponseEntity<String> editBackgroundBanner(@RequestParam("backgroundImageDefault") Boolean isDefault,
+                                                       @RequestParam("backgroundImage") MultipartFile file) {
+
+        if (isDefault == null) {
+            return ResponseEntity.badRequest().body("Ошибка");
+        }
+
         BannerBackground bannerBackground = bannerBackgroundService.getBannerBackground(1L);
+        bannerBackground.setIsDefault(isDefault);
         bannerBackground.setUrl(uploadFile.uploadFile(file, bannerBackground.getUrl()));
         bannerBackgroundService.saveBannerBackground(bannerBackground);
         return ResponseEntity.ok("Файл успешно загружен");
-    }
 
-    @PostMapping("/deleteBackgroundBanner/")
-    @ResponseBody
-    public ResponseEntity<String> deleteBackgroundBanner() {
-        BannerBackground bannerBackground = bannerBackgroundService.getBannerBackground(1L);
-        bannerBackground.setUrl(null);
-        bannerBackgroundService.saveBannerBackground(bannerBackground);
-        return ResponseEntity.ok("Image deleted successfully");
-    }
-
-    @PostMapping("/changeBackgroundBannerBlock/")
-    @ResponseBody
-    public ResponseEntity<String> changeBackgroundBanner(@RequestParam("radioButton") Boolean radioButtonValue) {
-        BannerBackground  bannerBackground = bannerBackgroundService.getBannerBackground(1L);
-        bannerBackground.setIsDefault(radioButtonValue);
-        bannerBackgroundService.saveBannerBackground(bannerBackground);
-        return ResponseEntity.ok("Файл успешно загружен");
     }
 
 
-    //  Stock and News banner
-
-    @GetMapping("/showAllBannerForNewsAndStocks/")
+    @PostMapping("/editBannerBlockForNewsAndStocks/")
     @ResponseBody
-    public List<BannerForNewsAndStocks> showAllBannerForNewsAndStocks() {
-        return bannerForNewsAndStocksService.getAllBannerForNewsAndStocks();
-    }
+    public ResponseEntity<?> editBannerBlockForNewsAndStocks(@ModelAttribute("bannerBlock")
+                                                 @Valid BannerForNewsAndStockBlockDto bannerForNewsAndStockBlockDto,
+                                                 BindingResult bindingResult) {
 
-    @GetMapping("/getBannerForNewsAndStocks/{id}")
-    @ResponseBody
-    public BannerForNewsAndStocks getBannerForNewsAndStocks(@PathVariable Long id) {
-        return bannerForNewsAndStocksService.getBannerForNewsAndStocksById(id);
-    }
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+        for (BannerForNewsAndStocksItemDto bannerUpdateDTO : bannerForNewsAndStockBlockDto.getBanners()) {
+            if (isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())) {
+                return ResponseEntity.badRequest().body("Недопустимый тип файла");
+            }
+        }
 
-    @GetMapping("/deleteBannerForNewsAndStocks/{id}")
-    @ResponseBody
-    public ResponseEntity<String> deleteBannerForNewsAndStocks(@PathVariable String id) {
-        bannerForNewsAndStocksService.deleteBannerForNewsAndStocks(Long.parseLong(id));
-        return ResponseEntity.ok("Image deleted successfully");
-    }
+        // Удалить из коллекции баннеры у которых id null
+        bannerForNewsAndStockBlockDto.getBanners().removeIf(bannerUpdateDTO -> bannerUpdateDTO.getId() == null);
 
-    @GetMapping("/createBannerForNewsAndStocks/")
-    @ResponseBody
-    public List<BannerForNewsAndStocks> createBannerForNewsAndStocks() {
-        BannerForNewsAndStocks bannerForNewsAndStocks = new BannerForNewsAndStocks();
-        bannerForNewsAndStocks.setBannerBlockForNewsAndStocks(bannerBlockForNewsAndStocksService.getBannerBlockForNewsAndStocks(1L));
-        bannerForNewsAndStocksService.saveBannerForNewsAndStocks(bannerForNewsAndStocks);
-        BannerForNewsAndStocks bannerForNewsAndStocksDB = bannerForNewsAndStocksService.getLastBannerForNewsAndStocks();
-        return List.of(bannerForNewsAndStocksDB);
-    }
+        for (BannerForNewsAndStocksItemDto bannerUpdateDTO : bannerForNewsAndStockBlockDto.getBanners()) {
+            if (isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())) {
+                return ResponseEntity.badRequest().body("Недопустимый тип файла");
+            }
+        }
+        BannerBlockForNewsAndStocks bannerBlockForNewsAndStocks = bannerBlockForNewsAndStocksService.getBannerBlockForNewsAndStocks(1L);
+        bannerBlockForNewsAndStocks
+                .setStatusBlockBannerForNewsAndStocks(
+                        bannerForNewsAndStockBlockDto.getStatusBlockBannerForNewsAndStocks());
+        bannerBlockForNewsAndStocks.
+                setTimeChangeBlockBannerForNewsAndStocks(
+                        bannerForNewsAndStockBlockDto.getTimeChangeBlockBannerForNewsAndStocks());
 
-    @PostMapping("/editBannerForNewsAndStocks/{id}")
-    @ResponseBody
-    public ResponseEntity<String> editBannerForNewsAndStocks(@RequestPart("file") MultipartFile file,
-                                                             @PathVariable Long id) {
+        // Удалить баннера айди которых нет в списке
+        List<Long> ids = bannerForNewsAndStockBlockDto
+                .getBanners()
+                .stream()
+                .map(BannerForNewsAndStocksItemDto::getId).toList();
 
-        BannerForNewsAndStocks bannerForNewsAndStocks = bannerForNewsAndStocksService.getBannerForNewsAndStocksById(id);
-        bannerForNewsAndStocks.setPathImage(uploadFile.uploadFile(file, bannerForNewsAndStocks.getPathImage()));
-        bannerForNewsAndStocksService.saveBannerForNewsAndStocks(bannerForNewsAndStocks);
-        return ResponseEntity.ok("Файл успешно загружен");
-    }
 
-    @PostMapping("/editAllBannerForNewsAndStocks/")
-    @ResponseBody
-    public ResponseEntity<String> editBannerForNewsAndStocksBlock(@RequestBody BannerForNewsAndStockBlockDto bannerForNewsAndStockBlockDto) {
-        BannerBlockForNewsAndStocks bannerBlockForNewsAndStocks
-                = bannerBlockForNewsAndStocksService.getBannerBlockForNewsAndStocks(1L);
-        bannerBlockForNewsAndStocks.setTimeChangeBlockBannerForNewsAndStocks(bannerForNewsAndStockBlockDto.getTimeChangeBlockBannerForNewsAndStocks());
-        bannerBlockForNewsAndStocks.setStatusBlockBannerForNewsAndStocks(bannerForNewsAndStockBlockDto.getStatusBlockBannerForNewsAndStocks());
-        bannerBlockForNewsAndStocksService.saveBannerBlockForNewsAndStocks(bannerBlockForNewsAndStocks);
-        for(BannerForNewsAndStocksItemDto bannerForNewsAndStocksItemDto : bannerForNewsAndStockBlockDto.getMainBannersItemDto()) {
-            BannerForNewsAndStocks bannerForNewsAndStocks = bannerForNewsAndStocksService.getBannerForNewsAndStocksById(bannerForNewsAndStocksItemDto.getId());
-            bannerForNewsAndStocks.setUrl(bannerForNewsAndStocksItemDto.getUrl());
-            bannerForNewsAndStocks.setTitle(bannerForNewsAndStocksItemDto.getText());
+        List<BannerForNewsAndStocks> banners = bannerForNewsAndStocksService.getAllBannerForNewsAndStocks();
+        banners.stream().filter(banner -> !ids.contains(banner.getId()))
+                .forEach(bannerForNewsAndStocksService::deleteBannerForNewsAndStocks);
+
+        for (BannerForNewsAndStocksItemDto bannerUpdateDTO : bannerForNewsAndStockBlockDto.getBanners()) {
+            if (bannerUpdateDTO.getId() == null) {
+                continue;
+            }
+            BannerForNewsAndStocks bannerForNewsAndStocks = bannerForNewsAndStocksService.getBannerForNewsAndStocksById(bannerUpdateDTO.getId());
+            bannerForNewsAndStocks.setBannerBlockForNewsAndStocks(bannerBlockForNewsAndStocks);
+            bannerForNewsAndStocks.setId(bannerUpdateDTO.getId());
+            bannerForNewsAndStocks.setUrl(bannerUpdateDTO.getUrl());
+            bannerForNewsAndStocks.setTitle(bannerUpdateDTO.getTitle());
+            if (!bannerUpdateDTO.getPathImage().isEmpty()) {
+                bannerForNewsAndStocks.setPathImage(
+                        uploadFile
+                                .uploadFile(
+                                        bannerUpdateDTO.getPathImage(),
+                                        bannerForNewsAndStocks.getPathImage()));
+            }
             bannerForNewsAndStocksService.saveBannerForNewsAndStocks(bannerForNewsAndStocks);
         }
 
-
         return ResponseEntity.ok("Файл успешно загружен");
+    }
+
+
+
+    // Метод для проверки тип файла на изображение
+
+    private boolean isAllowedImageTypeAndSize(MultipartFile file) {
+
+        if (file.getSize() > 10 * 1024 * 1024) {
+            return true;
+        }
+
+        return !StringUtils.hasText(file.getContentType()) || !StringUtils.startsWithIgnoreCase(file.getContentType(), "image/");
     }
 
 }

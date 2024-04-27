@@ -11,6 +11,7 @@
               th:action="@{{id}(id=${hall.id})}"
               enctype="multipart/form-data">
             <div class="row justify-content-end">
+
                 <div class="flex justify-content-end row">
                     <div class="card-header">
                         <ul class="nav nav-pills card-header-pills" role="tablist"
@@ -200,6 +201,7 @@
                                             <div class="invalid-feedback" th:if="${#fields.hasErrors('seoDescription')}"
                                                  th:errors="*{seoDescription}"></div>
                                         </div>
+                                        <input hidden="hidden" name="cinemaId" th:value="*{cinema.id}">
                                     </div>
                                 </div>
                             </div>
@@ -478,6 +480,7 @@
             }
         </script>
     </div>
+
 </div>
 </body>
 </html>

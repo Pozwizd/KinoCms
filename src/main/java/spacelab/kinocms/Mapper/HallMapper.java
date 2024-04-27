@@ -26,6 +26,7 @@ public class HallMapper {
         hall.setSeoTitle(hallDto.getSeoTitle());
         hall.setSeoKeywords(hallDto.getSeoKeywords());
         hall.setSeoDescription(hallDto.getSeoDescription());
+        hall.setCinema(hallDto.getCinema());
         return hall;
     }
 
@@ -38,6 +39,7 @@ public class HallMapper {
         hallDto.setSeoTitle(hall.getSeoTitle());
         hallDto.setSeoKeywords(hall.getSeoKeywords());
         hallDto.setSeoDescription(hall.getSeoDescription());
+        hallDto.setCinema(hall.getCinema());
         return hallDto;
 
     }

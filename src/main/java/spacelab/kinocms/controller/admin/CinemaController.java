@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.Mapper.CinemaMapper;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.Cinema;
-import spacelab.kinocms.model.CinemaDto;
+import spacelab.kinocms.Dto.CinemaDto;
 import spacelab.kinocms.model.ImagesEntity.ImageCinema;
 import spacelab.kinocms.service.CinemaService;
 import spacelab.kinocms.service.HallService;
@@ -79,7 +79,7 @@ public class CinemaController {
     }
 
     @GetMapping("/removeCinema/{id}")
-    public ModelAndView removeCinema(Model model, @PathVariable String id, HttpServletRequest request) {
+    public ModelAndView removeCinema(@PathVariable String id, HttpServletRequest request) {
         cinemaService.deleteCinema(Long.parseLong(id));
         String referer = request.getHeader("Referer");
         return new ModelAndView("redirect:" + referer);

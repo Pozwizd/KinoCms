@@ -45,7 +45,7 @@ public class BannerServiceImp implements BannerService {
     @Override
     public Banner getBanner(long id) {
         logger.info("Get banner by id: " + id);
-        return bannerRepository.findById(id).orElse(null);
+        return bannerRepository.findById(id).orElse(new Banner());
     }
 
     @Override
@@ -58,5 +58,12 @@ public class BannerServiceImp implements BannerService {
     public Banner getLastBannerByBannerBlock(BannerBlock bannerBlock) {
         logger.info("Get last banner by banner block: " + bannerBlock);
         return bannerRepository.findTopBannerByBannerBlockOrderByIdDesc(bannerBlock);
+    }
+
+    @Override
+    public void deleteBanner(Banner banner) {
+        logger.info("Delete banner by id: " + banner.getId());
+        bannerRepository.findById(banner.getId()).ifPresent(bannerPresent -> uploadFile.deleteFile(bannerPresent.getUrl()));
+        bannerRepository.deleteById(banner.getId());
     }
 }

@@ -2,7 +2,7 @@ package spacelab.kinocms.Mapper;
 
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.model.Cinema;
-import spacelab.kinocms.model.CinemaDto;
+import spacelab.kinocms.Dto.CinemaDto;
 import spacelab.kinocms.service.CinemaService;
 
 @Service

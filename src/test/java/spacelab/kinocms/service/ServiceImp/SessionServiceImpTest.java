@@ -72,7 +72,7 @@ class SessionServiceImpTest {
     @Test
     void testDeleteSession() {
         long id = 1L;
-        sessionService.deleteSession(id);
+        sessionService.deleteSession(Session.builder().id(id).build());
         verify(sessionRepository).deleteById(id);
     }
 

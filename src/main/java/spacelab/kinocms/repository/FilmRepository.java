@@ -10,7 +10,8 @@ import java.util.List;
 
 @Repository
 public interface FilmRepository extends JpaRepository<Film, Long> {
-    @Query("SELECT f FROM Film f WHERE (CURRENT_DATE BETWEEN f.startPremiereDate AND f.endPremiereDate)")
+    // Все фильмы премьера которых началась
+    @Query("SELECT f FROM Film f WHERE ( f.startPremiereDate < CURRENT_DATE())")
     List<Film> getAllCurrentFilm();
 
 

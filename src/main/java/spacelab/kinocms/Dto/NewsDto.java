@@ -20,7 +20,6 @@ import java.util.Date;
 public class NewsDto implements Serializable {
     Long id;
     Boolean status;
-    @NotEmpty
     @Size(min = 3, max = 50, message = "Название должно содержать от 3 до 50 символов.")
     String name;
     @NotNull(message = "Пожалуйста, введите дату публикации")

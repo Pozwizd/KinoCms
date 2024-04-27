@@ -10,7 +10,7 @@ public interface BannerForNewsAndStocksService {
 
     public BannerForNewsAndStocks getBannerForNewsAndStocksById(Long id);
     public void saveBannerForNewsAndStocks(BannerForNewsAndStocks bannerForNewsAndStocks);
-    public void deleteBannerForNewsAndStocks(Long id);
+    public void deleteBannerForNewsAndStocks(BannerForNewsAndStocks bannerForNewsAndStocks);
     public void updateBannerForNewsAndStocks(BannerForNewsAndStocks bannerForNewsAndStocks);
     public List<BannerForNewsAndStocks> getAllBannerForNewsAndStocks();
 

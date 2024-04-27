@@ -1,22 +1,27 @@
 package spacelab.kinocms.Dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-@Data
-public class BannerForNewsAndStocksItemDto{
+import java.util.List;
 
-    public BannerForNewsAndStocksItemDto(Long id, String url, String title, MultipartFile pathImage) {
+
+@Data
+public class BannerUpdateDTO {
+    public BannerUpdateDTO(String id, String url, String title, MultipartFile pathImage) {
         this.id = id;
         this.url = url;
         this.title = title;
         this.pathImage = pathImage;
     }
 
-    public BannerForNewsAndStocksItemDto() {
+    public BannerUpdateDTO() {
     }
 
-    private Long id;
+    private String id;
     private String url;
     private String title;
     private MultipartFile pathImage;

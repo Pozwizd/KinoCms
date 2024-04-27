@@ -20,6 +20,8 @@ import java.util.List;
 @AllArgsConstructor
 public class SessionServiceImp implements SessionService {
 
+
+
     private SessionRepository sessionRepository;
     private static final Logger logger = LogManager.getLogger(SessionServiceImp.class);
 
@@ -43,14 +45,15 @@ public class SessionServiceImp implements SessionService {
 
     @Override
     public void updateSession(Session session) {
-        logger.info("Update session: " + session);
+        logger.info("Update session: {}", session);
         sessionRepository.save(session);
     }
 
     @Override
-    public void deleteSession(long id) {
-        logger.info("Delete session by id: " + id);
-        sessionRepository.deleteById(id);
+    public void deleteSession(Session session) {
+        logger.info("Delete session: {}", session);
+
+        sessionRepository.delete(session);
     }
 
     @Override

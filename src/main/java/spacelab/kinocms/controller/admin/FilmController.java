@@ -75,6 +75,7 @@ public class FilmController {
             return new ModelAndView("admin/film/editFilm");
         }
 
+
         film.setTypeFilm(filmTypes);
 
 
@@ -91,7 +92,7 @@ public class FilmController {
         return new ModelAndView("redirect:" + referer);
     }
 
-    @PostMapping("/removeFilm/{id}")
+    @GetMapping("/removeFilm/{id}")
     public ModelAndView removeFilm(Model model, @PathVariable String id, HttpServletRequest request) {
         filmService.deleteFilm(Long.parseLong(id));
         String referer = request.getHeader("Referer");

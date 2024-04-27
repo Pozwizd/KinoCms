@@ -23,7 +23,7 @@ public interface SessionService {
 
     public void updateSession(Session session);
 
-    public void deleteSession(long id);
+    public void deleteSession(Session session);
 
     List<Session> getAllSessionByRequest(Date dateSession, Film film, Cinema cinema, Hall hall, Boolean d3d, Boolean d2d, Boolean imax);
 }

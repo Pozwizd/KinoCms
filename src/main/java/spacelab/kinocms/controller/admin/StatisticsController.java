@@ -8,19 +8,26 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.service.CinemaService;
 import spacelab.kinocms.service.FilmService;
+import spacelab.kinocms.service.UserService;
 
 @Controller
 @RequestMapping( "/admin")
 @AllArgsConstructor
 public class StatisticsController {
     private final FilmService filmService;
+    private final UserService userService;
+    private final CinemaService cinemaService;
 
 
     @GetMapping({"/", ""})
     public ModelAndView index(Model model) {
         model.addAttribute("title", "Статистика");
         model.addAttribute("pageActive", "statistics");
+        model.addAttribute("users", userService.getAllUsers().size());
+        model.addAttribute("films", filmService.getAllFilms().size());
+        model.addAttribute("cinemas", cinemaService.getAllCinemas().size());
         int[] countFilms = filmService.countFilmsMonth();
         model.addAttribute("sessionStatistics", convertToJson(countFilms));
 

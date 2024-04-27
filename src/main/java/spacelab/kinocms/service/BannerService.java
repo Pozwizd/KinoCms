@@ -20,4 +20,6 @@ public interface BannerService {
     public List<Banner> getAllBanners();
 
     public Banner getLastBannerByBannerBlock(BannerBlock bannerBlock);
+
+    void deleteBanner(Banner banner);
 }

@@ -17,7 +17,6 @@ import java.sql.Date;
 public class UserDto{
     Long id;
     @NotEmpty(message = "Пожалуйста, введите ваше имя")
-    @Size(min=2, max=30)
     String name;
     String surname;
     String nickname;

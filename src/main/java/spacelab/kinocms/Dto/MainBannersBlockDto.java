@@ -9,5 +9,4 @@ public class MainBannersBlockDto {
     private Boolean status;
     private Integer timeChange;
     private List<MainBannersItemDto> mainBannersItemDto;
-
 }

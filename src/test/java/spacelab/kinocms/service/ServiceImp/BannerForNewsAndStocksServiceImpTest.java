@@ -53,7 +53,7 @@ class BannerForNewsAndStocksServiceImpTest {
     @Test
     void testDeleteBannerForNewsAndStocks() {
         Long id = 1L;
-        bannerForNewsAndStocksService.deleteBannerForNewsAndStocks(id);
+        bannerForNewsAndStocksService.deleteBannerForNewsAndStocks(BannerForNewsAndStocks.builder().id(id).build());
         verify(bannerForNewsAndStocksRepository).deleteById(id);
     }
 

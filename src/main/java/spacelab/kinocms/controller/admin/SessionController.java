@@ -6,11 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.Dto.BannerForNewsAndStocksItemDto;
 import spacelab.kinocms.Dto.SessionDto;
 import spacelab.kinocms.Dto.SessionPageDto;
 import spacelab.kinocms.Mapper.SessionMapper;
 import spacelab.kinocms.model.Hall;
 import spacelab.kinocms.model.Session;
+import spacelab.kinocms.model.banners.BannerForNewsAndStocks;
 import spacelab.kinocms.service.CinemaService;
 import spacelab.kinocms.service.FilmService;
 import spacelab.kinocms.service.HallService;
@@ -20,6 +22,7 @@ import spacelab.kinocms.validator.SessionValidator;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("admin/session")
@@ -73,6 +76,15 @@ public class SessionController {
     @ResponseBody
     public ResponseEntity<String> saveSessions(@RequestBody List<SessionDto> sessions) {
 
+        // Удалить сессии которых нет из базы данных
+        List<Long> ids = sessions.stream().map(SessionDto::getId).map(Long::parseLong).collect(Collectors.toList());
+
+        List<Session> sessionList = sessionService.getAllSession();
+        sessionList.stream().filter(session -> !ids.contains(session.getId()))
+                .forEach(sessionService::deleteSession);
+
+
+
         List<String> sessionDtosWithErrors = sessionValidator.validate(sessions);
 
         if (!sessionDtosWithErrors.isEmpty()) {
@@ -91,7 +103,7 @@ public class SessionController {
     @GetMapping("/delete/{id}")
     @ResponseBody
     public ModelAndView deleteSession(@PathVariable String id) {
-        sessionService.deleteSession(Long.parseLong(id));
+        sessionService.deleteSession(sessionService.readSession(Long.parseLong(id)));
         return new ModelAndView("redirect:/admin/session");
     }
 

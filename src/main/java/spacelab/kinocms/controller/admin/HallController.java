@@ -45,9 +45,11 @@ public class HallController {
 
 
     @PostMapping("/editHall/{id}")
-    public ModelAndView editHall(@Valid @ModelAttribute("hall") HallDto hall,
-                                 BindingResult bindingResult, Model model) {
+    public ModelAndView editHall(@RequestParam ("cinemaId") String cinemaId,
+            @Valid @ModelAttribute("hall") HallDto hall,
+            BindingResult bindingResult, Model model) {
 
+        hall.setCinema(cinemaService.getCinema(Long.parseLong(cinemaId)));
         if (bindingResult.hasErrors()) {
             model.addAttribute("title", "Редактирование зала " + hallService.getHall(hall.getId()).getHallNumber());
             model.addAttribute("pageActive", "cinema");
@@ -55,7 +57,7 @@ public class HallController {
         }
 
         hallService.saveHallPage(hallMapper.toEntity(hall));
-        return new ModelAndView("redirect:/admin/cinema/editCinema/" + hall.getId());
+        return new ModelAndView("redirect:/admin/cinema/editCinema/" + hall.getCinema().getId());
     }
 
     @GetMapping("/createHall/{id}")

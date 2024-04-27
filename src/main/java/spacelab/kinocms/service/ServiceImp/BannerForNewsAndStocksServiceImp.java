@@ -19,7 +19,7 @@ public class BannerForNewsAndStocksServiceImp implements BannerForNewsAndStocksS
     @Override
     public BannerForNewsAndStocks getBannerForNewsAndStocksById(Long id) {
         logger.info("Get banner for news and stocks by id: " + id);
-        return bannerForNewsAndStocksRepository.findById(id).orElse(null);
+        return bannerForNewsAndStocksRepository.findById(id).orElse(new BannerForNewsAndStocks());
     }
 
     @Override
@@ -29,9 +29,9 @@ public class BannerForNewsAndStocksServiceImp implements BannerForNewsAndStocksS
     }
 
     @Override
-    public void deleteBannerForNewsAndStocks(Long id) {
-        logger.info("Delete banner for news and stocks by id: " + id);
-        bannerForNewsAndStocksRepository.deleteById(id);
+    public void deleteBannerForNewsAndStocks(BannerForNewsAndStocks bannerForNewsAndStocks) {
+        logger.info("Delete banner for news and stocks by id: {}", bannerForNewsAndStocks.toString());
+        bannerForNewsAndStocksRepository.delete(bannerForNewsAndStocks);
     }
 
     @Override

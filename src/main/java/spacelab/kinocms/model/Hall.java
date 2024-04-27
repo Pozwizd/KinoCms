@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import spacelab.kinocms.model.ImagesEntity.ImageHall;
 
 import java.util.ArrayList;
@@ -35,8 +37,13 @@ public class Hall {
     @Column
     private String topBanner;
     @JsonIgnore
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hall")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hall", cascade = CascadeType.REMOVE)
     private List<ImageHall> imagesHall = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hallId", cascade = CascadeType.REMOVE)
+    private List<Session> sessions = new ArrayList<>();
+
     @Column
     private Date dateCreated;
     @Column
@@ -50,8 +57,8 @@ public class Hall {
     @Column(columnDefinition = "TEXT")
     private String seoDescription;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cinema_id")
+    @Fetch(FetchMode.JOIN)
     private Cinema cinema;
-
 }

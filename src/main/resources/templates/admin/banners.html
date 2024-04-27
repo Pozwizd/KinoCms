@@ -5,708 +5,476 @@
 <body>
 <div layout:fragment="content">
     <div class="container">
+        <div th:text="${appContextPath}" hidden id="appContextPath"></div>
         <!--Блок с баннерами-->
-        <form id="MainBannerForm"
-              class="p-2 form-block rounded-3 border">
-            <div>
+
+        <div>
+            <form class="p-2 form-block rounded-3 border banner-block-validation" th:object="${bannerBlock}" novalidate
+                  id="banner-form">
                 <div>
-                    <div class="d-flex flex-row justify-content-center">
-                        <div></div>
-                        <h4 class="fw-bold pt-3">На главной верх</h4>
+                    <div>
+                        <div class="d-flex flex-row justify-content-center">
+                            <div></div>
+                            <h4 class="fw-bold pt-3">На главной верх</h4>
+                        </div>
+                        <div class="d-flex flex-row justify-content-end">
+                            <div class="form-check form-switch form-check-inline col-1 my-auto">
+                                <label>
+                                    <input th:field="*{status}"
+                                           class="form-check-input" type="checkbox"/>
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-flex flex-row justify-content-end">
-                        <div class="form-check form-switch form-check-inline col-1 my-auto">
-                            <label>
-                                <input th:field="${bannerBlock.status}"
-                                       class="form-check-input" type="checkbox"
-                                       name="status"/>
+                    <div class="row row-cols-1 row-cols-md-4 g-4 mb-5" id="MainBannersBlock">
+                        <div class="col element-banner" th:each="banner, i : *{banners}">
+                            <div class="card text-center mb-2">
+                                <div style="object-fit : contain" class="card-header"
+                                     id="MainBannerImageBlock">
+                                    <a type="button" onclick="removeBanner(this)"
+                                       class="btn rounded-pill btn-icon btn-label-danger position-absolute top-0 end-0">
+                                        <span class="fa-solid fa-x"></span>
+                                    </a>
+                                    <div class="image-container">
+                                        <img style="object-fit : cover; height: 200px" class="card-img-top"
+                                             id=""
+                                             th:src="@{*{banners[__${i.index}__].pathImage}}"
+                                             alt="Card image cap"/>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <input type="file"
+                                           class="form-control your-class-name"
+                                           th:field="*{banners[__${i.index}__].pathImage}"
+                                           onchange="previewImage(this)"
+                                           accept="image/png, image/jpeg" size="10"/>
+                                    <div class="form-group mb-1">
+                                        <input type="hidden" th:field="*{banners[__${i.index}__].id}"
+                                               class="form-control banner-id"
+                                               value="" placeholder="URL">
+                                        <input type="text" th:field="*{banners[__${i.index}__].url}"
+                                               class="form-control"
+                                               value="" placeholder="URL" required>
+                                        <input type="text" th:field="*{banners[__${i.index}__].title}"
+                                               class="form-control"
+                                               value="" placeholder="Текст" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <hr class="line"/>
+                    <div class="col-12 d-flex justify-content-around">
+                        <div class="col-2">
+                            <label class="form-inline">Скорость вращения
+                                <select class="form-select form-select-sm" id="timeChangeBanner"
+                                        th:field="*{timeChange}">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
                             </label>
+
+                        </div>
+                        <div class="col-2">
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    onclick="addBanner()">
+                                Добавить
+                            </button>
+                        </div>
+                        <div class="col-2">
+                            <button type="submit"
+                                    class="btn btn-primary btn-form-block-multiple">
+                                Сохранить
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="row row-cols-1 row-cols-md-4 g-4 mb-5" id="MainBannersBlock">
+            </form>
+        </div>
+        <script>
 
-                </div>
-                <hr class="line"/>
-                <div class="col-12 d-flex justify-content-around">
-                    <div class="col-2">
-                        <label class="form-inline">Скорость вращения
-                            <select class="form-select form-select-sm"
-                                    name="timeChange" th:field="${bannerBlock.timeChange}">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
+            function previewImage(input) {
+                console.log(input);
+                let file = input.files[0];
 
-                    </div>
-                    <div class="col-2">
-                        <button type="button"
-                                class="btn btn-primary"
-                                onclick="addBlockMainBanner()">
-                            Добавить
-                        </button>
-                    </div>
-                    <div class="col-2">
-                        <button type="submit"
-                                class="btn btn-primary btn-form-block-multiple"
-                                id="saveButtonBanner">
-                            Сохранить
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <br>
-        </form>
+                console.log(file);
+                // Проверка типа файла
+                if (!file.type.match("image.*")) {
+                    showToast('error', 'Ошибка', 'Укажите фото');
+                    input.classList.add("is-invalid");
+                    input.classList.remove("is-valid");
+                    return;
+                }
+                let mb = 7;
+
+                if (file.size > mb * 1024 * 1024) {
+                    showToast('error', 'Ошибка', 'Укажите фото не превышающее ' + mb + ' МБ');
+                    // 500 килобайт в байтах
+                    input.classList.add("is-invalid");
+                    input.classList.remove("is-valid");
+                    return;
+                }
+
+                input.classList.add("is-valid");
+                input.classList.remove("is-invalid");
+
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let imageContainer =
+                        input.parentElement.previousElementSibling.querySelector(
+                            ".image-container"
+                        );
+                    let image = imageContainer.querySelector("img");
+                    console.log(image);
+                    image.src = e.target.result;
+                    image.alt = "Предварительный просмотр";
+                    image.classList.add("img-preview");
+                };
+                reader.readAsDataURL(file);
+            }
+
+            let bsValidationForms = document.querySelector(".banner-block-validation");
+            let mainBannerBlockEndPoint = '/admin/banners/editBlockMainBanners/';
+            validationAndSubmitSend(bsValidationForms, mainBannerBlockEndPoint);
+
+
+
+            function validationAndSubmitSend(form, endPoint) {
+
+                form.addEventListener("submit", function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        event.preventDefault();
+
+                        let Inputs = form.querySelectorAll('input');
+
+                        for (let InputElement of Inputs) {
+                            if (InputElement.classList.contains('is-invalid')) {
+                                showToast('error', 'Ошибка', 'Пожалуйста, укажите корректные значения');
+                                return;
+                            }
+                        }
+
+                        var formData = new FormData(this);
+                        $.ajax({
+                            type: 'POST',
+                            url: appContextPath + endPoint,
+                            data: formData,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (response) {
+                                console.log(response);
+                                showToast('success', 'Успешно', 'Объекты обновлены');
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                                showToast('error', 'Ошибка', 'Перезагрузите страницу и попробуйте ещё раз');
+                            }
+                        });
+                    }
+
+                    form.classList.add("was-validated");
+                });
+
+            }
+
+
+            function addBanner() {
+                var formIndex = document.querySelectorAll('.element-banner').length;
+                var lastElement = document.querySelectorAll('.element-banner')[formIndex - 1];
+                var bannerIdInput = lastElement.querySelector('.banner-id');
+
+                var bannerIdValue = bannerIdInput.value;
+                bannerIdValue++;
+                $('<div class="col element-banner" th:each="banner, i : *{banners}">\n' +
+                    '   <div class="card text-center mb-2">\n' +
+                    '       <div style="object-fit : contain" class="card-header"\n' +
+                    '            id="MainBannerImageBlock">\n' +
+                    '           <a type="button" onclick="removeBanner(this)"\n' +
+                    '              class="btn rounded-pill btn-icon btn-label-danger position-absolute top-0 end-0">\n' +
+                    '               <span class="fa-solid fa-x"></span>\n' +
+                    '           </a>\n' +
+                    '           <div class="image-container">\n' +
+                    '               <img style="object-fit : scale-down; height: 200px" class="card-img-top"\n' +
+                    '                    \n' +
+                    '                    src="https://via.placeholder.com/300x200?text=Нет изображения"\n' +
+                    '                    alt="Card image cap"/>\n' +
+                    '           </div>\n' +
+                    '       </div>\n' +
+                    '       <div class="card-body">\n' +
+                    '           <input type="file"\n' +
+                    '                  class="form-control"\n' +
+                    '                  name="banners[' + formIndex + '].pathImage"\n' +
+                    '                  id="banners' + formIndex + '.pathImage"\n' +
+                    '                  onchange="previewImage(this)"\n' +
+                    '                  accept="image/png, image/jpeg" required/>\n' +
+                    '           <div class="valid-feedback">Отлично</div>\n' +
+                    '           <div class="invalid-feedback"> Укажите изображение</div>\n' +
+                    '           <div class="form-group mb-1">\n' +
+                    '               <input type="hidden" id="banners' + formIndex + '.id" \n' +
+                    '                      name="banners[' + formIndex + '].id" class="form-control banner-id"\n' +
+                    '                      value="' + bannerIdValue + '" placeholder="URL" required>\n' +
+                    '               <input type="text" id="banners' + formIndex + '.url" \n' +
+                    '                      name="banners[' + formIndex + '].url" class="form-control"\n' +
+                    '                      value="" placeholder="URL" required>\n' +
+                    '               <input type="text" id="banners' + formIndex + '.title" \n' +
+                    '                      name="banners[' + formIndex + '].title" class="form-control"\n' +
+                    '                      value="" placeholder="Текст" required>\n' +
+                    '           </div>\n' +
+                    '       </div>\n' +
+                    '   </div>\n' +
+                    '</div>').appendTo('#MainBannersBlock');
+            }
+
+            function addBannerNewsAndStocks() {
+                var formIndex = document.querySelectorAll('.element-banner').length;
+                var lastElement = document.querySelectorAll('.element-banner')[formIndex - 1];
+                var bannerIdInput = lastElement.querySelector('.banner-id');
+
+                var bannerIdValue = bannerIdInput.value;
+                bannerIdValue++;
+                $('<div class="col element-banner" ">\n' +
+                    '     <div class="card text-center mb-2">\n' +
+                    '         <div style="object-fit : contain" class="card-header"\n' +
+                    '              id="bannerImageBlockForNewsAndStocks">\n' +
+                    '             <a type="button" onclick="removeBanner(this)"\n' +
+                    '                class="btn rounded-pill btn-icon btn-label-danger position-absolute top-0 end-0">\n' +
+                    '                 <span class="fa-solid fa-x"></span>\n' +
+                    '             </a>\n' +
+                    '             <div class="image-container">\n' +
+                    '                 <img style="object-fit : scale-down; height: 200px" class="card-img-top"\n' +
+                    '                      src="https://via.placeholder.com/300x200?text=Нет изображения"\n' +
+                    '                      alt="Card image cap"/>\n' +
+                    '             </div>\n' +
+                    '         </div>\n' +
+                    '         <div class="card-body">\n' +
+                    '        <input type="file"\n' +
+                    '               class="form-control"\n' +
+                    '               name="banners[' + formIndex + '].pathImage"\n' +
+                    '               id="banners' + formIndex + '.pathImage"\n' +
+                    '               onchange="previewImage(this)"\n' +
+                    '               accept="image/png, image/jpeg" required/>\n' +
+                    '        <div class="form-group mb-1">\n' +
+                    '            <input type="hidden" id="banners' + formIndex + '.id" \n' +
+                    '                   name="banners[' + formIndex + '].id" class="form-control banner-id"\n' +
+                    '                   value="' + bannerIdValue + '" placeholder="URL" required>\n' +
+                    '            <input type="text" id="banners' + formIndex + '.url" \n' +
+                    '                   name="banners[' + formIndex + '].url" class="form-control"\n' +
+                    '                   value="" placeholder="URL" required>\n' +
+                    '            <input type="text" id="banners' + formIndex + '.title" \n' +
+                    '                   name="banners[' + formIndex + '].title" class="form-control"\n' +
+                    '                   value="" placeholder="Текст" required>\n' +
+                    '        </div>\n' +
+                    '    </div>\n' +
+                    '</div>\n' +
+                    '</div>').appendTo('#bannerBlockForNewsAndStocks');
+            }
+
+            function removeBanner(thisElement) {
+                let elementBanner = thisElement.closest('.element-banner');
+                elementBanner.remove();
+            }
+        </script>
+
+        <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+        <script th:src="@{/assets/vendor/libs/block-ui/block-ui.js}"></script>
+        <script th:src="@{/customAssets/js/toast.js}"></script>
+
+        <script>
+            let appContextPath = document.getElementById("appContextPath").textContent
+
+
+        </script>
+
+
         <br/>
         <!--Блок с фоновым баннером-->
         <div class="rounded-start border">
-            <div class="d-flex flex-row justify-content-center">
-                <div></div>
-                <h4 class="fw-bold pt-3">Сквозной банер на заднем фоне</h4>
-            </div>
-            <div class="row">
-                <div class="col-1 align-items-center d-flex justify-content-center align-content-center">
-                    <input
-                            name="backgroundImage"
-                            class="form-check-input col-3"
-                            type="radio"
-                            value="false"
-                            th:checked="${!bannerBackground.isDefault} ? 'checked' : null"
-                    />
+            <form class=" bannerBackground-validation" novalidate>
+                <div class="d-flex flex-row justify-content-center">
+                    <h4 class="fw-bold pt-3">Сквозной банер на заднем фоне</h4>
                 </div>
-                <div class="col-2 align-items-center d-flex justify-content-center align-content-center">
-                    <p class="col-form-label col-sm-2  ">
-                        Фото на фон
-                    </p>
-                </div>
-                <div class="col-4" id="backgroundImageBlock">
-                </div>
-                <div class="col-3 d-flex justify-content-center align-items-center flex-column">
-                    <label class="form-label">
+                <div class="row">
+                    <div class="col-1 align-items-center d-flex justify-content-center align-content-center">
+
+                        <input type="radio" name="backgroundImageDefault" value="false" th:checked="${bannerBackground.isDefault == 'false' ? 'checked' : ''}" />
+
+                    </div>
+                    <div class="col-2 align-items-center d-flex justify-content-center align-content-center">
+                        <p class="col-form-label col-sm-2  ">
+                            Фото на фон
+                        </p>
+                    </div>
+                    <div class="col-4 image-container" id="backgroundImageBlock">
+                        <div class="image-container">
+                            <img style="object-fit : scale-down; height: 200px" class="card-img-top"
+                                 th:src="@{${bannerBackground.url != null || bannerBackground.url != '' ? bannerBackground.url : 'https://via.placeholder.com/300x200?text=Нет изображения'}}"
+                                 alt="Card image cap"/>
+                        </div>
+                    </div>
+
+                    <div class="col-3 d-flex justify-content-center align-items-center flex-column">
                         <input type="file"
                                class="form-control"
                                accept="image/png, image/jpeg"
-                               name="mainImagePage"
-                               onchange="editBackgroundBanner(this)"
+                               name="backgroundImage"
+                               onchange="previewImage(this)"
                         />
-                    </label>
-                    <br/>
-                    <label class="form-label">
-                        <a>
-                            <button
-                                    type="button"
-                                    class="btn btn-danger"
-                                    onclick="removeBackgroundBanner()">
-                                Удалить
-                            </button>
-                        </a>
-                    </label>
+                        <br/>
+                        <label class="form-label">
+                            <a>
+                                <button
+                                        type="button"
+                                        class="btn btn-danger">
+                                    Удалить
+                                </button>
+                            </a>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-4">
-                <div class="col-1 align-items-center d-flex justify-content-center align-content-center">
-                    <input
-                            name="backgroundImage"
-                            class="form-check-input col-3"
-                            type="radio"
-                            value="true"
-                            th:checked="${bannerBackground.isDefault} ? 'checked' : null"
-                    />
+                <div class="row mb-4">
+                    <div class="col-1 align-items-center d-flex justify-content-center align-content-center">
+                        <input type="radio" name="backgroundImageDefault" value="true" th:checked="${bannerBackground.isDefault == 'true' ? 'checked' : ''}"  />
+                    </div>
+                    <div class="col-2 align-items-center d-flex justify-content-center align-content-center">
+                        <p class="col-form-label col-sm-2  ">
+                            Просто фон
+                        </p>
+                    </div>
                 </div>
-                <div class="col-2 align-items-center d-flex justify-content-center align-content-center">
-                    <p class="col-form-label col-sm-2  ">
-                        Просто фон
-                    </p>
+
+                <div class="col-12 d-flex justify-content-around">
+                    <div class="col-2">
+
+                    </div>
+                    <div class="col-2">
+
+                    </div>
+                    <div class="col-2">
+                        <button type="submit"
+                                class="btn btn-primary btn-form-block-multiple">
+                            Сохранить
+                        </button>
+                    </div>
                 </div>
-            </div>
+                <br/>
+            </form>
+            <script>
+                let bannerBackgroundValidationForms = document.querySelector(".bannerBackground-validation");
+                let bannerBackgroundValidationEndPoint = '/admin/banners/editBackgroundBanner/';
+
+                validationAndSubmitSend(bannerBackgroundValidationForms, bannerBackgroundValidationEndPoint);
+            </script>
         </div>
         <br/>
+
         <!--Блок с баннерами для акций и новостей-->
-        <form id="BannerForNewsAndStocksForm"
-              class="p-2 form-block rounded-3 border">
-            <div>
+
+        <div>
+            <form class="p-2 form-block rounded-3 border banner-block-NewsAndStocks-validation" th:object="${bannerBlockForNewsAndStocks}"
+                  novalidate
+                  id="bannerBlockForNewsAndStocks-form">
                 <div>
-                    <div class="d-flex flex-row justify-content-center">
-                        <div></div>
-                        <h4 class="fw-bold pt-3">На главной Новости Акции</h4>
+                    <div>
+                        <div class="d-flex flex-row justify-content-center">
+                            <div></div>
+                            <h4 class="fw-bold pt-3">На главной Новости Акции</h4>
+                        </div>
+                        <div class="d-flex flex-row justify-content-end">
+                            <div class="form-check form-switch form-check-inline col-1 my-auto">
+                                <label>
+                                    <input th:field="*{statusBlockBannerForNewsAndStocks}"
+                                           class="form-check-input" type="checkbox"/>
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-flex flex-row justify-content-end">
-                        <div class="form-check form-switch form-check-inline col-1 my-auto">
-                            <label>
-                                <input class="form-check-input" type="checkbox"
-                                       name="statusBlockBannerForNewsAndStocks"
-                                       th:field="${bannerBlockForNewsAndStocks.statusBlockBannerForNewsAndStocks}"/>
+                    <div class="row row-cols-1 row-cols-md-4 g-4 mb-5" id="bannerBlockForNewsAndStocks">
+
+                        <div class="col element-banner" th:each="banner, i : *{banners}">
+                            <div class="card text-center mb-2">
+                                <div style="object-fit : contain" class="card-header"
+                                     id="bannerImageBlockForNewsAndStocks">
+                                    <a type="button" onclick="removeBanner(this)"
+                                       class="btn rounded-pill btn-icon btn-label-danger position-absolute top-0 end-0">
+                                        <span class="fa-solid fa-x"></span>
+                                    </a>
+                                    <div class="image-container">
+                                        <img style="object-fit : scale-down; height: 200px" class="card-img-top"
+                                             th:src="@{*{banners[__${i.index}__].pathImage}}"
+                                             alt="Card image cap"/>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <input type="file"
+                                           class="form-control your-class-name"
+                                           th:field="*{banners[__${i.index}__].pathImage}"
+                                           onchange="previewImage(this)"
+                                           accept="image/png, image/jpeg" size="10"/>
+                                    <div class="form-group mb-1">
+                                        <input type="hidden" th:field="*{banners[__${i.index}__].id}"
+                                               class="form-control banner-id"
+                                               value="" placeholder="URL">
+                                        <input type="text" th:field="*{banners[__${i.index}__].url}"
+                                               class="form-control"
+                                               value="" placeholder="URL" required>
+                                        <input type="text" th:field="*{banners[__${i.index}__].title}"
+                                               class="form-control"
+                                               value="" placeholder="Текст" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <hr class="line"/>
+                    <div class="col-12 d-flex justify-content-around">
+                        <div class="col-2">
+                            <label class="form-inline">Скорость вращения
+                                <select class="form-select form-select-sm" id="timeChangeBlockBannerForNewsAndStocks"
+                                        th:field="*{timeChangeBlockBannerForNewsAndStocks}">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
                             </label>
+
+                        </div>
+                        <div class="col-2">
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    onclick="addBannerNewsAndStocks()">
+                                Добавить
+                            </button>
+                        </div>
+                        <div class="col-2">
+                            <button type="submit"
+                                    class="btn btn-primary btn-form-block-multiple">
+                                Сохранить
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="row row-cols-1 row-cols-md-4 g-4 mb-5" id="BannerForNewsAndStocksBlock">
-                </div>
-                <hr class="line"/>
-                <div class="col-12 d-flex justify-content-around">
-                    <div class="col-2">
-                        <label class="form-inline">Скорость вращения
-                            <select class="form-select form-select-sm"
-                                    th:field="${bannerBlockForNewsAndStocks.timeChangeBlockBannerForNewsAndStocks}"
-                                    name="timeChangeBlockBannerForNewsAndStocks">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="col-2">
-                        <button type="button"
-                                class="btn btn-primary"
-                                onclick="addBlockBannerForNewsAndStocks()">
-                            Добавить
-                        </button>
-                    </div>
-                    <div class="col-2">
-                        <button type="submit" class="btn btn-primary btn-form-block-multiple"
-                                id="saveButtonBannerForNewsAndStocks">
-                            Сохранить
-                        </button>
-                        <p th:text="${projectPath}"></p>
-                    </div>
-                </div>
-            </div>
-            <br>
-        </form>
-        <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
-        <script th:src="@{/assets/vendor/libs/block-ui/block-ui.js}"></script>
-        <div th:text="${appContextPath}" hidden id="appContextPath"></div>
+            </form>
+
+            <script>
+                let bannerForNewsAndStockBlockValidationForms = document.querySelector(".banner-block-NewsAndStocks-validation");
+                let bannerForNewsAndStockBlockEndPoint = '/admin/banners/editBannerBlockForNewsAndStocks/';
+                validationAndSubmitSend(bannerForNewsAndStockBlockValidationForms, bannerForNewsAndStockBlockEndPoint);
+            </script>
+        </div>
 
     </div>
-<!--    th:src="@{/customAssets/js/banners.js}"-->
+
     <script>
-        let appContextPath = document.getElementById("appContextPath").textContent
-
-        $(document).ready(function () {
-            showAllMainBanner()
-        });
-
-        function showAllMainBanner() {
-
-            $.ajax({
-                url: appContextPath + '/admin/banners/showAllMainBanner/',
-                method: 'GET',
-                dataType: 'JSON',
-                success: function (result) {
-                    console.log("Успешно загружены главные баннера", result);
-                    drawMainBanner(result)
-                },
-                error: function (error) {
-                    console.log("Проблемма в отрисовке главных баннеров", error);
-                }
-            })
-        }
-
-        function drawMainBanner(result) {
-            for (const data of result) {
-                $('<div class="col" id="MainBannerBlock' + data.id + '">\n' +
-                    '  <div class="card text-center mb-2">\n' +
-                    '      <div class="card-header" id="MainBannerImageBlock' + data.id + '">\n' +
-                    '          <a type="button" onclick="removeBlockMainBanner(this, ' + data.id + ')" \n' +
-                    '             class="btn rounded-pill btn-icon btn-label-danger position-absolute top-0 end-0">\n' +
-                    '          <span class="fa-solid fa-x">\n' +
-                    '          </span>\n' +
-                    '          </a>\n' +
-                    '          <img style=" height: 200px;"  class="card-img-top"\n' +
-                    '               id="imageBanner' + data.id + '"\n' +
-                    '               src="' + (data.pathImage != null ? appContextPath +  data.pathImage : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '"' +
-                    '               alt="Card image cap"/>\n' +
-                    '      </div>\n' +
-                    '      <div class="card-body">\n' +
-                    '          <input type="file"\n' +
-                    '                 class="form-control"  \n' +
-                    '                 onchange="editMainBanner(this, ' + data.id + ')" ' +
-                    '                 accept="image/png, image/jpeg"\n' +
-                    '          <div class="form-group mb-1">\n' +
-                    '              <input type="hidden" name="id[]" class="form-control" value="' + data.id + '" placeholder="URL">\n' +
-                    '              <input type="text" name="url[]" class="form-control" value="' + data.url + '" placeholder="URL">\n' +
-                    '              <input type="text" name="text[]" class="form-control" value="' + data.title + '" placeholder="Текст">\n' +
-                    '          </div>\n' +
-                    '      </div>\n' +
-                    '  </div>\n' +
-                    '</div>').appendTo('#MainBannersBlock');
-            }
-        }
-
-        function editMainBanner(element, id) {
-            let file = element.files[0];
-            let formData = new FormData();
-            formData.append("file", file);
-            $.ajax({
-                url: appContextPath+'/admin/banners/editMainBanner/' + id,
-                method: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (result) {
-                    console.log("Баннер успешно изменен", result);
-                    if ($(element).hasClass("is-invalid")){
-                        $(element).removeClass("is-invalid");
-                    }
-                    element.addClass("is-valid");
-                    $.ajax({
-                        url: appContextPath+'/admin/banners/getMainBanner/' + id,
-                        method: 'GET',
-                        success: function (result) {
-                            console.log("Успешно загружен новый главный баннер", result);
-                            let imageBlock = $('#imageBanner' + id);
-                            $('<img class="card-img-top"\n' +
-                                'id="imageBanner' + result.id + '" ' +
-                                'src="' + (result.pathImage != null ? appContextPath + result.pathImage : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '" ' +
-                                'alt="Card image cap"/>').appendTo("#MainBannerImageBlock" + result.id);
-                            imageBlock.remove();
-                        },
-                        error: function (error) {
-                            console.error("Ошибка при получении нового главного баннера", error);
-                        }
-                    });
-
-                },
-                error: function (error) {
-                    invalidateMainBanner(element,id);
-                    console.error("Ошибка при изменении главного баннера:", error);
-                }
-            });
-
-        }
-
-        function invalidateMainBanner(element, id) {
-            let form = $(element);
-            let block = form.parent();
-            if (!form.hasClass("is-invalid")) {
-                block.append('<div data-invalid class="invalid-feedback">Неверное формат</div>');
-                form.addClass("is-invalid");
-            }
-
-
-
-        }
-
-        function addBlockMainBanner() {
-            $.ajax({
-                url: appContextPath+'/admin/banners/createMainBanner/',
-                method: 'GET',
-                dataType: 'JSON',
-                success: function (result) {
-                    console.log("Успешно добавлен новый главный баннер", result);
-                    drawMainBanner(result)
-                }
-            })
-        }
-
-        function removeBlockMainBanner(element, id) {
-            let block = $('#MainBannerBlock' + id);
-            block.remove();
-            $.ajax({
-                url: appContextPath+'/admin/banners/deleteMainBanner/' + id,
-                method: 'GET',
-                success: function (result) {
-                    console.log('Успешно удален главный баннер');
-                },
-                error: function (error) {
-                    console.error("Ошибка при удалении главного баннера:", error);
-                }
-            })
-        }
-
-        <!--        Отправка формы целого блока-->
-        let formSection = $('#MainBannerForm');
-        let formBlockMultiple = $('#saveButtonBanner');
-        $(document).ready(function () {
-            $('#MainBannerForm').submit(function (event) {
-                event.preventDefault();
-                let entities = [];
-                $('input[name="id[]"]').each(function (index) {
-                    let id = $(this).val();
-                    let url = $('input[name="url[]"]').eq(index).val();
-                    let text = $('input[name="text[]"]').eq(index).val();
-
-                    let entityText = {
-                        id: id,
-                        url: url,
-                        text: text
-                    };
-                    entities.push(entityText);
-                });
-
-                let entity = {
-                    status: $('input[name="status"]').prop('checked'),
-                    timeChange: $('select[name="timeChange"]').val(),
-                    mainBannersItemDto: entities
-                };
-                let jsonData = JSON.stringify(entity);
-                $.ajax({
-                    url: appContextPath + '/admin/banners/editAllMainBanners/',
-                    type: 'POST',
-                    data: jsonData,
-                    contentType: 'application/json',
-                    success: function (response) {
-                        console.log("Успешно изменен блок главных баннеров", response);
-                        window.response = "Успех";
-                        window.statusResponse = "success";
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Ошибка при изменении блока главных баннеров:", error);
-                        window.response = "Перезагрузите страницу и повторите попытку";
-                        window.statusResponse = "danger";
-                    }
-                });
-            });
-        });
-
-        if (formBlockMultiple.length && formSection.length) {
-            formBlockMultiple.on('click', function () {
-                formSection.block({
-                    message:
-                        '<div class="d-flex justify-content-center"><p class="mb-0">Please wait...</p> <div class="sk-wave m-0"><div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div></div> </div>',
-                    css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                    },
-                    overlayCSS: {
-                        opacity: 0.5
-                    },
-                    timeout: 1000,
-                    onUnblock: function () {
-                        formSection.block({
-                            message: '<p class="mb-0">Almost Done...</p>',
-                            timeout: 1000,
-                            css: {
-                                backgroundColor: 'transparent',
-                                border: '0'
-                            },
-                            overlayCSS: {
-                                opacity: 0.25
-                            },
-                            onUnblock: function () {
-                                formSection.block({
-                                    message: '<div class="p-3 bg-' + window.statusResponse + '">' + window.response + '</div>',
-                                    timeout: 500,
-                                    css: {
-                                        backgroundColor: 'transparent',
-                                        border: '0'
-                                    },
-                                    overlayCSS: {
-                                        opacity: 0.25
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-        }
-
-
-        $(document).ready(function () {
-            drawBackgroundBanner()
-        });
-
-        function drawBackgroundBanner() {
-            $.ajax({
-                url: appContextPath + '/admin/banners/getBackgroundBanner/',
-                method: 'GET',
-                dataType: 'JSON',
-                success: function (result) {
-                    console.log("Успешно получен фоновый баннер", result);
-                    $('<img ' +
-                        'src="' + (result.url != null ? appContextPath + result.url : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '"' +
-                        ' class="img-fluid"\n' +
-                        ' id="background-image"\n' +
-                        ' style="max-width: 250px; max-height: 200px;">').appendTo('#backgroundImageBlock');
-                },
-                error: function (error) {
-                    console.log("Ошибка при получении фонового баннера:", error);
-                }
-            })
-
-
-        }
-
-        function editBackgroundBanner(element) {
-            let file = element.files[0];
-            let formData = new FormData();
-            formData.append("file", file);
-            $.ajax({
-                url: appContextPath + '/admin/banners/editBackgroundBanner/',
-                method: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (result) {
-                    console.log("Успешно изменен новый главный баннер", result);
-                    $.ajax({
-                        url: appContextPath + '/admin/banners/getBackgroundBanner/',
-                        method: 'GET',
-                        success: function (result) {
-                            console.log("Успешно получен фоновый баннер", result);
-                            let imageBlock = $('#background-image');
-                            imageBlock.remove();
-                            drawBackgroundBanner();
-                        },
-                        error: function (error) {
-                            console.error("Ошибка при нового фонового баннера:", error);
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.error("Ошибка при изменении фонового баннера:", error);
-                }
-            });
-
-        }
-
-        function removeBackgroundBanner() {
-            let block = $('#background-image');
-            block.remove();
-            $.ajax({
-                url: appContextPath + '/admin/banners/deleteBackgroundBanner/',
-                method: 'POST',
-                processData: false,
-                contentType: false,
-                success: function (result) {
-                    console.log("Успешно удален фоновый баннер", result);
-                    drawBackgroundBanner();
-                },
-                error: function (error) {
-                    console.error("Ошибка при удалении фонового баннера:", error);
-                }
-            });
-        }
-
-        $(document).ready(function () {
-            $('input[name="backgroundImage"]').change(function () {
-                let radioButtonValue = $(this).val();
-                $.ajax({
-                    url: appContextPath + '/admin/banners/changeBackgroundBannerBlock/',
-                    type: 'POST',
-                    data: {radioButton: radioButtonValue},
-                    success: function (response) {
-                        console.log("Успешно изменен фоновый баннер по умолчанию", response);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("Проблема при изменении фонового баннера по умолчанию:", error);
-                    }
-                });
-            });
-        });
-
-
-        $(document).ready(function () {
-            showAllBannerForNewsAndStocks()
-        });
-
-        function showAllBannerForNewsAndStocks() {
-            $.ajax({
-                url: appContextPath + '/admin/banners/showAllBannerForNewsAndStocks/',
-                method: 'GET',
-                dataType: 'JSON',
-                success: function (result) {
-                    console.log("Успешно получены все баннеры для новостей и акции", result);
-                    drawBannerForNewsAndStocks(result)
-                },
-                error: function (error) {
-                    console.log("Проблема при получении баннеров для новостей и акции:", error);
-                }
-            })
-        }
-
-        function drawBannerForNewsAndStocks(result) {
-            for (const data of result) {
-                $('<div class="col" id="BannerForNewsAndStocksBlock' + data.id + '">\n' +
-                    '    <div class="card text-center mb-2">\n' +
-                    '        <div class="card-header" id="BannerForNewsAndStocksImageBlock' + data.id + '">\n' +
-                    '            <a type="button" onclick="removeBlockBannerForNewsAndStocks(this, ' + data.id + ')" \n' +
-                    '               class="btn rounded-pill btn-icon btn-label-danger position-absolute top-0 end-0">\n' +
-                    '            <span class="fa-solid fa-x">\n' +
-                    '            </span>\n' +
-                    '            </a>\n' +
-                    '            <img class="card-img-top"\n' +
-                    '                 id="imageBannerForNewsAndStocks' + data.id + '"\n' +
-                    '                 src="' + (data.pathImage != null ? appContextPath + data.pathImage : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '"' +
-                    '                 alt="Card image cap"/>\n' +
-                    '        </div>\n' +
-                    '        <div class="card-body">\n' +
-                    '            <input type="file"\n' +
-                    '                   class="form-control"  \n' +
-                    '                   onchange="editBannerForNewsAndStocks(this, ' + data.id + ')" ' +
-                    '                   accept="image/png, image/jpeg"\n' +
-                    '            <div class="form-group mb-1">\n' +
-                    '                <input type="hidden" name="idBannerForNewsAndStocks[]" class="form-control" value="' + data.id + '" placeholder="URL">\n' +
-                    '                <input type="text" name="urlBannerForNewsAndStocks[]" class="form-control" value="' + data.url + '" placeholder="URL">\n' +
-                    '                <input type="text" name="textBannerForNewsAndStocks[]" class="form-control" value="' + data.title + '" placeholder="Текст">\n' +
-                    '            </div>\n' +
-                    '        </div>\n' +
-                    '    </div>\n' +
-                    '</div>').appendTo('#BannerForNewsAndStocksBlock');
-            }
-        }
-
-        function editBannerForNewsAndStocks(element, id) {
-            let file = element.files[0];
-            let formData = new FormData();
-            formData.append("file", file);
-            $.ajax({
-                url: appContextPath + '/admin/banners/editBannerForNewsAndStocks/'+id,
-                method: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (result) {
-                    console.log("Успешно изменен баннер для новостей и акции", result);
-                    $.ajax({
-                        url: appContextPath + '/admin/banners/getBannerForNewsAndStocks/' + id,
-                        method: 'GET',
-                        success: function (result) {
-                            console.log("Успешно загружено изображение баннера для новостей и акции", result);
-                            let imageBlock = $('#imageBannerForNewsAndStocks' + id);
-                            $('<img class="card-img-top"\n' +
-                                'id="imageBannerForNewsAndStocks' + result.id + '" ' +
-                                'src="' + (result.pathImage != null || result.pathImage != "" ? appContextPath + result.pathImage : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '" ' +
-                                'alt="Card image cap"/>').appendTo("#BannerForNewsAndStocksImageBlock" + result.id);
-                            imageBlock.remove();
-                        },
-                        error: function (error) {
-                            console.error("Ошибка при загрузке обновленного баннера:", error);
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.error("Ошибка при изменении баннера для новостей и акции:", error);
-                }
-            });
-
-        }
-
-        function addBlockBannerForNewsAndStocks() {
-            $.ajax({
-                url: appContextPath + '/admin/banners/createBannerForNewsAndStocks/',
-                method: 'GET',
-                dataType: 'JSON',
-                success: function (result) {
-                    console.log("Успешно создан баннер для новостей и акции", result);
-                    drawBannerForNewsAndStocks(result)
-                },
-                error: function (error) {
-                    console.error("Ошибка при создании баннера для новостей и акции:", error);
-                }
-            })
-        }
-
-        function removeBlockBannerForNewsAndStocks(element, id) {
-            let block = $('#BannerForNewsAndStocksBlock' + id);
-            block.remove();
-            $.ajax({
-                url: appContextPath + '/admin/banners/deleteBannerForNewsAndStocks/' + id,
-                method: 'GET',
-                dataType: 'JSON',
-                success: function (result) {
-                    console.log("Успешно удален баннер для новостей и акции", result);
-                }
-            })
-        }
-
-
-        <!--        Отправка формы целого блока-->
-
-        $(document).ready(function () {
-            $('#BannerForNewsAndStocksForm').submit(function (event) {
-                event.preventDefault();
-
-                let entities = [];
-
-                $('input[name="idBannerForNewsAndStocks[]"]').each(function (index) {
-                    let id = $(this).val();
-                    let url = $('input[name="urlBannerForNewsAndStocks[]"]').eq(index).val();
-                    let text = $('input[name="textBannerForNewsAndStocks[]"]').eq(index).val();
-
-                    let entityText = {
-                        id: id,
-                        url: url,
-                        text: text
-                    };
-                    entities.push(entityText);
-                });
-
-                let entity = {
-                    statusBlockBannerForNewsAndStocks: $('input[name="statusBlockBannerForNewsAndStocks"]').prop('checked'),
-                    timeChangeBlockBannerForNewsAndStocks: $('select[name="timeChangeBlockBannerForNewsAndStocks"]').val(),
-                    mainBannersItemDto: entities
-                };
-
-                let jsonData = JSON.stringify(entity);
-                $.ajax({
-                    url: appContextPath + '/admin/banners/editAllBannerForNewsAndStocks/',
-                    type: 'POST',
-                    data: jsonData,
-                    contentType: 'application/json',
-                    success: function (response) {
-                        console.log("Успешно изменен блок баннеров для новостей и акции", response);
-                        window.response = "Успех";
-                        window.statusResponse = "success";
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Ошибка при изменении блока баннеров для новостей и акции:", error);
-                        window.response = "Перезагрузите страницу и повторите попытку";
-                        window.statusResponse = "danger";
-                    }
-                });
-            });
-        });
-
-        let formSectionBannerForNewsAndStocks = $('#BannerForNewsAndStocksForm');
-        let formBlockMultipleBannerForNewsAndStocks = $('#saveButtonBannerForNewsAndStocks');
-
-        if (formBlockMultipleBannerForNewsAndStocks.length && formSectionBannerForNewsAndStocks.length) {
-            formBlockMultipleBannerForNewsAndStocks.on('click', function () {
-                formSectionBannerForNewsAndStocks.block({
-                    message:
-                        '<div class="d-flex justify-content-center"><p class="mb-0">Please wait...</p> <div class="sk-wave m-0"><div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div> <div class="sk-rect sk-wave-rect"></div></div> </div>',
-                    css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                    },
-                    overlayCSS: {
-                        opacity: 0.5
-                    },
-                    timeout: 1000,
-                    onUnblock: function () {
-                        formSectionBannerForNewsAndStocks.block({
-                            message: '<p class="mb-0">Almost Done...</p>',
-                            timeout: 1000,
-                            css: {
-                                backgroundColor: 'transparent',
-                                border: '0'
-                            },
-                            overlayCSS: {
-                                opacity: 0.25
-                            },
-                            onUnblock: function () {
-                                formSectionBannerForNewsAndStocks.block({
-                                    message: '<div class="p-3 bg-' + window.statusResponse + '">' + window.response + '</div>',
-                                    timeout: 500,
-                                    css: {
-                                        backgroundColor: 'transparent',
-                                        border: '0'
-                                    },
-                                    overlayCSS: {
-                                        opacity: 0.25
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-        }
 
     </script>
 </div>

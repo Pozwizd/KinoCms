@@ -11,6 +11,7 @@ import spacelab.kinocms.model.ImagesEntity.ImageCinema;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -36,11 +37,11 @@ public class Cinema {
     private String topBanner;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cinema")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cinema", cascade = CascadeType.REMOVE)
     private List<ImageCinema> imagesCinema = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cinema")
-    private List<Hall> Halls = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cinema", cascade = CascadeType.REMOVE)
+    private List<Hall> halls = new ArrayList<>();
     @Column
     private String seoUrl;
     @Column
