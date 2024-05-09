@@ -36,7 +36,7 @@ public class PageServiceImp implements PageService {
     @Override
     public Page getPage(long id) {
         logger.info("Get page by id: {}", id);
-        return pageRepository.findById(id).orElse(null);
+        return pageRepository.findById(id).orElse(new Page());
     }
 
     @Override
@@ -75,6 +75,11 @@ public class PageServiceImp implements PageService {
         page.setDateOfCreated(pageRepository.findById(page.getId()).get().getDateOfCreated());
         logger.info("Update page: {}", page);
         pageRepository.save(page);
+    }
+
+    @Override
+    public Long idLastPage() {
+        return pageRepository.idLastPage();
     }
 
 }

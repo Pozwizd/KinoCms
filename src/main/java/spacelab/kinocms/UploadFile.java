@@ -2,6 +2,7 @@ package spacelab.kinocms;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -24,11 +25,11 @@ public class UploadFile {
         deleteFile(OldPath);
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         try {
-            file.transferTo(new File( Paths.get(projectPath).toAbsolutePath() + "/" + fileName));
+            file.transferTo(new File(Paths.get(projectPath).toAbsolutePath() + "/" + fileName));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "/" + Paths.get(projectPath).subpath(Paths.get(projectPath).getNameCount()-1,
+        return "/" + Paths.get(projectPath).subpath(Paths.get(projectPath).getNameCount() - 1,
                 Paths.get(projectPath).getNameCount()) + "/" + fileName;
     }
 
@@ -42,6 +43,7 @@ public class UploadFile {
             oldFile.delete();
         }
     }
+
     public void createFolder(String path) {
         Path currentPath = Paths.get(path).toAbsolutePath();
 
@@ -57,5 +59,21 @@ public class UploadFile {
         } else {
             System.out.println("Папка уже существует: " + folder.getAbsolutePath());
         }
+    }
+
+    // Метод для проверки тип файла на изображение
+
+    public boolean isAllowedImageTypeAndSize(MultipartFile file) {
+        if (file.getContentType() == null) {
+            return true;
+        }
+        if (file.isEmpty()) {
+            return true;
+        }
+        if (file.getSize() > 10 * 1024 * 1024) {
+            return true;
+        }
+
+        return StringUtils.hasText(file.getContentType()) || !StringUtils.startsWithIgnoreCase(file.getContentType(), "image/");
     }
 }

@@ -30,7 +30,7 @@ public class StockServiceImp implements StockService {
     @Override
     public Stock getStock(long id) {
         logger.info("Get stock by id: " + id);
-        return stocksRepository.findById(id).get();
+        return stocksRepository.findById(id).orElse(new Stock());
     }
 
     @Override
@@ -48,8 +48,13 @@ public class StockServiceImp implements StockService {
 
     @Override
     public void updateStock(Stock stock) {
-        logger.info("Update stock: " + stock);
-        stock.setDateCreated(stocksRepository.findById(stock.getId()).get().getDateCreated());
+        logger.info("Update stock: {}", stock);
         stocksRepository.save(stock);
+    }
+
+    @Override
+    public Long idLastStock() {
+        logger.info("Get id last Stock");
+        return stocksRepository.idLastFilm();
     }
 }

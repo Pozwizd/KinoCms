@@ -32,6 +32,7 @@
                             <input type="text"
                                    class="form-control"
                                    id="last-name"
+                                   required
                                    placeholder="Введите вашу фамилию"
                                    th:field="*{surname}"
                             >
@@ -198,6 +199,7 @@
                                 },
                                 regexp: {
                                     regexp: /^[а-яА-ЯёЁa-zA-Z0-9]+$/,
+                                    message: 'Имя должно содержать только буквы'
                                 }
                             }
                         },

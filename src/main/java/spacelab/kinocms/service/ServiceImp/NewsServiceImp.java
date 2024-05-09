@@ -31,7 +31,7 @@ public class NewsServiceImp implements NewsService {
     @Override
     public News getNews(long id) {
         logger.info("Get news by id: {}", id);
-        return newsRepository.findById(id).orElse(null);
+        return newsRepository.findById(id).orElse(new News());
     }
 
     @Override
@@ -49,7 +49,12 @@ public class NewsServiceImp implements NewsService {
     @Override
     public void updateNews(News news) {
         logger.info("Update news: {}", news);
-        news.setDateCreated(newsRepository.findById(news.getId()).get().getDateCreated());
         newsRepository.save(news);
+    }
+
+    @Override
+    public Long idLastFilm() {
+        logger.info("Get id last film");
+        return newsRepository.idLastFilm();
     }
 }

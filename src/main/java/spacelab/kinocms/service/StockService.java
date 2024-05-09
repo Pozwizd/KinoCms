@@ -17,4 +17,6 @@ public interface StockService {
     public void deleteStock(long id);
 
     public void updateStock(Stock stock);
+
+    public Long idLastStock();
 }

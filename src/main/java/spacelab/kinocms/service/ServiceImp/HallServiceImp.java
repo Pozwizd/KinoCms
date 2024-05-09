@@ -21,13 +21,13 @@ public class HallServiceImp implements HallService {
     @Override
     public void saveHall(Hall hall) {
         hallRepository.save(hall);
-        logger.info("Save hall: " + hall);
+        logger.info("Save hall: {}", hall);
     }
 
     @Override
     public Hall getHall(Long id) {
-        logger.info("Get hall by id: " + id);
-        return hallRepository.findById(id).orElse(null);
+        logger.info("Get hall by id: {}", id);
+        return hallRepository.findById(id).orElse(new Hall());
     }
 
     @Override
@@ -38,19 +38,19 @@ public class HallServiceImp implements HallService {
 
     @Override
     public List<Hall>  getHallByCinema(Cinema cinema) {
-        logger.info("Get all hall by cinema: " + cinema);
+        logger.info("Get all hall by cinema: {}", cinema);
         return hallRepository.findAllByCinema(cinema);
     }
 
     @Override
     public void updateHall(Hall hall) {
-        logger.info("Update hall: " + hall);
+        logger.info("Update hall: {}", hall);
         hallRepository.save(hall);
     }
 
     @Override
     public void deleteHall(long id) {
-        logger.info("Delete hall by id: " + id);
+        logger.info("Delete hall by id: {}", id);
         hallRepository.deleteById(id);
     }
 
@@ -68,8 +68,13 @@ public class HallServiceImp implements HallService {
             hall1 = new Hall();
         }
 
-        logger.info("Save hall: " + hall1);
+        logger.info("Save hall: {}", hall1);
         hallRepository.save(hall1);
 
+    }
+
+    @Override
+    public Long idLastHall() {
+        return hallRepository.idLastHall();
     }
 }

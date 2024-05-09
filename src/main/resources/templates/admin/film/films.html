@@ -19,6 +19,7 @@
                 </a>
                 <a th:href="@{films/editFilm/{id}(id=*{film.id})}">
                     <img class="card-img-top"
+                         style="object-fit : contain; height: 25vw"
                          th:src="@{${film.mainImage == null || film.mainImage.isEmpty() || film.mainImage == '' ? '/customAssets/250x200.png' : film.mainImage}}"
                          alt="Card image cap"/>
                 </a>
@@ -31,7 +32,7 @@
     </div>
     <div class="row justify-content-center">
         <div class="d-grid gap-2 col-3 mx-auto mt-3">
-            <a th:href="@{cinema/createCinema}" class="btn btn-outline-primary">Добавить
+            <a th:href="@{/admin/films/createFilm}" class="btn btn-outline-primary">Добавить
             </a>
         </div>
     </div>
@@ -50,6 +51,7 @@
                 </a>
                 <a th:href="@{films/editFilm/{id}(id=*{film.id})}">
                     <img class="card-img-top"
+                         style="object-fit : cover; height: 25vw"
                          th:src="@{${film.mainImage == null || film.mainImage.isEmpty() ? '/customAssets/250x200.png' : film.mainImage}}"
                          alt="Card image cap"/>
                 </a>

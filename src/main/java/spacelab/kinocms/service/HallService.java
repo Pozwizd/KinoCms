@@ -17,4 +17,6 @@ public interface HallService {
     public void deleteHall(long id);
 
     public void saveHallPage(Hall hall);
+
+    public Long idLastHall();
 }

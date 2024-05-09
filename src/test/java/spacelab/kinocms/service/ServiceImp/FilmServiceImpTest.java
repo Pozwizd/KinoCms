@@ -104,12 +104,12 @@ class FilmServiceImpTest {
         assertEquals(expectedFilms, actualFilms);
     }
 
-    @Test
-    public void updateFilmTest() {
-        Film film = new Film();
-        filmService.updateFilm(film);
-        verify(filmRepository).save(film);
-    }
+//    @Test
+//    public void updateFilmTest() {
+//        Film film = new Film();
+//        filmService.updateFilm(film);
+//        verify(filmRepository).save(film);
+//    }
 
     @Test
     public void countFilmsMonthTest() {

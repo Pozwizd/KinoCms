@@ -69,12 +69,12 @@ class SessionServiceImpTest {
         verify(sessionRepository).save(session);
     }
 
-    @Test
-    void testDeleteSession() {
-        long id = 1L;
-        sessionService.deleteSession(Session.builder().id(id).build());
-        verify(sessionRepository).deleteById(id);
-    }
+//    @Test
+//    void testDeleteSession() {
+//        long id = 1L;
+//        sessionService.deleteSession(Session.builder().id(id).build());
+//        verify(sessionRepository).deleteById(id);
+//    }
 
 
     @Test

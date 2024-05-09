@@ -20,4 +20,6 @@ public interface CinemaService {
     public void deleteCinema(long id);
 
     public void updateCinema(Cinema cinema);
+
+    public Long idLastCinema();
 }

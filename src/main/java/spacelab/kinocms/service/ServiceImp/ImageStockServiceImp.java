@@ -50,9 +50,9 @@ public class ImageStockServiceImp implements ImageStockService {
     }
 
     @Override
-    public void deleteImageStock(long id) {
-        logger.info("Delete image stock by id: " + id);
-        imageStockRepository.deleteById(id);
+    public void deleteImageStock(ImageStock imageStock) {
+        logger.info("Delete image stock: " + imageStock);
+        imageStockRepository.deleteById(imageStock.getId());
     }
 
     @Override

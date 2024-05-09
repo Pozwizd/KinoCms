@@ -1,8 +1,9 @@
 package spacelab.kinocms.Dto;
 
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+import spacelab.kinocms.Dto.Images.ImageCinemaDto;
 import spacelab.kinocms.model.Cinema;
 import spacelab.kinocms.model.Hall;
 
@@ -15,16 +16,17 @@ import java.util.List;
  */
 @Data
 public class CinemaDto implements Serializable {
-    Long id;
 
+    Long id;
     @Size(min = 3, max = 50, message = "Название должно содержать от 3 до 50 символов.")
     String name;
-
     @Size(min = 3, max = 500, message = "Описание должно содержать от 3 до 50 символов.")
     String description;
-
     @Size(min = 3, max = 500, message = "Условия должны содержать от 3 до 50 символов.")
     String conditions;
+    MultipartFile logoPath;
+    MultipartFile topBanner;
+    List<ImageCinemaDto> imagesCinema = new ArrayList<>();
     List<Hall> Halls = new ArrayList<>();
     String seoUrl;
     String seoTitle;

@@ -70,12 +70,11 @@ public class BannerController {
         if (bannerBlockUpdateDTO.getBanners() != null) {
             bannerBlockUpdateDTO.getBanners().removeIf(bannerUpdateDTO -> bannerUpdateDTO.getId() == null);
             for (BannerUpdateDTO bannerUpdateDTO : bannerBlockUpdateDTO.getBanners()) {
-                if (isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())
+                if (uploadFile.isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())
                         && !banners.stream().map(Banner::getId).collect(Collectors.toList()).contains(Long.parseLong(bannerUpdateDTO.getId()))) {
                     return ResponseEntity.badRequest().body("Недопустимый тип файла");
                 }
             }
-
 
             // Удалить баннера айди которых нет в списке
             List<Long> ids = bannerBlockUpdateDTO
@@ -135,26 +134,12 @@ public class BannerController {
 
     @PostMapping("/editBannerBlockForNewsAndStocks/")
     @ResponseBody
-    public ResponseEntity<?> editBannerBlockForNewsAndStocks(@ModelAttribute("bannerBlock")
+    public ResponseEntity<?> editBannerBlockForNewsAndStocks(@ModelAttribute("bannerBlockForNewsAndStocks")
                                                  @Valid BannerForNewsAndStockBlockDto bannerForNewsAndStockBlockDto,
                                                  BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        }
-        for (BannerForNewsAndStocksItemDto bannerUpdateDTO : bannerForNewsAndStockBlockDto.getBanners()) {
-            if (isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())) {
-                return ResponseEntity.badRequest().body("Недопустимый тип файла");
-            }
-        }
-
-        // Удалить из коллекции баннеры у которых id null
-        bannerForNewsAndStockBlockDto.getBanners().removeIf(bannerUpdateDTO -> bannerUpdateDTO.getId() == null);
-
-        for (BannerForNewsAndStocksItemDto bannerUpdateDTO : bannerForNewsAndStockBlockDto.getBanners()) {
-            if (isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())) {
-                return ResponseEntity.badRequest().body("Недопустимый тип файла");
-            }
         }
         BannerBlockForNewsAndStocks bannerBlockForNewsAndStocks = bannerBlockForNewsAndStocksService.getBannerBlockForNewsAndStocks(1L);
         bannerBlockForNewsAndStocks
@@ -164,50 +149,59 @@ public class BannerController {
                 setTimeChangeBlockBannerForNewsAndStocks(
                         bannerForNewsAndStockBlockDto.getTimeChangeBlockBannerForNewsAndStocks());
 
-        // Удалить баннера айди которых нет в списке
-        List<Long> ids = bannerForNewsAndStockBlockDto
-                .getBanners()
-                .stream()
-                .map(BannerForNewsAndStocksItemDto::getId).toList();
-
-
         List<BannerForNewsAndStocks> banners = bannerForNewsAndStocksService.getAllBannerForNewsAndStocks();
-        banners.stream().filter(banner -> !ids.contains(banner.getId()))
-                .forEach(bannerForNewsAndStocksService::deleteBannerForNewsAndStocks);
 
-        for (BannerForNewsAndStocksItemDto bannerUpdateDTO : bannerForNewsAndStockBlockDto.getBanners()) {
-            if (bannerUpdateDTO.getId() == null) {
-                continue;
+
+
+        if (bannerForNewsAndStockBlockDto.getBanners() != null) {
+
+            bannerForNewsAndStockBlockDto.getBanners().removeIf(bannerUpdateDTO -> bannerUpdateDTO.getId() == null);
+            for (BannerForNewsAndStocksItemDto bannerUpdateDTO : bannerForNewsAndStockBlockDto.getBanners()) {
+                if (uploadFile.isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())
+                        && !banners.stream().map(BannerForNewsAndStocks::getId).collect(Collectors.toList()).contains(bannerUpdateDTO.getId())) {
+                    return ResponseEntity.badRequest().body("Недопустимый тип файла");
+                }
             }
-            BannerForNewsAndStocks bannerForNewsAndStocks = bannerForNewsAndStocksService.getBannerForNewsAndStocksById(bannerUpdateDTO.getId());
-            bannerForNewsAndStocks.setBannerBlockForNewsAndStocks(bannerBlockForNewsAndStocks);
-            bannerForNewsAndStocks.setId(bannerUpdateDTO.getId());
-            bannerForNewsAndStocks.setUrl(bannerUpdateDTO.getUrl());
-            bannerForNewsAndStocks.setTitle(bannerUpdateDTO.getTitle());
-            if (!bannerUpdateDTO.getPathImage().isEmpty()) {
-                bannerForNewsAndStocks.setPathImage(
-                        uploadFile
-                                .uploadFile(
-                                        bannerUpdateDTO.getPathImage(),
-                                        bannerForNewsAndStocks.getPathImage()));
+
+            // Удалить баннера айди которых нет в списке
+            List<Long> ids = bannerForNewsAndStockBlockDto
+                    .getBanners()
+                    .stream()
+                    .map(BannerForNewsAndStocksItemDto::getId).toList();
+
+
+            banners.stream().filter(banner -> !ids.contains(banner.getId()))
+                    .forEach(bannerForNewsAndStocksService::deleteBannerForNewsAndStocks);
+
+            for (BannerForNewsAndStocksItemDto bannerUpdateDTO : bannerForNewsAndStockBlockDto.getBanners()) {
+                if (bannerUpdateDTO.getId() == null) {
+                    continue;
+                }
+                BannerForNewsAndStocks bannerForNewsAndStocks = bannerForNewsAndStocksService.getBannerForNewsAndStocksById(bannerUpdateDTO.getId());
+                bannerForNewsAndStocks.setBannerBlockForNewsAndStocks(bannerBlockForNewsAndStocks);
+                bannerForNewsAndStocks.setId(bannerUpdateDTO.getId());
+                bannerForNewsAndStocks.setUrl(bannerUpdateDTO.getUrl());
+                bannerForNewsAndStocks.setTitle(bannerUpdateDTO.getTitle());
+                if (!bannerUpdateDTO.getPathImage().isEmpty()) {
+                    bannerForNewsAndStocks.setPathImage(
+                            uploadFile
+                                    .uploadFile(
+                                            bannerUpdateDTO.getPathImage(),
+                                            bannerForNewsAndStocks.getPathImage()));
+                }
+                bannerForNewsAndStocksService.saveBannerForNewsAndStocks(bannerForNewsAndStocks);
             }
-            bannerForNewsAndStocksService.saveBannerForNewsAndStocks(bannerForNewsAndStocks);
+
+            for (BannerForNewsAndStocks banner : banners) {
+                bannerForNewsAndStocksService.deleteBannerForNewsAndStocks(banner);
+            }
+
+            return ResponseEntity.ok("Файл успешно загружен");
+
         }
-
         return ResponseEntity.ok("Файл успешно загружен");
     }
 
 
-
-    // Метод для проверки тип файла на изображение
-
-    private boolean isAllowedImageTypeAndSize(MultipartFile file) {
-
-        if (file.getSize() > 10 * 1024 * 1024) {
-            return true;
-        }
-
-        return !StringUtils.hasText(file.getContentType()) || !StringUtils.startsWithIgnoreCase(file.getContentType(), "image/");
-    }
 
 }

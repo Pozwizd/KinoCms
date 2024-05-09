@@ -30,7 +30,7 @@ public class ImageNewsServiceImp implements ImageNewsService {
     @Override
     public ImageNews getImageNews(long id) {
         logger.info("Get image news by id: " + id);
-        return imageNewsRepository.findById(id).orElse(null);
+        return imageNewsRepository.findById(id).orElse(new ImageNews());
     }
 
     @Override
@@ -53,9 +53,9 @@ public class ImageNewsServiceImp implements ImageNewsService {
     }
 
     @Override
-    public void deleteImageNews(long id) {
-        logger.info("Delete image news by id: " + id);
-        imageNewsRepository.deleteById(id);
+    public void deleteImageNews(ImageNews imageNews) {
+        logger.info("Delete image news: {}", imageNews);
+        imageNewsRepository.delete(imageNews);
     }
 
     @Override

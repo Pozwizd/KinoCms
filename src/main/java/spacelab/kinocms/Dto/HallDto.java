@@ -1,29 +1,33 @@
 package spacelab.kinocms.Dto;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import org.springframework.web.multipart.MultipartFile;
+import spacelab.kinocms.Dto.Images.ImageHallDto;
 import spacelab.kinocms.model.Cinema;
 import spacelab.kinocms.model.Hall;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * DTO for {@link Hall}
  */
 @Data
 public class HallDto implements Serializable {
+
     Long id;
-    @NotEmpty(message = "Название фильма не может быть пустым")
-    @Size(min = 3, max = 100, message = "Название фильма должно содержать от 3 до 100 символов")
     String hallNumber;
-    @NotEmpty(message = "Описание не может быть пустым")
     String description;
+    MultipartFile urlSchemeImageHall;
+    MultipartFile topBanner;
+    List<ImageHallDto> imagesHall = new ArrayList<>();
     String seoUrl;
     String seoTitle;
     String seoKeywords;
     String seoDescription;
     Cinema cinema;
+
 }

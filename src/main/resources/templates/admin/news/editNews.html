@@ -8,9 +8,11 @@
     <div class="container">
         <form th:method="post"
               th:object="${news}"
-              th:action="@{{id}(id=${news.id})}"
+              th:action="@{/admin/news/editNews/{id}(id=${news.id})}"
+              class="needs-validation"
               enctype="multipart/form-data">
             <div class="row justify-content-end">
+                <input type="hidden" th:field="*{id}">
                 <div class="flex justify-content-end row">
                     <div class="card-header">
                         <ul class="nav nav-pills card-header-pills" role="tablist"
@@ -54,27 +56,17 @@
                     <div class="tab-pane fade show active" id="navs-pills-within-card-active" role="tabpanel">
                         <div class="row mb-4">
                             <label class="col-sm-1 col-form-label-sm">Название</label>
-                            <div class="col-sm-5">
-
-                                    <input type="text"
-                                           class="form-control form-control-sm"
-                                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
-                                           th:field="*{name}">
-
-                                <div class="invalid-feedback"
-                                     th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-
+                            <div class="col-sm-6">
+                                <input type="text"
+                                       class="form-control form-control-sm"
+                                       th:field="*{name}">
                             </div>
                             <label for="datePosting" class="col-sm-2 col-form-label">Дата публикации</label>
                             <div class="col-sm-3">
                                 <input type="date"
                                        class="form-control"
-                                       th:classappend="${#fields.hasErrors('datePosting')} ? 'is-invalid'"
                                        id="datePosting"
                                        th:field="*{datePosting}">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('datePosting')}">
-                                    Укажите дату публикации
-                                </div>
                             </div>
                         </div>
 
@@ -86,39 +78,34 @@
                                     <textarea id="autosize-demo"
                                               data-autosize
                                               class="form-control"
-                                              th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"
                                               th:field="*{description}">
                                     </textarea>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
-                                         th:errors="*{description}"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-4" id="mainImageBigBlock">
-                            <div class="row align-items-center">
-                                <div class="col-6" id="mainImageBlock">
+                            <div class="row align-items-center image-container">
+                                <div class="col-6 image-container" id="mainImageBlock">
                                     <label class="col-form-label col-sm-2">
                                         Главная картинка
                                     </label>
-
+                                    <img th:src="@{${news.mainImage == null || news.mainImage == '' ? '/customAssets/noImage.png' : news.mainImage  }}"
+                                         class="img-fluid" id="mainImage"
+                                         th:id="'MainImageFilm' + ${news.id}"
+                                         style="max-width: 250px;
+                                          max-height: 200px;" alt="">
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">
                                         <input type="file"
+                                               th:field="*{mainImage}"
                                                class="form-control"
                                                accept="image/png, image/jpeg"
+                                               th:data-image-id="'MainImageFilm'+${news.id}"
                                                name="mainImagePage"
-                                               onchange="changeMainPage(this)"/>
+                                               onchange="previewImage(this)"/>
                                     </label>
                                     <label class="form-label">
-                                        <a>
-                                            <button
-                                                    type="button"
-                                                    class="btn btn-danger"
-                                                    onclick="deleteMainImage(this)">
-                                                Удалить
-                                            </button>
-                                        </a>
                                     </label>
                                 </div>
                             </div>
@@ -127,225 +114,50 @@
                             <label>Галерея картинок</label>
                             <div class="col-12">
                                 <div class="row align-items-center" id="gallery-image">
+                                    <div class="col-3 image-item" th:each="imageNews, i : *{imagesNews}">
+                                        <div class="card text-center mb-2">
+                                            <div style="object-fit : contain" class="card-header">
+                                                <img th:src="@{*{imagesNews[__${i.index}__].url} }"
+                                                     th:id="'imageFilm' + ${i.index}"
+                                                     class="img-fluid mb-2"
+                                                     style="object-fit : cover; height: 200px">
+                                            </div>
+                                            <div class="card-body">
+                                                <input type=hidden class="form-control"
+                                                       th:field="*{imagesNews[__${i.index}__].id}">
+                                                <input type="file" class="form-control"
+                                                       th:data-image-id="'imageFilm' + ${i.index}"
+                                                       th:field="*{imagesNews[__${i.index}__].url}"
+                                                       accept="image/png, image/jpeg"
+                                                       onchange="previewImage(this)"
+                                                       multiple
+                                                />
+                                                <div class="form-group mb-1">
+                                                    <button style="width: 100%;"
+                                                            type="button"
+                                                            onclick="removeImageBlock(this, '.image-item')"
+                                                            class="btn btn-danger">
+                                                        Удалить
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 text-center">
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
                             <div th:text="${appContextPath}" hidden id="appContextPath"></div>
-                            <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
-                            <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js}"></script>
-                            <script>
-                                let appContextPath = document.getElementById("appContextPath").textContent
-                                const textarea = document.querySelectorAll('[data-autosize]');
-                                $(document).ready(function () {
-                                    showMainImage();
-                                    showAllImages();
-                                    autosize(textarea);
-                                });
-
-
-                                showMainImage = () => {
-                                    $.ajax({
-                                        url: appContextPath + '/admin/news/editNews/showMainPage/' + [[${news.id}]],
-                                        method: 'GET',
-                                        dataType: 'JSON',
-                                        success: function (result) {
-                                            console.log(result)
-                                            $('<img src="' +
-                                                (result.mainImage == null ? 'https://via.placeholder.com/250x200&text=Empty' : appContextPath + result.mainImage)
-                                                + '"' +
-                                                ' class="img-fluid"\n' +
-                                                ' id="mainImage" \n' +
-                                                ' style="max-width: 250px;' +
-                                                ' max-height: 200px;">').appendTo('#mainImageBlock');
-
-                                        },
-                                        error: function (error) {
-                                            console.log(error);
-                                        }
-                                    })
-                                }
-
-                                function changeMainPage(element) {
-                                    let file = element.files[0];
-                                    let formData = new FormData();
-                                    formData.append("file", file);
-                                    $.ajax({
-                                        url: appContextPath + '/admin/news/editNews/editMainPage/' + [[${news.id}]],
-                                        method: 'POST',
-                                        data: formData,
-                                        processData: false,
-                                        contentType: false,
-                                        success: function (result) {
-                                            console.log("Выгрузка файла прошла успешно");
-                                            let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
-                                            nearestImg.remove();
-                                            showMainImage();
-                                        },
-                                        error: function (error) {
-                                            console.error("Ошибка при загрузке файла:", error);
-                                        }
-                                    });
-                                }
-
-                                function deleteMainImage(element) {
-                                    let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
-                                    nearestImg.remove();
-                                    $.ajax({
-                                        url: appContextPath + '/admin/news/editNews/deleteMainPage/' + [[${news.id}]],
-                                        method: 'POST',
-                                        processData: false,
-                                        contentType: false,
-                                        success: function (result) {
-                                            console.log(result);
-                                            showMainImage();
-                                        },
-                                        error: function () {
-                                            console.log("Error delete mainPage")
-                                        }
-                                    })
-
-                                }
-
-                                showAllImages = () => {
-                                    $.ajax({
-                                        url: appContextPath + '/admin/news/editNews/showAllImages/' + [[${news.id}]],
-                                        method: 'GET',
-                                        dataType: 'JSON',
-                                        success: function (result) {
-                                            console.log(result);
-                                            drawImages(result)
-                                        },
-                                        error: function (error) {
-                                            console.log(error);
-                                        }
-                                    })
-                                }
-
-                                function drawImages(result) {
-                                    for (const data of result) {
-                                        $('<div class="col-3">' +
-                                            '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                                            '<img src="' + (data.url != null ? appContextPath + data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
-                                            ' id="imagePage' + data.id + '" ' +
-                                            'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                            '<label class="form-label" id="imagePageEdit' + data.id + '" style="max-width: 250px;">' +
-                                            '<input type="file" ' +
-                                            'class="form-control" ' +
-                                            'accept="image/png, image/jpeg" onchange="editImagePage(this,' + data.id + ')" multiple/>' +
-                                            '</label>' +
-                                            '<label class="form-label" style="max-width: 250px;">' +
-                                            '<button style="width: 100%;" ' +
-                                            'type="button" ' +
-                                            'class="btn btn-danger" ' +
-                                            'onclick="removeBlock(this, ' + data.id + ' )">' +
-                                            'Удалить' +
-                                            '</button>' +
-                                            '</label>' +
-                                            '</div>' +
-                                            '</div>').appendTo('#gallery-image');
-
-                                    }
-                                }
-
-                                const addBlock = () => {
-                                    $.ajax({
-                                        url: appContextPath + '/admin/news/editNews/createNewImage/' + [[${news.id}]],
-                                        method: 'GET',
-                                        dataType: 'JSON',
-                                        success: function (result) {
-                                            console.log(result)
-                                            $('<div class="col-3">' +
-                                                '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                                                '<img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"' +
-                                                ' id="imagePage"' + result.id + ' ' +
-                                                'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                                '<label class="form-label"  id="imagePageEdit' + result.id + '" style="max-width: 250px;">' +
-                                                '<input type="file" ' +
-                                                'class="form-control"' +
-                                                'accept="image/png, image/jpeg" onchange="editImagePage(this,' + result.id + ')" multiple/>' +
-                                                '</label>' +
-                                                '<label class="form-label" style="max-width: 250px;">' +
-                                                '<button style="width: 100%;" ' +
-                                                'type="button" ' +
-                                                'class="btn btn-danger" ' +
-                                                'onclick="removeBlock(this, ' + result.id + ' )">' +
-                                                'Удалить' +
-                                                '</button>' +
-                                                '</label>' +
-                                                '</div>' +
-                                                '</div>').appendTo('#gallery-image');
-                                        },
-                                        error: function (error) {
-                                            console.log("Проблема при создании файла:", error);
-                                        }
-                                    })
-                                }
-                                document.querySelector('#add-image-button').addEventListener('click', addBlock);
-
-
-                                function editImagePage(element, id) {
-                                    let file = element.files[0];
-                                    let formData = new FormData();
-                                    formData.append("file", file);
-                                    $.ajax({
-                                        url: appContextPath + '/admin/news/editNews/editImageNews/' + id,
-                                        method: 'POST',
-                                        data: formData,
-                                        processData: false,
-                                        contentType: false,
-                                        success: function (result) {
-                                            $.ajax({
-                                                url: appContextPath + '/admin/news/editNews/getImage/' + id,
-                                                method: 'GET',
-                                                success: function (result) {
-                                                    let block = $(element).closest('.col-3').find('img');
-                                                    $('<img src="' + appContextPath + result.url + '" ' +
-                                                        'id="imagePage' + result.id + '" ' +
-                                                        'class="img-fluid mb-2" ' +
-                                                        'style="max-width: 250px; max-height: 200px;">')
-                                                        .insertBefore($("#imagePageEdit" + result.id));
-                                                    block.remove();
-                                                },
-                                                error: function (error) {
-                                                    console.error("Ошибка при загрузке файла:", error);
-                                                }
-                                            });
-                                        },
-                                        error: function (error) {
-                                            console.error("Ошибка при загрузке файла:", error);
-                                        }
-                                    });
-                                }
-
-
-                                function removeBlock(element, id) {
-                                    let block = element.closest('.col-3');
-                                    block.remove();
-                                    $.ajax({
-                                        url: appContextPath + '/admin/news/editNews/deleteImage/' + id,
-                                        method: 'GET',
-                                        dataType: 'JSON',
-                                        success: function (result) {
-                                            console.log(result);
-                                        }
-                                    })
-                                }
-                            </script>
                         </div>
                         <div class="row mb-4">
                             <label class="col-sm-2 col-form-label-sm">Ссылка на видео</label>
                             <div class="col-sm-9">
                                 <label></label>
-                                    <input type="text"
-                                           placeholder="Ссылка на видео"
-                                           class="form-control form-control-sm"
-                                           th:classappend="${#fields.hasErrors('linkVideo')} ? 'is-invalid' : ''"
-                                           th:field="*{linkVideo}">
-
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('linkVideo')}"
-                                     th:errors="*{linkVideo}"></div>
+                                <input type="text"
+                                       placeholder="Ссылка на видео"
+                                       class="form-control form-control-sm"
+                                       th:field="*{linkVideo}">
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -423,6 +235,132 @@
                 </div>
             </div>
         </form>
+        <script>
+            let appContextPath = document.getElementById("appContextPath").textContent
+            const textarea = document.querySelectorAll('[data-autosize]');
+            $(document).ready(function () {
+                autosize(textarea);
+            });
+
+            document.getElementById("add-image-button").addEventListener("click", function () {
+                addNewImageItem('imagesNews');
+            });
+
+            document.addEventListener('DOMContentLoaded', function (e) {
+                let id = document.getElementById("id").value;
+                let mainImage = document.getElementById("MainImageFilm" + id).getAttribute('src') === appContextPath + '/customAssets/noImage.png';
+                let fields = {
+                    name: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите ваше имя'
+                            },
+                            regexp: {
+                                regexp: /^[а-яА-ЯёЁa-zA-Z0-9]+$/,
+                                message: 'Имя должно содержать только буквы'
+                            }
+                        }
+                    },
+                    datePosting: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите дату публикации'
+                            }
+                        }
+                    },
+                    description: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите описание'
+                            },
+                            stringLength: {
+                                min: 10,
+                                max: 1000,
+                                message: 'Описание должно содержать не менее 10 символов'
+                            }
+
+                        }
+                    },
+                    linkVideo: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите ссылку на трейлер'
+                            },
+                            regexp: {
+                                regexp: /https:\/\/youtu\.be\/([a-zA-Z0-9_-]{1,100})/,
+                                message: 'Ссылка должна быть в формате https://youtu.be/трейлер'
+                            }
+                        },
+                    },
+                    seoUrl: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите SEO URL'
+                            }
+                        }
+                    },
+                    seoTitle: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите SEO Title'
+                            }
+                        }
+                    },
+                    seoDescription: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите SEO Description'
+                            }
+                        }
+                    },
+                    seoKeywords: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите SEO Keywords'
+                            }
+                        }
+                    },
+                }
+                if (mainImage) {
+                    fields['mainImage'] = {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, выберите главное изображение'
+                            }
+                        }
+                    }
+                }
+                (function () {
+                    const formValidationExamples = document.querySelector(".needs-validation");
+                    const fv = FormValidation.formValidation(formValidationExamples, {
+                        fields,
+
+                        plugins: {
+                            trigger: new FormValidation.plugins.Trigger(),
+                            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                                eleValidClass: '',
+                                rowSelector: '.row',
+                            }),
+                            submitButton: new FormValidation.plugins.SubmitButton(),
+                            defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+                            autoFocus: new FormValidation.plugins.AutoFocus()
+                        },
+                        init: instance => {
+                            instance.on('plugins.message.placed', function (e) {
+                                if (e.element.parentElement.classList.contains('input-group')) {
+
+                                    e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                                }
+                                if (e.element.parentElement.parentElement.classList.contains('custom-option')) {
+                                    e.element.closest('.row').insertAdjacentElement('afterend', e.messageElement);
+                                }
+                            });
+                        }
+                    });
+                })();
+            });
+
+        </script>
     </div>
 </div>
 </body>

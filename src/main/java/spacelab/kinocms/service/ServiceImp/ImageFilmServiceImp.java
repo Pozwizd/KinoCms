@@ -21,26 +21,26 @@ public class ImageFilmServiceImp implements ImageFilmService {
     private static final Logger logger = LogManager.getLogger(ImageFilmServiceImp.class);
     @Override
     public void saveImageFilm(ImageFilm imageFilm) {
-        logger.info("Save image film: " + imageFilm);
+        logger.info("Save image film: {}", imageFilm);
         imageFilmRepository.save(imageFilm);
     }
 
     @Override
-    public void deleteImageFilm(Long id) {
-        logger.info("Delete image film by id: " + id);
-        imageFilmRepository.findById(id).ifPresent(imageFilm -> uploadFile.deleteFile(imageFilm.getUrl()));
-        imageFilmRepository.deleteById(id);
+    public void deleteImageFilm(ImageFilm imageFilm) {
+        logger.info("Delete image film: {}", imageFilm);
+        uploadFile.deleteFile(imageFilm.getUrl());
+        imageFilmRepository.delete(imageFilm);
     }
 
     @Override
     public ImageFilm getImageFilmById(Long id) {
-        logger.info("Get image film by id: " + id);
-        return imageFilmRepository.findById(id).orElse(null);
+        logger.info("Get image film by id: {}", id);
+        return imageFilmRepository.findById(id).orElse(new ImageFilm());
     }
 
     @Override
     public ImageFilm getLastImageFilmByFilm(Film film) {
-        logger.info("Get last image film by film: " + film);
+        logger.info("Get last image film by film: {}", film);
         return imageFilmRepository.findTopImageFilmByFilmOrderByIdDesc(film);
     }
 
@@ -52,13 +52,13 @@ public class ImageFilmServiceImp implements ImageFilmService {
 
     @Override
     public List<ImageFilm> getAllImageFilmByFilm(Film film) {
-        logger.info("Get all image films by film: " + film);
+        logger.info("Get all image films by film: {}", film);
         return imageFilmRepository.findAllImageFilmByFilm(film);
     }
 
     @Override
     public void updateImageFilm(ImageFilm imageFilm) {
-        logger.info("Update image film: " + imageFilm);
+        logger.info("Update image film: {}", imageFilm);
         imageFilmRepository.saveAndFlush(imageFilm);
     }
 

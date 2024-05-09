@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="card-body">
                                     <input type="file"
-                                           class="form-control your-class-name"
+                                           class="form-control"
                                            th:field="*{banners[__${i.index}__].pathImage}"
                                            onchange="previewImage(this)"
                                            accept="image/png, image/jpeg" size="10"/>
@@ -289,8 +289,6 @@
 
         <script>
             let appContextPath = document.getElementById("appContextPath").textContent
-
-
         </script>
 
 
@@ -328,15 +326,7 @@
                                onchange="previewImage(this)"
                         />
                         <br/>
-                        <label class="form-label">
-                            <a>
-                                <button
-                                        type="button"
-                                        class="btn btn-danger">
-                                    Удалить
-                                </button>
-                            </a>
-                        </label>
+
                     </div>
                 </div>
                 <div class="row mb-4">
@@ -414,7 +404,7 @@
                                 </div>
                                 <div class="card-body">
                                     <input type="file"
-                                           class="form-control your-class-name"
+                                           class="form-control"
                                            th:field="*{banners[__${i.index}__].pathImage}"
                                            onchange="previewImage(this)"
                                            accept="image/png, image/jpeg" size="10"/>

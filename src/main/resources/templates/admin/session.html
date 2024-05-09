@@ -361,7 +361,7 @@
                                 },
                                 error: function (error) {
 
-                                    showToast("error", "Ошибка", "Перезагрузите страницу и попробуйте ещё раз");
+                                    showToast("error", "Ошибка", "Укажите корректные значения");
 
                                     let errorArray = error.responseText.split(",").map(item => item.trim().replace(/[\[\]]/g, ''));
                                     for (let i = 0; i < errorArray.length; i++) {

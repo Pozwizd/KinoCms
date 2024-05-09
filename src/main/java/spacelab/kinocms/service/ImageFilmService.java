@@ -11,7 +11,7 @@ public interface ImageFilmService {
 
     public void saveImageFilm(ImageFilm imageFilm);
 
-    public void deleteImageFilm(Long id);
+    public void deleteImageFilm(ImageFilm imageFilm);
 
     public ImageFilm getImageFilmById(Long id);
 

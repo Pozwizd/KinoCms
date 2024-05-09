@@ -24,4 +24,6 @@ public interface PageService {
     public void updatePage(Page page);
 
     void editPage(Page page);
+
+    Long idLastPage();
 }

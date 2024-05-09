@@ -19,7 +19,7 @@ public interface ImageNewsService {
 
     List<ImageNews> getAllImagesNewsByNews(News news);
 
-    void deleteImageNews(long id);
+    void deleteImageNews(ImageNews imageNews);
 
     void updateImageNews(ImageNews imageNews);
 

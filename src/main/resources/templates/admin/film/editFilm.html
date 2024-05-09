@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="admin/template/layout.html">
+      layout:decorate="admin/template/layout.html" xmlns="http://www.w3.org/1999/html">
 
 <body>
 <div layout:fragment="content">
     <div class="container">
         <form th:method="post"
               th:object="${film}"
-              th:action="@{{id}(id=${film.id})}"
-              enctype="multipart/form-data">
+              class="needs-validation"
+              th:action="@{/admin/films/editFilm/{id}(id=${film.id})}"
+              enctype="multipart/form-data" novalidate>
             <div class="row justify-content-end">
+                <input type="hidden" th:field="*{id}" >
                 <div class="flex justify-content-end row">
                     <div class="card-header">
                         <ul class="nav nav-pills card-header-pills" role="tablist"
@@ -38,7 +40,8 @@
                                         aria-controls="navs-pills-within-card-link"
                                         aria-selected="false"
                                         disabled
-                                >English</button>
+                                >English
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -54,9 +57,9 @@
                                 <input type="text"
                                        class="form-control form-control-sm"
                                        th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
-                                       th:field="*{name}">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
-                                     th:errors="*{name}"></div>
+                                       th:field="*{name}"
+                                       pattern="[A-Za-zА-Яа-я\s]{1,50}"
+                                       required>
                             </div>
                             <label class="col-sm-2 col-form-label-sm">Период проката:</label>
                             <div class="col-sm-2">
@@ -65,11 +68,7 @@
                                        th:classappend="${#fields.hasErrors('startPremiereDate')} ? 'is-invalid' : ''"
                                        placeholder="Выберите дату"
                                        th:field="*{startPremiereDate}"
-                                       name="dateOfBirth">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('startPremiereDate')}"
-                                     >
-                                    Укажите дату начала проката
-                                </div>
+                                       name="dateOfBirth" required>
                             </div>
 
                             <div class="col-sm-2">
@@ -78,15 +77,10 @@
                                        th:classappend="${#fields.hasErrors('endPremiereDate')} ? 'is-invalid' : ''"
                                        placeholder="Введите дату рождения"
                                        th:field="*{endPremiereDate}"
-                                       name="dateOfBirth">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('endPremiereDate')}"
-                                     >
-                                    Укажите дату окончания проката
-                                </div>
+                                       name="dateOfBirth" required>
                             </div>
                         </div>
                         <div class="row mb-4">
-
 
 
                         </div>
@@ -99,45 +93,80 @@
                                               rows="3"
                                               class="form-control"
                                               th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"
-                                              th:field="*{description}">
+                                              th:field="*{description}" required>
                                     </textarea>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
-                                         th:errors="*{description}"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-4" id="mainImageBigBlock">
-                            <div class="row align-items-center">
-                                <div class="col-6" id="mainImageBlock">
+                            <div class="row align-items-center image-container">
+                                <div class="col-6 image-container" id="mainImageBlock">
                                     <label class="col-form-label col-sm-2">
                                         Главная картинка
                                     </label>
+                                    <img th:src="@{${film.mainImage == null || film.mainImage == '' ? '/customAssets/noImage.png' : film.mainImage }}"
+                                         class="img-fluid" id="mainImage"
+                                         th:id="'MainImageFilm' + ${film.id}"
+                                         style="max-width: 250px; max-height: 200px;"
+                                         alt="">
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">
                                         <input type="file"
+                                               th:field="*{mainImage}"
+                                               th:required="${film.mainImage == null}"
                                                class="form-control"
                                                accept="image/png, image/jpeg"
-                                               name="mainImagePage"
-                                               onchange="changeMainImage(this)"/>
+                                               th:data-image-id="'MainImageFilm'+${film.id}"
+                                               name="mainImage"
+                                               onchange="previewImage(this)"/>
                                     </label>
                                     <label class="form-label">
-                                        <a>
-                                            <button
-                                                    type="button"
-                                                    class="btn btn-danger"
-                                                    onclick="deleteMainImage(this)">
-                                                Удалить
-                                            </button>
-                                        </a>
+                                        <!--                                        <a>-->
+                                        <!--                                            <button-->
+                                        <!--                                                    type="button"-->
+                                        <!--                                                    class="btn btn-danger"-->
+                                        <!--                                                    onclick="">-->
+                                        <!--                                                Удалить-->
+                                        <!--                                            </button>-->
+                                        <!--                                        </a>-->
                                     </label>
                                 </div>
                             </div>
+
                         </div>
                         <div class="row mb-4">
                             <label>Галерея картинок</label>
                             <div class="col-12">
                                 <div class="row align-items-center" id="gallery-image">
+                                    <div class="col-3 image-item" th:each="imageFilm, i : *{imagesFilm}">
+                                        <div class="card text-center mb-2">
+                                            <div style="object-fit : contain" class="card-header">
+                                                <img th:src="@{*{imagesFilm[__${i.index}__].url} }"
+                                                     th:id="'imageFilm' + ${i.index}"
+                                                     class="img-fluid mb-2"
+                                                     style="object-fit : cover; height: 200px">
+                                            </div>
+                                            <div class="card-body">
+                                                <input type=hidden class="form-control"
+                                                       th:field="*{imagesFilm[__${i.index}__].id}">
+                                                <input type="file" class="form-control"
+                                                       th:data-image-id="'imageFilm' + ${i.index}"
+                                                       th:field="*{imagesFilm[__${i.index}__].url}"
+                                                       accept="image/png, image/jpeg"
+                                                       onchange="previewImage(this)"
+                                                       multiple
+                                                />
+                                                <div class="form-group mb-1">
+                                                    <button style="width: 100%;"
+                                                            type="button" onclick="removeImageBlock(this)"
+                                                            class="btn btn-danger">
+                                                        Удалить
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 text-center">
@@ -145,238 +174,38 @@
                             </div>
                             <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
                             <div th:text="${appContextPath}" hidden id="appContextPath"></div>
-                            <script>
-                                let appContextPath = document.getElementById("appContextPath").textContent
 
-                                let baseUrl = window.location.href;
-                                $(document).ready(function () {
-                                    const textarea = document.querySelectorAll('[data-autosize]');
-                                    autosize(textarea);
-                                    showMainImage();
-                                    showAllImageFilm();
-
-                                });
-
-
-                                showMainImage = () => {
-                                    $.ajax({
-                                        url: appContextPath + '/admin/films/editFilm/showMainPage/' + [[${film.id}]],
-                                        method: 'GET',
-                                        dataType: 'Text',
-                                        success: function (result) {
-                                            console.log("Успешно загружена главная обложка", result);
-                                            $('<img src="' +
-                                                (result == null || result === '' ? 'https://via.placeholder.com/250x200&text=Empty' : appContextPath + result)
-                                                + '"' +
-                                                ' class="img-fluid"\n' +
-                                                ' id="mainImage" \n' +
-                                                ' style="max-width: 250px;' +
-                                                ' max-height: 200px;">').appendTo('#mainImageBlock');
-
-                                        },
-                                        error: function (error) {
-                                            console.log('Произошла ошибка при загрузке главной обложки', error);
-                                        }
-                                    })
-                                }
-
-                                function changeMainImage(element) {
-                                    let file = element.files[0];
-                                    let formData = new FormData();
-                                    formData.append("file", file);
-                                    $.ajax({
-                                        url: appContextPath + '/admin/films/editFilm/editMainImage/' + [[${film.id}]],
-                                        method: 'POST',
-                                        data: formData,
-                                        processData: false,
-                                        contentType: false,
-                                        success: function (result) {
-                                            console.log("Успешно изменена обложки", result);
-                                            let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
-                                            nearestImg.remove();
-                                            showMainImage();
-                                        },
-                                        error: function (error) {
-                                            console.error("Ошибка при загрузке обложки", error);
-                                        }
-                                    });
-                                }
-
-                                function deleteMainImage(element) {
-                                    let nearestImg = $(element).closest('#mainImageBigBlock').find('#mainImage');
-                                    nearestImg.remove();
-                                    $.ajax({
-                                        url: appContextPath + '/admin/films/editFilm/deleteMainImage/' + [[${film.id}]],
-                                        method: 'POST',
-                                        processData: false,
-                                        contentType: false,
-                                        success: function (result) {
-                                            console.log("Успешно удалена обложка", result);
-                                            showMainImage();
-                                        },
-                                        error: function (error) {
-                                            console.log("Произошла ошибка при удалении обложки", error);
-                                        }
-                                    })
-
-                                }
-
-                                function showAllImageFilm () {
-                                    $.ajax({
-                                        url: appContextPath + '/admin/films/editFilm/showAllImageFilm/' + [[${film.id}]],
-                                        method: 'GET',
-                                        dataType: 'JSON',
-                                        success: function (result) {
-                                            console.log("Успешно загружены картинки фильма", result);
-                                            drawImagesFilm(result)
-                                        },
-                                        error: function (error) {
-                                            console.log('Произошла ошибка при загрузке картинок фильма', error);
-                                        }
-                                    })
-                                }
-
-                                // Рисуем картинки
-                                function drawImagesFilm(result) {
-                                    for (const data of result) {
-                                        $('<div class="col-3">' +
-                                            '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                                            '<img src="' + (data.url != null ? appContextPath + data.url : 'https://via.placeholder.com/250x200&text=Empty') + '"' +
-                                            ' id="imagePage' + data.id + '" ' +
-                                            'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                            '<label class="form-label" id="imagePageEdit' + data.id + '" style="max-width: 250px;">' +
-                                            '<input type="file" ' +
-                                            'class="form-control" ' +
-                                            'accept="image/png, image/jpeg" onchange="editImageFilm(this,' + data.id + ')" multiple/>' +
-                                            '</label>' +
-                                            '<label class="form-label" style="max-width: 250px;">' +
-                                            '<button style="width: 250px;" ' +
-                                            'type="button" ' +
-                                            'class="btn btn-danger" ' +
-                                            'onclick="removeBlock(this, ' + data.id + ' )">' +
-                                            'Удалить' +
-                                            '</button>' +
-                                            '</label>' +
-                                            '</div>' +
-                                            '</div>').appendTo('#gallery-image');
-                                    }
-                                }
-
-                                function addNewImageFilm () {
-                                    $.ajax({
-                                        url: appContextPath + '/admin/films/editFilm/createNewImage/' + [[${film.id}]],
-                                        method: 'GET',
-                                        dataType: 'JSON',
-                                        success: function (result) {
-                                            console.log(result)
-                                            $('<div class="col-3">' +
-                                                '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                                                '<img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"' +
-                                                ' id="imagePage"' + result.id + ' ' +
-                                                'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                                '<label class="form-label"  id="imagePageEdit' + result.id + '" style="max-width: 250px;">' +
-                                                '<input type="file" ' +
-                                                'class="form-control"' +
-                                                'accept="image/png, image/jpeg" onchange="editImageFilm(this,' + result.id + ')" multiple/>' +
-                                                '</label>' +
-                                                '<label class="form-label" style="max-width: 250px;">' +
-                                                '<button style="width: 100%;" ' +
-                                                'type="button" ' +
-                                                'class="btn btn-danger" ' +
-                                                'onclick="removeBlock(this, ' + result.id + ' )">' +
-                                                'Удалить' +
-                                                '</button>' +
-                                                '</label>' +
-                                                '</div>' +
-                                                '</div>').appendTo('#gallery-image');
-                                        }
-                                    })
-                                }
-                                document.querySelector('#add-image-button').addEventListener('click', addNewImageFilm);
-
-                                function editImageFilm(element, id) {
-                                    let file = element.files[0];
-                                    let formData = new FormData();
-                                    formData.append("file", file);
-                                    $.ajax({
-                                        url: appContextPath + '/admin/films/editFilm/editImageFilm/' + id,
-                                        method: 'POST',
-                                        data: formData,
-                                        processData: false,
-                                        contentType: false,
-                                        success: function (result) {
-                                            console.log("Успешно изменена картинка фильма", result);
-                                            $.ajax({
-                                                url: appContextPath + '/admin/films/editFilm/getImage/' + id,
-                                                method: 'GET',
-                                                success: function (result) {
-                                                    console.log("Успешно получена картинка фильма", result);
-                                                    let block = $(element).closest('.col-3').find('img');
-                                                    $('<img src="' + appContextPath +  result.url + '" ' +
-                                                        'id="imagePage' + result.id + '" ' +
-                                                        'class="img-fluid mb-2" ' +
-                                                        'style="max-width: 250px; max-height: 200px;">')
-                                                        .insertBefore($("#imagePageEdit" + result.id));
-                                                    block.remove();
-                                                },
-                                                error: function (error) {
-                                                    console.error("Ошибка при получении обновленной картинки фильма", error);
-                                                }
-                                            });
-                                        },
-                                        error: function (error) {
-                                            console.error("Ошибка при изменении картинки фильма", error);
-                                        }
-                                    });
-                                }
-
-                                function removeBlock(element, id) {
-                                    let block = element.closest('.col-3');
-                                    block.remove();
-                                        $.ajax({
-                                        url: appContextPath + '/admin/films/editFilm/deleteImage/' + id,
-                                        method: 'GET',
-                                        dataType: 'JSON',
-                                        success: function (result) {
-                                            console.log("Успешно удалена картинка фильма", result);
-                                        },
-                                        error: function (error) {
-                                            console.error("Ошибка при удалении картинки фильма", error);
-                                        }
-                                    })
-                                }
-                            </script>
                         </div>
                         <div class="row mb-4">
                             <label class="col-sm-2 col-form-label-sm">Ссылка на видео</label>
                             <div class="col-sm-9">
                                 <input type="text"
                                        class="form-control form-control-sm"
-                                       th:classappend="${#fields.hasErrors('linkTrailer')} ? 'is-invalid'"
                                        th:field="*{linkTrailer}">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('linkTrailer')}" th:errors="*{linkTrailer}"></div>
                             </div>
                         </div>
 
-                        <div class="row mb-4">
+                        <div class="row mb-4 typeFilm">
                             <label class="col-sm-2 col-form-label-sm">Тип кино</label>
                             <div class="col-sm-1">
-                                <input type="checkbox" class="form-check-input" name="filmTypes" value="Threedimensional"
-                                       th:checked="${filmTypeFilm != null && filmTypeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).Threedimensional)}">
+                                <input type="checkbox" class="" name="typeFilm[]"
+                                       value="Threedimensional"
+                                       th:checked="${film.typeFilm != null && film.typeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).Threedimensional)}">
                                 <label class="form-label ml-2">3D</label>
                             </div>
                             <div class="col-sm-1">
-                                <input type="checkbox" class="form-check-input" name="filmTypes" value="Twodimensional"
-                                       th:checked="${filmTypeFilm != null && filmTypeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).Twodimensional)}">
+                                <input type="checkbox" class="" name="typeFilm[]" value="Twodimensional"
+                                       th:checked="${film.typeFilm != null && film.typeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).Twodimensional)}">
                                 <label class="form-label ml-2"> 2D </label>
                             </div>
                             <div class="col-sm-1">
-                                <input type="checkbox" class="form-check-input" name="filmTypes" value="IMAX"
-                                       th:checked="${filmTypeFilm != null && filmTypeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).IMAX)}">
+                                <input type="checkbox" class="" name="typeFilm[]" value="IMAX"
+                                       th:checked="${film.typeFilm != null && film.typeFilm.contains(T(spacelab.kinocms.enums.TypeFilm).IMAX)}">
                                 <label class="form-label ml-2"> IMAX </label>
                             </div>
-                            <div class="invalid-feedback" th:if="${typeFilmError}">Необходимо указать хотя бы один тип кино</div>
+
                         </div>
+
                         <div class="row mb-4">
                             <div class="col-2">
                                 <label class="col-form-label-sm">SEO блок</label>
@@ -390,10 +219,8 @@
                                             <input type="text"
                                                    id="seoUrl"
                                                    class="form-control form-control-sm col-sm-8"
-                                                   th:classappend="${#fields.hasErrors('seoUrl')} ? 'is-invalid' : ''"
                                                    th:field="*{seoUrl}">
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoUrl')}"
-                                                 th:errors="*{seoUrl}"></div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -444,13 +271,14 @@
                                     </button>
                                 </div>
                                 <div class="d-grid gap-2 col-3 mx-auto mt-3">
-                                    <a type="submit" id="refreshButton" class="btn btn-outline-primary">Вернуть базовую версию
+                                    <a type="submit" id="refreshButton" class="btn btn-outline-primary">Вернуть базовую
+                                        версию
                                     </a>
                                 </div>
                                 <script>
                                     const refreshButton = document.getElementById('refreshButton');
 
-                                    refreshButton.addEventListener('click', function() {
+                                    refreshButton.addEventListener('click', function () {
                                         location.reload();
                                     });
                                 </script>
@@ -462,6 +290,188 @@
                 </div>
             </div>
         </form>
+        <script>
+            let appContextPath = document.getElementById("appContextPath").textContent
+            $(document).ready(function () {
+                const textarea = document.querySelectorAll('[data-autosize]');
+                autosize(textarea);
+            });
+
+            document.getElementById("add-image-button").addEventListener("click", function () {
+                addNewImageItem('imagesFilm');
+            });
+
+            document.addEventListener('DOMContentLoaded', function (e) {
+                let id = document.getElementById("id").value;
+                let mainImage =  document.getElementById("MainImageFilm"+id).getAttribute('src') === appContextPath+ '/customAssets/noImage.png';
+                console.log(mainImage);
+                if(mainImage){
+                    (function () {
+                        const formValidationExamples = document.querySelector(".needs-validation");
+                        const fv = FormValidation.formValidation(formValidationExamples, {
+                            fields: {
+                                newImageItem: {
+                                    validators: {
+                                        notEmpty: {
+                                            message: 'Загрузите изображение'
+                                        }
+                                    }
+                                },
+                                mainImage: {
+                                    validators: {
+                                        notEmpty: {
+                                            message: 'Загрузите изображение'
+                                        }
+                                    }
+                                },
+                            },
+                            plugins: {
+                                trigger: new FormValidation.plugins.Trigger(),
+                                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                                    eleValidClass: '',
+                                    rowSelector: '.row',
+                                }),
+                                submitButton: new FormValidation.plugins.SubmitButton(),
+                                defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+                                autoFocus: new FormValidation.plugins.AutoFocus()
+                            },
+                            init: instance => {
+                                instance.on('plugins.message.placed', function (e) {
+                                    if (e.element.parentElement.classList.contains('input-group')) {
+
+                                        e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                                    }
+                                    if (e.element.parentElement.parentElement.classList.contains('custom-option')) {
+                                        e.element.closest('.row').insertAdjacentElement('afterend', e.messageElement);
+                                    }
+                                });
+                            }
+                        });
+                    })();
+                }
+                (function () {
+                    const formValidationExamples = document.querySelector(".needs-validation");
+                    const fv = FormValidation.formValidation(formValidationExamples, {
+                        fields: {
+                            newImageItem: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Загрузите изображение'
+                                    }
+                                }
+                            },
+                            name: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите ваше имя'
+                                    },
+                                    regexp: {
+                                        regexp: /^[а-яА-ЯёЁa-zA-Z0-9]+$/,
+                                        message: 'Имя должно содержать только буквы'
+                                    }
+                                }
+                            },
+                            startPremiereDate: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите дату начала премьеры'
+                                    }
+                                }
+                            },
+                            endPremiereDate: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите дату окончания премьеры'
+                                    }
+                                }
+                            },
+                            description: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите описание'
+                                    },
+                                    stringLength: {
+                                        min: 10,
+                                        max: 1000,
+                                        message: 'Описание должно содержать не менее 10 символов'
+                                    }
+
+                                }
+                            },
+                            "typeFilm[]": {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, выберите тип кино'
+                                    }
+                                }
+                            },
+                            linkTrailer: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите ссылку на трейлер'
+                                    },
+                                    regexp: {
+                                        regexp: /https:\/\/youtu\.be\/([a-zA-Z0-9_-]{1,100})/,
+                                        message: 'Ссылка должна быть в формате https://youtu.be/трейлер'
+                                    }
+                                },
+                            },
+                            seoUrl: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO URL'
+                                    }
+                                }
+                            },
+                            seoTitle: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO Title'
+                                    }
+                                }
+                            },
+                            seoDescription: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO Description'
+                                    }
+                                }
+                            },
+                            seoKeywords: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO Keywords'
+                                    }
+                                }
+                            },
+                        },
+
+                        plugins: {
+                            trigger: new FormValidation.plugins.Trigger(),
+                            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                                eleValidClass: '',
+                                rowSelector: '.row',
+                            }),
+                            submitButton: new FormValidation.plugins.SubmitButton(),
+                            defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+                            autoFocus: new FormValidation.plugins.AutoFocus()
+                        },
+                        init: instance => {
+                            instance.on('plugins.message.placed', function (e) {
+                                if (e.element.parentElement.classList.contains('input-group')) {
+
+                                    e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                                }
+                                if (e.element.parentElement.parentElement.classList.contains('custom-option')) {
+                                    e.element.closest('.row').insertAdjacentElement('afterend', e.messageElement);
+                                }
+                            });
+                        }
+                    });
+                })();
+            });
+
+        </script>
     </div>
 </div>
 </body>

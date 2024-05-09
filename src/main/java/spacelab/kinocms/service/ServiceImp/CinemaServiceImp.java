@@ -39,7 +39,7 @@ public class CinemaServiceImp implements CinemaService {
     @Override
     public Cinema getCinema(Long id) {
         logger.info("Get cinema by id: " + id);
-        return cinemaRepository.findById(id).orElse(null);
+        return cinemaRepository.findById(id).orElse(new Cinema());
     }
 
     @Override
@@ -64,5 +64,10 @@ public class CinemaServiceImp implements CinemaService {
     public void updateCinema(Cinema cinema) {
         cinemaRepository.save(cinema);
         logger.info("Update cinema: " + cinema);
+    }
+
+    @Override
+    public Long idLastCinema() {
+        return cinemaRepository.idLastCinema();
     }
 }

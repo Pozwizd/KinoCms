@@ -91,7 +91,6 @@ public class DistributionController {
     public ModelAndView giveMailUser(@RequestParam (value = "user", required = false) List<User> users, Model model,
                                      HttpServletRequest request, HttpSession session) {
 
-        System.out.println(users);
         session.setAttribute("userList", users);
 
         return new ModelAndView("redirect:/admin/distribution");

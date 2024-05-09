@@ -21,6 +21,10 @@ import java.util.List;
 @Entity
 @Table
 public class Film {
+    public Film(Long id) {
+        this.id = id;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -33,7 +37,7 @@ public class Film {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    String mainImage;
+    private String mainImage;
 
     @OneToMany(mappedBy = "film", fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
     @JsonIgnore

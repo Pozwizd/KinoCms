@@ -44,7 +44,8 @@ public class FilmServiceImp implements FilmService {
     @Override
     public Film getFilm(Long id) {
         logger.info("Get film by id: " + id);
-        return filmRepository.findById(id).orElse(null);
+        Long maxId = filmRepository.idLastFilm();
+        return filmRepository.findById(id).orElse(new Film(maxId+1));
     }
 
     @Override
@@ -66,7 +67,13 @@ public class FilmServiceImp implements FilmService {
     @Override
     public void updateFilm(Film film) {
         logger.info("Update film: " + film);
-        filmRepository.save(film);
+        filmRepository.saveAndFlush(film);
+    }
+
+    @Override
+    public Long idLastFilm() {
+        logger.info("Get id last film");
+        return filmRepository.idLastFilm();
     }
 
     @Override

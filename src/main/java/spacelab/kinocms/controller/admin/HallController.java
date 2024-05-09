@@ -10,9 +10,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.Dto.CinemaDto;
 import spacelab.kinocms.Dto.HallDto;
+import spacelab.kinocms.Mapper.CinemaMapper;
 import spacelab.kinocms.Mapper.HallMapper;
 import spacelab.kinocms.UploadFile;
+import spacelab.kinocms.model.Cinema;
 import spacelab.kinocms.model.Hall;
 import spacelab.kinocms.model.ImagesEntity.ImageHall;
 import spacelab.kinocms.service.CinemaService;
@@ -35,6 +38,7 @@ public class HallController {
     private final ImageHallService imageHallService;
     private final UploadFile uploadFile;
     private final HallMapper hallMapper;
+    private final CinemaMapper cinemaMapper;
 
 
     @GetMapping("/editHall/{id}")
@@ -45,29 +49,72 @@ public class HallController {
 
 
     @PostMapping("/editHall/{id}")
-    public ModelAndView editHall(@RequestParam ("cinemaId") String cinemaId,
-            @Valid @ModelAttribute("hall") HallDto hall,
-            BindingResult bindingResult, Model model) {
+    public ModelAndView editHall(@Valid @ModelAttribute("hall") HallDto hallDto,
+                                 BindingResult bindingResult, Model model) {
 
-        hall.setCinema(cinemaService.getCinema(Long.parseLong(cinemaId)));
         if (bindingResult.hasErrors()) {
-            model.addAttribute("title", "Редактирование зала " + hallService.getHall(hall.getId()).getHallNumber());
+            model.addAttribute("title", "Редактирование холла " + hallDto.getHallNumber());
             model.addAttribute("pageActive", "cinema");
+            model.addAttribute("hall", hallService.getHall(hallDto.getId()));
             return new ModelAndView("admin/cinemas/hallEdit");
         }
+        if(hallDto.getImagesHall() != null) {
+            hallDto.getImagesHall().removeIf(imageCinemaDto -> imageCinemaDto.getId() == null
+                    && imageCinemaDto.getUrl().getSize() == 0);
+            if(hallDto
+                    .getImagesHall()
+                    .stream()
+                    .anyMatch(image -> !uploadFile
+                            .isAllowedImageTypeAndSize(image.getUrl()))){
+                model.addAttribute("title", "Редактирование кинотеатра " + hallDto.getCinema().getName());
+                model.addAttribute("pageActive", "cinema");
+                model.addAttribute("hall", hallService.getHall(hallDto.getId()));
+                return new ModelAndView("admin/cinemas/hallEdit");
+            }
 
-        hallService.saveHallPage(hallMapper.toEntity(hall));
+        }
+        Hall hall = hallMapper.toEntity(hallDto);
+        hallService.updateHall(hall);
         return new ModelAndView("redirect:/admin/cinema/editCinema/" + hall.getCinema().getId());
     }
 
-    @GetMapping("/createHall/{id}")
-    public ModelAndView createHall(Model model, HttpServletRequest request, @PathVariable String id) {
+    @PostMapping("/createHall/")
+    public ModelAndView createHall(@Valid @ModelAttribute("cinema") CinemaDto cinemaDto,
+                                   BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+
+            model.addAttribute("title", "Редактирование кинотеатра " + cinemaDto.getName());
+            model.addAttribute("pageActive", "cinema");
+            Cinema cinema =  cinemaService.getCinema(cinemaDto.getId());
+            cinema.setId(cinemaDto.getId());
+            model.addAttribute("cinema", cinema);
+            return new ModelAndView("admin/cinemas/cinemaEdit");
+        }
+        if(cinemaDto.getImagesCinema() != null) {
+            cinemaDto.getImagesCinema().removeIf(imageCinemaDto -> imageCinemaDto.getId() == null
+                    && imageCinemaDto.getUrl().getSize() == 0);
+            if(cinemaDto
+                    .getImagesCinema()
+                    .stream()
+                    .anyMatch(image -> !uploadFile
+                            .isAllowedImageTypeAndSize(image.getUrl()))){
+                model.addAttribute("title", "Редактирование кинотеатра " + cinemaDto.getName());
+                model.addAttribute("pageActive", "cinema");
+                model.addAttribute("cinema", cinemaService.getCinema(cinemaDto.getId()));
+                return new ModelAndView("admin/cinemas/cinemaEdit");
+            }
+
+        }
+        Cinema cinema = cinemaMapper.toEntity(cinemaDto);
+        cinemaService.updateCinema(cinema);
+
         Hall hall = new Hall();
+        hall.setId(hallService.idLastHall() + 1);
         hall.setDateCreated(Date.valueOf(LocalDate.now()));
-        hall.setCinema(cinemaService.getCinema(Long.parseLong(id)));
-        hallService.saveHall(hall);
-        String referer = request.getHeader("Referer");
-        return new ModelAndView("redirect:" + referer);
+        hall.setCinema(cinema);
+        model.addAttribute("hall", hall);
+        return new ModelAndView("admin/cinemas/hallEdit");
     }
 
     @GetMapping("/removeHall/{id}")
@@ -76,108 +123,5 @@ public class HallController {
         String referer = request.getHeader("Referer");
         return new ModelAndView("redirect:" + referer);
     }
-
-// Ajax ====================================================================
-
-    @GetMapping("/editHall/showSchemeHall/{id}")
-    @ResponseBody
-    public String showSchemeHall(Model model, @PathVariable long id) {
-        Hall hall = hallService.getHall(id);
-        return hall.getUrlSchemeImageHall();
-    }
-
-    @PostMapping("/editHall/editSchemeHall/{id}")
-    @ResponseBody
-    public ResponseEntity<String> editSchemeHall(@RequestPart("file") MultipartFile file,
-                                                 @PathVariable Long id) {
-
-
-        Hall hall = hallService.getHall(id);
-        hall.setUrlSchemeImageHall(uploadFile.uploadFile(file, hall.getUrlSchemeImageHall()));
-        hallService.saveHall(hall);
-        return ResponseEntity.ok("Файл успешно загружен");
-    }
-
-    @PostMapping("/editHall/deleteSchemeHall/{id}")
-    @ResponseBody
-    public ResponseEntity<String> deleteSchemeHall(Model model, @PathVariable long id) {
-        Hall hall = hallService.getHall(id);
-        uploadFile.deleteFile(hall.getUrlSchemeImageHall());
-        hall.setUrlSchemeImageHall(null);
-        hallService.saveHall(hall);
-        return ResponseEntity.ok("Файл успешно удален");
-    }
-
-//    TopBanner
-
-    @GetMapping("/editHall/showTopBanner/{id}")
-    @ResponseBody
-    public String showTopBannerImage(Model model, @PathVariable long id) {
-        Hall hall = hallService.getHall(id);
-        return hall.getTopBanner();
-    }
-
-    @PostMapping("/editHall/editTopBanner/{id}")
-    @ResponseBody
-    public ResponseEntity<String> editTopBanner(@RequestPart("file") MultipartFile file,
-                                                @PathVariable Long id) {
-
-        Hall hall = hallService.getHall(id);
-        hall.setTopBanner(uploadFile.uploadFile(file, hall.getTopBanner()));
-        hallService.saveHall(hall);
-        return ResponseEntity.ok("Файл успешно загружен");
-    }
-
-    @PostMapping("/editHall/deleteTopBanner/{id}")
-    @ResponseBody
-    public ResponseEntity<String> deleteTopBanner(Model model, @PathVariable long id) {
-        Hall hall = hallService.getHall(id);
-        uploadFile.deleteFile(hall.getTopBanner());
-        hall.setTopBanner(null);
-        hallService.saveHall(hall);
-        return ResponseEntity.ok("Файл успешно удален");
-    }
-
-    @GetMapping("/editHall/showAllImages/{id}")
-    @ResponseBody
-    public List<ImageHall> showAllImages(@PathVariable String id) {
-        Hall hall = hallService.getHall(Long.parseLong(id));
-        return imageHallService.getAllImageHallByHall(hall);
-    }
-
-    @GetMapping("/editHall/getImage/{id}")
-    @ResponseBody
-    public ImageHall getImage(@PathVariable String id) {
-        return imageHallService.getImageHall(Long.parseLong(id));
-    }
-
-    @GetMapping("/editHall/deleteImage/{id}")
-    @ResponseBody
-    public ResponseEntity<String> deleteImage(@PathVariable String id) {
-        imageHallService.deleteImageHall(Long.parseLong(id));
-        return ResponseEntity.ok("Image deleted successfully");
-    }
-
-    @GetMapping("/editHall/createNewImage/{id}")
-    @ResponseBody
-    public ImageHall createImageHall(@PathVariable String id) {
-        ImageHall imageHall = new ImageHall();
-        Hall hall = hallService.getHall(Long.parseLong(id));
-        imageHall.setHall(hall);
-        imageHallService.saveImageHall(imageHall);
-        return imageHallService.getLastImageHallByHall(hall);
-
-    }
-
-    @PostMapping("/editHall/editImageHall/{id}")
-    @ResponseBody
-    public ResponseEntity<String> editImageHall(@RequestPart("file") MultipartFile file,
-                                                @PathVariable Long id) {
-        ImageHall imageHall = imageHallService.getImageHall(id);
-        imageHall.setUrl(uploadFile.uploadFile(file, imageHall.getUrl()));
-        imageHallService.saveImageHall(imageHall);
-        return ResponseEntity.ok("Файл успешно загружен");
-    }
-
 
 }

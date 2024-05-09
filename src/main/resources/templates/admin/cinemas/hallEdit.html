@@ -7,11 +7,14 @@
 <div layout:fragment="content">
     <div class="container">
         <form th:method="post"
+              class="needs-validation"
               th:object="${hall}"
-              th:action="@{{id}(id=${hall.id})}"
+              th:action="@{/admin/cinema/editHall/{id}(id=${hall.id})}"
               enctype="multipart/form-data">
             <div class="row justify-content-end">
-
+                <input type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{cinema}">
+                <input type="date" th:field="*{dateCreated}" hidden>
                 <div class="flex justify-content-end row">
                     <div class="card-header">
                         <ul class="nav nav-pills card-header-pills" role="tablist"
@@ -68,67 +71,80 @@
                                             id="autosize-demo"
                                             rows="3"
                                             class="form-control"
-                                            th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"
                                             data-autosize
                                             th:field="*{description}">
                                     </textarea>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
-                                         th:errors="*{description}"></div>
+
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-4" id="SchemeHallBlock">
-                            <div class="row align-items-center">
-                                <div class="col-6" id="SchemeHallImageBlock">
+                            <div class="row align-items-center" id="SchemeHallPathBlock">
+                                <div class="col-6 image-container">
                                     <label class="col-form-label col-sm-2">
                                         Схема зала
                                     </label>
+                                    <img th:src="@{${hall.urlSchemeImageHall == null || hall.urlSchemeImageHall == ''  ? '/customAssets/noImage.png' : hall.urlSchemeImageHall }}"
+                                         class="img-fluid" id="urlSchemeImageHall"
+                                         th:id="'urlSchemeImageHall' + ${hall.id}"
+                                         style="max-width: 250px;
+                                          max-height: 200px;" alt="">
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">
                                         <input type="file"
+                                               th:field="*{urlSchemeImageHall}"
+                                               th:required="${hall.urlSchemeImageHall == null}"
                                                class="form-control"
+                                               name="topBanner"
                                                accept="image/png, image/jpeg"
-                                               name="mainImagePage"
-                                               onchange="changeSchemeHall(this)"/>
+                                               th:data-image-id="'urlSchemeImageHall'+${hall.id}"
+                                               onchange="previewImage(this)"/>
                                     </label>
                                     <label class="form-label">
-                                        <a>
-                                            <button
-                                                    type="button"
-                                                    class="btn btn-danger"
-                                                    onclick="deleteSchemeHall(this)">
-                                                Удалить
-                                            </button>
-                                        </a>
+                                        <!--                                        <a>-->
+                                        <!--                                            <button-->
+                                        <!--                                                    type="button"-->
+                                        <!--                                                    class="btn btn-danger"-->
+                                        <!--                                                    onclick="">-->
+                                        <!--                                                Удалить-->
+                                        <!--                                            </button>-->
+                                        <!--                                        </a>-->
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-4" id="topBannerBlock">
-                            <div class="row align-items-center">
-                                <div class="col-6" id="topBannerImageBlock">
+                            <div class="row align-items-center" id="topBannerPathBlock">
+                                <div class="col-6 image-container">
                                     <label class="col-form-label col-sm-2">
-                                        Верхний баннер
+                                        Фото верхнего баннера
                                     </label>
+                                    <img th:src="@{${hall.topBanner == null || hall.topBanner == ''  ? '/customAssets/noImage.png' : hall.topBanner}}"
+                                         class="img-fluid" id="topBanner"
+                                         th:id="'topBanner' + ${hall.id}"
+                                         style="max-width: 250px; max-height: 200px;" alt="">
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">
                                         <input type="file"
+                                               th:field="*{topBanner}"
+                                               th:required="${hall.topBanner == null}"
                                                class="form-control"
+                                               name="topBanner"
                                                accept="image/png, image/jpeg"
-                                               name="mainImagePage"
-                                               onchange="changeTopBanner(this)"/>
+                                               th:data-image-id="'topBanner'+${hall.id}"
+                                               onchange="previewImage(this)"/>
                                     </label>
                                     <label class="form-label">
-                                        <a>
-                                            <button
-                                                    type="button"
-                                                    class="btn btn-danger"
-                                                    onclick="deleteTopBanner(this)">
-                                                Удалить
-                                            </button>
-                                        </a>
+                                        <!--                                        <a>-->
+                                        <!--                                            <button-->
+                                        <!--                                                    type="button"-->
+                                        <!--                                                    class="btn btn-danger"-->
+                                        <!--                                                    onclick="">-->
+                                        <!--                                                Удалить-->
+                                        <!--                                            </button>-->
+                                        <!--                                        </a>-->
                                     </label>
                                 </div>
                             </div>
@@ -137,6 +153,34 @@
                             <label>Галерея картинок</label>
                             <div class="col-12">
                                 <div class="row align-items-center" id="gallery-image">
+                                    <div class="col-3 image-item" th:each="imageCinema, i : *{imagesHall}">
+                                        <div class="card text-center mb-2">
+                                            <div style="object-fit : contain" class="card-header">
+                                                <img th:src="@{*{imagesHall[__${i.index}__].url} }"
+                                                     th:id="'imageCinema' + ${i.index}"
+                                                     class="img-fluid mb-2"
+                                                     style="object-fit : cover; height: 200px">
+                                            </div>
+                                            <div class="card-body">
+                                                <input type=hidden class="form-control"
+                                                       th:field="*{imagesHall[__${i.index}__].id}">
+                                                <input type="file" class="form-control"
+                                                       th:data-image-id="'imageCinema' + ${i.index}"
+                                                       th:field="*{imagesHall[__${i.index}__].url}"
+                                                       accept="image/png, image/jpeg"
+                                                       onchange="previewImage(this)"
+                                                       multiple
+                                                />
+                                                <div class="form-group mb-1">
+                                                    <button style="width: 100%;"
+                                                            type="button" onclick="removeImageBlock(this)"
+                                                            class="btn btn-danger">
+                                                        Удалить
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 text-center">
@@ -171,8 +215,6 @@
                                                    class="form-control"
                                                    th:classappend="${#fields.hasErrors('seoTitle')} ? 'is-invalid' : ''"
                                                    th:field="*{seoTitle}">
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoTitle')}"
-                                                 th:errors="*{seoTitle}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -182,10 +224,8 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoKeywords"
                                                    class="form-control"
-                                                   th:classappend="${#fields.hasErrors('seoKeywords')} ? 'is-invalid' : ''"
                                                    th:field="*{seoKeywords}">
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoKeywords')}"
-                                                 th:errors="*{seoKeywords}"></div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -196,12 +236,9 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoDescription"
                                                    class="form-control"
-                                                   th:classappend="${#fields.hasErrors('seoDescription')} ? 'is-invalid' : ''"
                                                    th:field="*{seoDescription}">
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoDescription')}"
-                                                 th:errors="*{seoDescription}"></div>
+
                                         </div>
-                                        <input hidden="hidden" name="cinemaId" th:value="*{cinema.id}">
                                     </div>
                                 </div>
                             </div>
@@ -223,261 +260,176 @@
             let baseUrl = window.location.href;
 
             $(document).ready(function () {
-                showSchemeHall();
-                showTopBanner();
-                showAllImages();
+                const textarea = document.querySelectorAll('[data-autosize]');
+                autosize(textarea);
             });
-            // Logo
-            function showSchemeHall ()  {
-                $.ajax({
-                    url: appContextPath + '/admin/cinema/editHall/showSchemeHall/' + [[${hall.id}]],
-                    method: 'GET',
-                    dataType: 'Text',
-                    success: function (result) {
-                        console.log("Лого должно успешно отобразиться")
-                        $('<img src="' +
-                            (result == null|| result === ""  ? 'https://via.placeholder.com/250x200.png?text=Нет+Изображения' : appContextPath  + result)
-                            + '"' +
-                            ' class="img-fluid"\n' +
-                            ' id="SchemeHallImage" \n' +
-                            ' style="max-width: 250px;' +
-                            ' max-height: 200px;">').appendTo('#SchemeHallImageBlock');
-                    },
-                    error: function () {
-                        console.log('error logo');
-                    }
-                })
-            }
 
-            function changeSchemeHall(element) {
-                let file = element.files[0];
-                let formData = new FormData();
-                formData.append("file", file);
-                $.ajax({
-                    url: appContextPath + '/admin/cinema/editHall/editSchemeHall/' + [[${hall.id}]],
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (result) {
-                        let nearestImg = $(element).closest('#SchemeHallBlock').find('#SchemeHallImage');
-                        nearestImg.remove();
-                        showSchemeHall();
-                    },
-                    error: function (error) {
-                        console.error("Ошибка при загрузке лого:", error);
-                    }
-                });
-            }
+            document.getElementById("add-image-button").addEventListener("click", function() {
+                addNewImageItem('imagesHall');
+            });
 
-            function deleteSchemeHall(element) {
-                let nearestImg = $(element).closest('#SchemeHallBlock').find('#SchemeHallImage');
-                nearestImg.remove();
-                let url = baseUrl + '/deleteLogoPath/'
-                $.ajax({
-                    url: appContextPath + '/admin/cinema/editHall/deleteSchemeHall/' + [[${hall.id}]],
-                    method: 'POST',
-                    processData: false,
-                    contentType: false,
-                    success: function (result) {
-                        showSchemeHall();
-                        console.log("Удаление лого прошло успешно", result);
-                    },
-                    error: function () {
-                        console.log("Ошибка удаления лого")
-                    }
-                })
-            }
-
-            // TopBanner
-
-            showTopBanner = () => {
-                let url = baseUrl + '/showTopBanner/';
-                $.ajax({
-                    url: appContextPath + '/admin/cinema/editHall/showTopBanner/' + [[${hall.id}]],
-                    method: 'GET',
-                    dataType: 'Text',
-                    success: function (result) {
-                        console.log("Лого должно успешно отобразиться")
-                        $('<img src="' +
-                            (result == null|| result === "" ? 'https://via.placeholder.com/250x200.png?text=Нет+Изображения' : appContextPath  + result)
-                            + '"' +
-                            ' class="img-fluid"\n' +
-                            ' id="topBannerImage" \n' +
-                            ' style="max-width: 250px;' +
-                            ' max-height: 200px;">').appendTo('#topBannerImageBlock');
-                    },
-                    error: function () {
-                        console.log('error logo');
-                    }
-                })
-            }
-
-            function changeTopBanner(element) {
-                let file = element.files[0];
-                let formData = new FormData();
-                formData.append("file", file);
-                $.ajax({
-                    url: appContextPath + '/admin/cinema/editHall/editTopBanner/' + [[${hall.id}]],
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (result) {
-                        console.log("Изменение лого успешно");
-                        let nearestImg = $(element).closest('#topBannerBlock').find('#topBannerImage');
-                        nearestImg.remove();
-                        showTopBanner();
-                    },
-                    error: function (error) {
-                        console.error("Ошибка при загрузке лого:", error);
-                    }
-                });
-            }
-
-            function deleteTopBanner(element) {
-                let nearestImg = $(element).closest('#topBannerBlock').find('#topBannerImage');
-                nearestImg.remove();
-                let url = baseUrl + '/deleteTopBanner/'
-                $.ajax({
-                    url: appContextPath + '/admin/cinema/editHall/deleteTopBanner/' + [[${hall.id}]],
-                    method: 'POST',
-                    processData: false,
-                    contentType: false,
-                    success: function (result) {
-                        showTopBanner();
-                        console.log("Удаление лого прошло успешно", result);
-                    },
-                    error: function () {
-                        console.log("Ошибка удаления лого")
-                    }
-                })
-            }
-
-            showAllImages = () => {
-                let url = baseUrl + '/showAllImages/';
-                $.ajax({
-                    url: appContextPath + '/admin/cinema/editHall/showAllImages/' + [[${hall.id}]],
-                    method: 'GET',
-                    dataType: 'JSON',
-                    success: function (result) {
-                        console.log(result);
-                        drawImages(result)
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                })
-            }
-
-            function drawImages(result) {
-                for (const data of result) {
-                    $('<div class="col-3">' +
-                        '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                        '<img src="' +
-                        (data.url == null || data.url === ""  ? 'https://via.placeholder.com/250x200.png?text=Нет+Изображения' : appContextPath  + data.url)
-                        + '"' +
-                        ' id="imagePage' + data.id + '" ' +
-                        'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                        '<label class="form-label" id="imagePageEdit' + data.id + '" style="max-width: 250px;">' +
-                        '<input type="file" ' +
-                        'class="form-control" ' +
-                        'accept="image/png, image/jpeg" onchange="editImagePage(this,' + data.id + ')" multiple/>' +
-                        '</label>' +
-                        '<label class="form-label" style="max-width: 250px;">' +
-                        '<button style="width: 250px;" ' +
-                        'type="button" ' +
-                        'class="btn btn-danger" ' +
-                        'onclick="removeBlock(this, ' + data.id + ' )">' +
-                        'Удалить' +
-                        '</button>' +
-                        '</label>' +
-                        '</div>' +
-                        '</div>').appendTo('#gallery-image');
-
-                }
-            }
-
-            const addBlock = () => {
-                let index;
-                let url = baseUrl + '/createNewImage/' + [[${hall.id}]]
-                $.ajax({
-                    url: appContextPath + '/admin/cinema/editHall/createNewImage/' + [[${hall.id}]],
-                    method: 'GET',
-                    dataType: 'JSON',
-                    success: function (result) {
-                        $('<div class="col-3">' +
-                            '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                            '<img src="https://via.placeholder.com/250x200.png?text=Нет+Изображения"' +
-                            ' id="imagePage"' + result.id + ' ' +
-                            'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                            '<label class="form-label"  id="imagePageEdit' + result.id + '" style="max-width: 250px;">' +
-                            '<input type="file" ' +
-                            'class="form-control"' +
-                            'accept="image/png, image/jpeg" onchange="editImagePage(this,' + result.id + ')" multiple/>' +
-                            '</label>' +
-                            '<label class="form-label" style="max-width: 250px;">' +
-                            '<button style="width: 100%;" ' +
-                            'type="button" ' +
-                            'class="btn btn-danger" ' +
-                            'onclick="removeBlock(this, ' + result.id + ' )">' +
-                            'Удалить' +
-                            '</button>' +
-                            '</label>' +
-                            '</div>' +
-                            '</div>').appendTo('#gallery-image');
-                    }
-                })
-            }
-            document.querySelector('#add-image-button').addEventListener('click', addBlock);
-
-            // Изменяем картинку
-            function editImagePage(element, id) {
-                let file = element.files[0];
-                let formData = new FormData();
-                formData.append("file", file);
-                let url = baseUrl + '/editImageHall/' + id;
-                $.ajax({
-                    url: appContextPath + '/admin/cinema/editHall/editImageHall/' + id,
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (result) {
-                        let url2 = baseUrl + '/getImage/' + id;
-                        $.ajax({
-                            url: appContextPath + '/admin/cinema/editHall/getImage/' + id,
-                            method: 'GET',
-                            success: function (result) {
-                                let block = $(element).closest('.col-3').find('img');
-                                $('<img src="'+ appContextPath + result.url + '" ' +
-                                    'id="imagePage' + result.id + '" ' +
-                                    'class="img-fluid mb-2" ' +
-                                    'style="max-width: 250px; max-height: 200px;">')
-                                    .insertBefore($("#imagePageEdit" + result.id));
-                                block.remove();
+            document.addEventListener('DOMContentLoaded', function (e) {
+                let id = [[${hall.id}]];
+                let topBanner =  document.getElementById("topBanner"+id).getAttribute('src') === appContextPath+ '/customAssets/noImage.png';
+                let urlSchemeImageHall =  document.getElementById("urlSchemeImageHall"+id).getAttribute('src') === appContextPath+ '/customAssets/noImage.png';
+                console.log(topBanner);
+                if(topBanner){
+                    (function () {
+                        const formValidationExamples = document.querySelector(".needs-validation");
+                        const fv = FormValidation.formValidation(formValidationExamples, {
+                            fields: {
+                                topBanner: {
+                                    validators: {
+                                        notEmpty: {
+                                            message: 'Загрузите изображение'
+                                        }
+                                    }
+                                },
                             },
-                            error: function (error) {
-                                console.error("Ошибка при загрузке файла:", error);
+                            plugins: {
+                                trigger: new FormValidation.plugins.Trigger(),
+                                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                                    eleValidClass: '',
+                                    rowSelector: '.row',
+                                }),
+                                submitButton: new FormValidation.plugins.SubmitButton(),
+                                defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+                                autoFocus: new FormValidation.plugins.AutoFocus()
+                            },
+                            init: instance => {
+                                instance.on('plugins.message.placed', function (e) {
+                                    if (e.element.parentElement.classList.contains('input-group')) {
+
+                                        e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                                    }
+                                    if (e.element.parentElement.parentElement.classList.contains('custom-option')) {
+                                        e.element.closest('.row').insertAdjacentElement('afterend', e.messageElement);
+                                    }
+                                });
                             }
                         });
-                    },
-                    error: function (error) {
-                        console.error("Ошибка при загрузке файла:", error);
-                    }
-                });
-            }
+                    })();
+                }
+                if(urlSchemeImageHall){
+                    (function () {
+                        const formValidationExamples = document.querySelector(".needs-validation");
+                        const fv = FormValidation.formValidation(formValidationExamples, {
+                            fields: {
+                                urlSchemeImageHall: {
+                                    validators: {
+                                        notEmpty: {
+                                            message: 'Загрузите изображение'
+                                        }
+                                    }
+                                },
+                            },
+                            plugins: {
+                                trigger: new FormValidation.plugins.Trigger(),
+                                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                                    eleValidClass: '',
+                                    rowSelector: '.row',
+                                }),
+                                submitButton: new FormValidation.plugins.SubmitButton(),
+                                defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+                                autoFocus: new FormValidation.plugins.AutoFocus()
+                            },
+                            init: instance => {
+                                instance.on('plugins.message.placed', function (e) {
+                                    if (e.element.parentElement.classList.contains('input-group')) {
 
-            function removeBlock(element, id) {
-                let block = element.closest('.col-3');
-                block.remove();
-                $.ajax({
-                    url: appContextPath + '/admin/cinema/editHall/deleteImage/' + id,
-                    method: 'GET',
-                    success: function (result) {
-                    }
-                })
-            }
+                                        e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                                    }
+                                    if (e.element.parentElement.parentElement.classList.contains('custom-option')) {
+                                        e.element.closest('.row').insertAdjacentElement('afterend', e.messageElement);
+                                    }
+                                });
+                            }
+                        });
+                    })();
+                }
+                (function () {
+                    const formValidationExamples = document.querySelector(".needs-validation");
+                    const fv = FormValidation.formValidation(formValidationExamples, {
+                        fields: {
+                            hallNumber: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите ваше имя'
+                                    },
+                                    regexp: {
+                                        regexp: /^[а-яА-ЯёЁa-zA-Z0-9]+$/,
+                                        message: 'Имя должно содержать только буквы'
+                                    }
+                                }
+                            },
+                            description: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите описание'
+                                    },
+                                    stringLength: {
+                                        min: 10,
+                                        max: 1000,
+                                        message: 'Описание должно содержать не менее 10 символов'
+                                    }
+
+                                }
+                            },
+                            seoUrl: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO URL'
+                                    }
+                                }
+                            },
+                            seoTitle: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO Title'
+                                    }
+                                }
+                            },
+                            seoDescription: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO Description'
+                                    }
+                                }
+                            },
+                            seoKeywords: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO Keywords'
+                                    }
+                                }
+                            },
+                        },
+
+                        plugins: {
+                            trigger: new FormValidation.plugins.Trigger(),
+                            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                                eleValidClass: '',
+                                rowSelector: '.row',
+                            }),
+                            submitButton: new FormValidation.plugins.SubmitButton(),
+                            defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+                            autoFocus: new FormValidation.plugins.AutoFocus()
+                        },
+                        init: instance => {
+                            instance.on('plugins.message.placed', function (e) {
+                                if (e.element.parentElement.classList.contains('input-group')) {
+
+                                    e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                                }
+                                if (e.element.parentElement.parentElement.classList.contains('custom-option')) {
+                                    e.element.closest('.row').insertAdjacentElement('afterend', e.messageElement);
+                                }
+                            });
+                        }
+                    });
+                })();
+            });
+
         </script>
     </div>
 

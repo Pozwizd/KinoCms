@@ -15,4 +15,6 @@ public interface NewsService {
     void deleteNews(long id);
 
     void updateNews(News news);
+
+    Long idLastFilm();
 }

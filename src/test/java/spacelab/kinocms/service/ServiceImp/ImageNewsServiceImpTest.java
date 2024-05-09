@@ -93,8 +93,10 @@ class ImageNewsServiceImpTest {
     @Test
     public void deleteImageNewsTest() {
         long imageNewsId = 1L;
-        imageNewsService.deleteImageNews(imageNewsId);
-        verify(imageNewsRepository).deleteById(imageNewsId);
+        ImageNews imageNews = new ImageNews();
+        imageNews.setId(imageNewsId);
+        imageNewsService.deleteImageNews(imageNews);
+        verify(imageNewsRepository).delete(imageNews);
     }
 
     @Test

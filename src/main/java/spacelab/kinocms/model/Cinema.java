@@ -32,7 +32,7 @@ public class Cinema {
     @Column(columnDefinition = "TEXT")
     String conditions;
     @Column
-    String logoPath;
+    private String logoPath;
     @Column
     private String topBanner;
 

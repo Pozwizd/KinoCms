@@ -78,7 +78,9 @@ class ImageStockServiceImpTest {
     @Test
     void deleteImageStockTest() {
         long id = 1L;
-        imageStockService.deleteImageStock(id);
+        ImageStock imageStock = new ImageStock();
+        imageStock.setId(id);
+        imageStockService.deleteImageStock(imageStock);
         verify(imageStockRepository, times(1)).deleteById(id);
     }
 

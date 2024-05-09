@@ -15,6 +15,7 @@ public interface FilmService {
     public void deleteFilm(Long id);
     public List<Film> getAllFilms();
     public void updateFilm(Film film);
+    public Long idLastFilm();
 
     int[] countFilmsMonth();
 }

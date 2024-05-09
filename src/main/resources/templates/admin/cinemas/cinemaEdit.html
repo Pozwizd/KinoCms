@@ -7,10 +7,12 @@
 <div layout:fragment="content">
     <div class="container">
         <form th:method="post"
+              id="myForm"
+              class="needs-validation"
               th:object="${cinema}"
-              th:action="@{{id}(id=${cinema.id})}"
-              enctype="multipart/form-data">
+              enctype="multipart/form-data" novalidate>
             <div class="row justify-content-end">
+                <input type="hidden" th:field="*{id}" >
                 <div class="flex justify-content-end row">
                     <div class="card-header">
                         <ul class="nav nav-pills card-header-pills" role="tablist"
@@ -52,10 +54,8 @@
                             <div class="col-sm-5">
                                 <input type="text"
                                        class="form-control form-control-sm"
-                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                                       required
                                        th:field="*{name}">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
-                                     th:errors="*{name}"></div>
                             </div>
                         </div>
 
@@ -65,13 +65,12 @@
                                 <div class="card-body">
                                     <textarea
                                             class="form-control"
-                                            th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"
                                             data-autosize
                                             rows="3"
+                                            required
+                                            pattern="[А-Яа-я]{3,}"
                                             th:field="*{description}">
                                     </textarea>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
-                                         th:errors="*{description}"></div>
                                 </div>
                             </div>
                         </div>
@@ -82,350 +81,119 @@
                                     <textarea data-autosize
                                               rows="3"
                                               class="form-control"
-                                              th:classappend="${#fields.hasErrors('conditions')} ? 'is-invalid' : ''"
                                               th:field="*{conditions}">
                                     </textarea>
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('conditions')}"
-                                         th:errors="*{conditions}"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-4" id="logoBlock">
                             <div class="row align-items-center">
-                                <div class="col-6" id="logoImageBlock">
+                                <div class="col-6 image-container" id="logoPathBlock">
                                     <label class="col-form-label col-sm-2">
                                         Логотип
                                     </label>
+                                    <img th:src="@{${cinema.logoPath == null || cinema.logoPath == '' ? '/customAssets/noImage.png' : cinema.logoPath}}"
+                                         class="img-fluid" id="logoPath"
+                                         th:id="'logoPath' + ${cinema.id}"
+                                         style="max-width: 250px; max-height: 200px;" alt="">
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">
                                         <input type="file"
+                                               th:field="*{logoPath}"
                                                class="form-control"
                                                accept="image/png, image/jpeg"
+                                               th:data-image-id="'logoPath'+${cinema.id}"
                                                name="mainImagePage"
-                                               onchange="changeLogo(this)"/>
+                                               onchange="previewImage(this)"/>
                                     </label>
                                     <label class="form-label">
-                                        <a>
-                                            <button
-                                                    type="button"
-                                                    class="btn btn-danger"
-                                                    onclick="deleteLogo(this)">
-                                                Удалить
-                                            </button>
-                                        </a>
+                                        <!--                                        <a>-->
+                                        <!--                                            <button-->
+                                        <!--                                                    type="button"-->
+                                        <!--                                                    class="btn btn-danger"-->
+                                        <!--                                                    onclick="">-->
+                                        <!--                                                Удалить-->
+                                        <!--                                            </button>-->
+                                        <!--                                        </a>-->
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-4" id="topBannerBlock">
-                            <div class="row align-items-center">
-                                <div class="col-6" id="topBannerImageBlock">
+                            <div class="row align-items-center" id="topBannerPathBlock">
+                                <div class="col-6 image-container">
                                     <label class="col-form-label col-sm-2">
                                         Фото верхнего баннера
                                     </label>
+                                    <img th:src="@{${cinema.topBanner == null || cinema.topBanner == '' ? '/customAssets/noImage.png': cinema.topBanner }}"
+                                         class="img-fluid" id="topBanner"
+                                         th:id="'topBanner' + ${cinema.id}"
+                                         style="max-width: 250px;
+                                          max-height: 200px;" alt="">
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">
                                         <input type="file"
+                                               th:field="*{topBanner}"
                                                class="form-control"
+                                               name="topBanner"
                                                accept="image/png, image/jpeg"
-                                               name="mainImagePage"
-                                               onchange="changeTopBanner(this)"/>
+                                               th:data-image-id="'topBanner'+${cinema.id}"
+                                               onchange="previewImage(this)"/>
                                     </label>
                                     <label class="form-label">
-                                        <a>
-                                            <button
-                                                    type="button"
-                                                    class="btn btn-danger"
-                                                    onclick="deleteTopBanner(this)">
-                                                Удалить
-                                            </button>
-                                        </a>
+                                        <!--                                        <a>-->
+                                        <!--                                            <button-->
+                                        <!--                                                    type="button"-->
+                                        <!--                                                    class="btn btn-danger"-->
+                                        <!--                                                    onclick="">-->
+                                        <!--                                                Удалить-->
+                                        <!--                                            </button>-->
+                                        <!--                                        </a>-->
                                     </label>
                                 </div>
                             </div>
                         </div>
+
                         <div class="row mb-4">
                             <label>Галерея картинок</label>
                             <div class="col-12">
                                 <div class="row align-items-center" id="gallery-image">
+                                    <div class="col-3 image-item" th:each="imageCinema, i : *{imagesCinema}">
+                                        <div class="card text-center mb-2">
+                                            <div style="object-fit : contain" class="card-header">
+                                                <img th:src="@{*{imagesCinema[__${i.index}__].url} }"
+                                                     th:id="'imageCinema' + ${i.index}"
+                                                     class="img-fluid mb-2"
+                                                     style="object-fit : cover; height: 200px">
+                                            </div>
+                                            <div class="card-body">
+                                                <input type=hidden class="form-control"
+                                                       th:field="*{imagesCinema[__${i.index}__].id}">
+                                                <input type="file" class="form-control"
+                                                       th:data-image-id="'imageCinema' + ${i.index}"
+                                                       th:field="*{imagesCinema[__${i.index}__].url}"
+                                                       accept="image/png, image/jpeg"
+                                                       onchange="previewImage(this)"
+                                                       multiple
+                                                />
+                                                <div class="form-group mb-1">
+                                                    <button style="width: 100%;"
+                                                            type="button" onclick="removeImageBlock(this)"
+                                                            class="btn btn-danger">
+                                                        Удалить
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 text-center">
                                 <button type="button" id="add-image-button" class="btn btn-primary">Добавить</button>
                             </div>
                             <div th:text="${appContextPath}" hidden id="appContextPath"></div>
-                            <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
-
-                            <script>
-                                let appContextPath = document.getElementById("appContextPath").textContent
-
-                                $(document).ready(function () {
-                                    const textarea = document.querySelectorAll('[data-autosize]');
-                                    autosize(textarea);
-
-                                    showAllImagesCinema();
-                                    showLogoCinema();
-                                    showTopBanner();
-
-                                });
-
-
-                                function showLogoCinema () {
-                                    $.ajax({
-                                        url: appContextPath + '/admin/cinema/editCinema/showLogoCinemaPath/' + [[${cinema.id}]],
-                                        method: 'GET',
-                                        dataType: "Text",
-                                        success: function (result) {
-                                            console.log("Успешно загружен логотип кинотеатра", result)
-                                            $('<img src="' +
-                                                (result == null || result === "" ? 'https://via.placeholder.com/250x200.png?text=Нет+Изображения' : appContextPath + result)
-                                                + '"' +
-                                                ' class="img-fluid"\n' +
-                                                ' id="logoImage" \n' +
-                                                ' style="max-width: 250px;' +
-                                                ' max-height: 200px;">').appendTo('#logoImageBlock');
-                                        },
-                                        error: function (result) {
-                                            console.log("Ошибка при загрузке логотипа кинотеатра", result)
-                                        }
-                                    })
-                                }
-
-                                function changeLogo(element) {
-                                    let file = element.files[0];
-                                    let formData = new FormData();
-                                    formData.append("file", file);
-                                    $.ajax({
-                                        url: appContextPath + '/admin/cinema/editCinema/editLogoPath/' + [[${cinema.id}]],
-                                        method: 'POST',
-                                        data: formData,
-                                        processData: false,
-                                        contentType: false,
-                                        success: function (result) {
-                                            console.log("Изменение лого успешно");
-                                            let nearestImg = $(element).closest('#logoBlock').find('#logoImage');
-                                            nearestImg.remove();
-                                            showLogoCinema();
-                                        },
-                                        error: function (error) {
-                                            console.error("Ошибка при загрузке лого:", error);
-                                        }
-                                    });
-                                }
-
-                                function deleteLogo(element) {
-                                    let nearestImg = $(element).closest('#logoBlock').find('#logoImage');
-                                    nearestImg.remove();
-                                    $.ajax({
-                                        url: appContextPath + '/admin/cinema/editCinema/deleteLogoPath/' + [[${cinema.id}]],
-                                        method: 'POST',
-                                        processData: false,
-                                        contentType: false,
-                                        success: function (result) {
-                                            showLogoCinema();
-                                            console.log("Удаление лого прошло успешно", result);
-                                        },
-                                        error: function () {
-                                            console.log("Ошибка удаления лого")
-                                        }
-                                    })
-                                }
-
-                                // TopBanner
-
-                                function showTopBanner () {
-                                    $.ajax({
-                                        url: appContextPath + '/admin/cinema/editCinema/showTopBanner/' + [[${cinema.id}]],
-                                        method: 'GET',
-                                        dataType: 'Text',
-                                        success: function (result) {
-                                            console.log("Лого должно успешно отобразиться")
-                                            $('<img src="' +
-                                                (result == null || result === "" ? 'https://via.placeholder.com/250x200.png?text=Нет+Изображения' : appContextPath + result)
-                                                + '"' +
-                                                ' class="img-fluid"\n' +
-                                                ' id="topBannerImage" \n' +
-                                                ' style="max-width: 250px;' +
-                                                ' max-height: 200px;">').appendTo('#topBannerImageBlock');
-                                        },
-                                        error: function () {
-                                            console.log('error logo');
-                                        }
-                                    })
-                                }
-
-                                function changeTopBanner(element) {
-                                    let file = element.files[0];
-                                    let formData = new FormData();
-                                    formData.append("file", file);
-                                    $.ajax({
-                                        url: appContextPath + '/admin/cinema/editCinema/editTopBanner/' + [[${cinema.id}]],
-                                        method: 'POST',
-                                        data: formData,
-                                        processData: false,
-                                        contentType: false,
-                                        success: function (result) {
-                                            console.log("Изменение лого успешно");
-                                            let nearestImg = $(element).closest('#topBannerBlock').find('#topBannerImage');
-                                            nearestImg.remove();
-                                            showTopBanner();
-                                        },
-                                        error: function (error) {
-                                            console.error("Ошибка при загрузке лого:", error);
-                                        }
-                                    });
-                                }
-
-                                function deleteTopBanner(element) {
-                                    let nearestImg = $(element).closest('#topBannerBlock').find('#topBannerImage');
-                                    nearestImg.remove();
-                                    $.ajax({
-                                        url: appContextPath + '/admin/cinema/editCinema/deleteTopBanner/' + [[${cinema.id}]],
-                                        method: 'POST',
-                                        processData: false,
-                                        contentType: false,
-                                        success: function (result) {
-                                            showTopBanner();
-                                            console.log("Удаление лого прошло успешно", result);
-                                        },
-                                        error: function () {
-                                            console.log("Ошибка удаления лого")
-                                        }
-                                    })
-                                }
-
-                                function showAllImagesCinema () {
-                                    $.ajax({
-                                        url: appContextPath + '/admin/cinema/editCinema/showAllImagesCinema/' + [[${cinema.id}]],
-                                        method: 'GET',
-                                        dataType: 'JSON',
-                                        success: function (result) {
-                                            console.log("All image");
-                                            drawImages(result)
-                                        },
-                                        error: function (error) {
-                                            console.log("Картинки не отображается");
-                                        }
-                                    })
-                                }
-
-                                function drawImages(result) {
-                                    for (const data of result) {
-                                        $('<div class="col-3">' +
-                                            '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                                            '<img src="' + (data.url != null ? appContextPath  + data.url : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '"' +
-                                            ' id="imagePage' + data.id + '" ' +
-                                            'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                            '<label class="form-label" id="imagePageEdit' + data.id + '" style="max-width: 250px;">' +
-                                            '<input type="file" ' +
-                                            'class="form-control" ' +
-                                            'accept="image/png, image/jpeg" onchange="editImageCinema(this,' + data.id + ')" multiple/>' +
-                                            '</label>' +
-                                            '<label class="form-label" style="max-width: 250px;">' +
-                                            '<button style="width: 100%;" ' +
-                                            'type="button" ' +
-                                            'class="btn btn-danger" ' +
-                                            'onclick="removeImageCinema(this, ' + data.id + ' )">' +
-                                            'Удалить' +
-                                            '</button>' +
-                                            '</label>' +
-                                            '</div>' +
-                                            '</div>').appendTo('#gallery-image');
-
-                                    }
-                                }
-
-                                function addNewImageCinema () {
-                                    $.ajax({
-                                        url: appContextPath + '/admin/cinema/editCinema/createNewImage/' + [[${cinema.id}]],
-                                        method: 'GET',
-                                        dataType: 'JSON',
-                                        success: function (result) {
-                                            console.log('Успешно создана новая картинка кинотеатра', result);
-                                            $('<div class="col-3">' +
-                                                '<div class="d-flex flex-column" style="max-width: 100%;">' +
-                                                '<img src="' + (result.url != null ? appContextPath + result.url : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '"' +
-                                                ' id="imagePage' + result.id + '" ' +
-                                                'class="img-fluid mb-2" style="max-width: 250px; max-height: 200px;">' +
-                                                '<label class="form-label"  id="imagePageEdit' + result.id + '" style="max-width: 250px;">' +
-                                                '<input type="file" ' +
-                                                'class="form-control"' +
-                                                'accept="image/png, image/jpeg" onchange="editImageCinema(this,' + result.id + ')" multiple/>' +
-                                                '</label>' +
-                                                '<label class="form-label" style="max-width: 250px;">' +
-                                                '<button style="width: 250px;" ' +
-                                                'type="button" ' +
-                                                'class="btn btn-danger" ' +
-                                                'onclick="removeImageCinema(this, ' + result.id + ' )">' +
-                                                'Удалить' +
-                                                '</button>' +
-                                                '</label>' +
-                                                '</div>' +
-                                                '</div>').appendTo('#gallery-image');
-                                        },
-                                        error: function (error) {
-                                            console.log('Не удалось создать новую картинку кинотеатра', error);
-                                        }
-                                    })
-                                }
-                                document.querySelector('#add-image-button').addEventListener('click', addNewImageCinema);
-
-                                function editImageCinema(element, id) {
-                                    let file = element.files[0];
-                                    let formData = new FormData();
-                                    formData.append("file", file);
-                                    $.ajax({
-                                        url: appContextPath + '/admin/cinema/editCinema/editImageCinema/' + id,
-                                        method: 'POST',
-                                        data: formData,
-                                        processData: false,
-                                        contentType: false,
-                                        success: function (result) {
-                                            console.log("Успешно изменено изображение кинотеатра", result);
-                                            $.ajax({
-                                                url: appContextPath + '/admin/cinema/editCinema/getImageCinema/' + id,
-                                                method: 'GET',
-                                                success: function (result) {
-                                                    console.log("Загрузка обновленного изображения кинотеатра прошла успешно:", result);
-                                                    let block = $(element).closest('.col-3').find('img');
-                                                    $('<img src="' + (result.url != null ? appContextPath + result.url : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения') + '"' +
-                                                        ' id="imagePage' + result.id + '" ' +
-                                                        'class="img-fluid mb-2" ' +
-                                                        'style="max-width: 250px; max-height: 200px;">')
-                                                        .insertBefore($("#imagePageEdit" + result.id));
-                                                    block.remove();
-                                                },
-                                                error: function (error) {
-                                                    console.error("Ошибка при изменении обновленного изображения кинотеатра:", error);
-                                                }
-                                            });
-                                        },
-                                        error: function (error) {
-                                            console.error("Ошибка при изменении изображения кинотеатра:", error);
-                                        }
-                                    });
-                                }
-
-                                function removeImageCinema(element, id) {
-                                    let block = element.closest('.col-3');
-                                    block.remove();
-                                    $.ajax({
-                                        url: appContextPath + '/admin/cinema/editCinema/deleteImageCinema/' + id,
-                                        method: 'GET',
-                                        success: function (result) {
-                                            console.log('Успешно удалено изображение кинотеатра', result);
-                                        },
-                                        error: function (error) {
-                                            console.error("Ошибка при удалении изображения кинотеатра:", error);
-                                        }
-                                    })
-                                }
-
-                            </script>
-
-
                         </div>
                         <div class="row mb-4">
                             <div class="d-flex flex-row justify-content-center align-items-center">
@@ -473,8 +241,11 @@
                             <br>
                             <hr/>
                             <div class="d-flex flex-row justify-content-center align-items-center">
-                                <a th:href="@{/admin/cinema/createHall/{id}(id=${cinema.id})}"
-                                   class="btn btn-primary">Создать Зал</a>
+                                <button type="button"
+                                        class="btn btn-primary"
+                                        id="createHallButton">
+                                    Создать Зал
+                                </button>
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -490,10 +261,7 @@
                                             <input type="text"
                                                    id="seoUrl"
                                                    class="form-control form-control-sm col-sm-8"
-                                                   th:classappend="${#fields.hasErrors('seoUrl')} ? 'is-invalid'"
                                                    th:field="*{seoUrl}">
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoUrl')}"
-                                                 th:errors="*{seoUrl}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -503,10 +271,7 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoTitle"
                                                    class="form-control"
-                                                   th:classappend="${#fields.hasErrors('seoTitle')} ? 'is-invalid'"
                                                    th:field="*{seoTitle}">
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoTitle')}"
-                                                 th:errors="*{seoTitle}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -516,10 +281,7 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoKeywords"
                                                    class="form-control"
-                                                   th:classappend="${#fields.hasErrors('seoKeywords')} ? 'is-invalid'"
                                                    th:field="*{seoKeywords}">
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoKeywords')}"
-                                                 th:errors="*{seoKeywords}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -530,26 +292,272 @@
                                         <div class="col-sm-10">
                                             <input type="text" id="seoDescription"
                                                    class="form-control"
-                                                   th:classappend="${#fields.hasErrors('seoDescription')} ? 'is-invalid'"
                                                    th:field="*{seoDescription}">
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('seoDescription')}"
-                                                 th:errors="*{seoDescription}"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row justify-content-center">
                                 <div class="d-grid gap-2 col-3 mx-auto mt-3">
-                                    <button type="submit" class="btn btn-outline-primary">Сохранить
+                                    <button type="button" id="editCinemaButton" class="btn btn-outline-primary">Сохранить
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </form>
+        <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+
+        <script>
+            let appContextPath = document.getElementById("appContextPath").textContent
+            $(document).ready(function () {
+                const textarea = document.querySelectorAll('[data-autosize]');
+                autosize(textarea);
+            });
+            document.getElementById("add-image-button").addEventListener("click", function() {
+                addNewImageItem('imagesCinema');
+            });
+
+            document.addEventListener('DOMContentLoaded', function (e) {
+
+            });
+
+            let endPointEditCinema = appContextPath+'/admin/cinema/editCinema/' + [[${cinema.id}]];
+            let endPointCreateHall = appContextPath+'/admin/cinema/createHall/';
+
+            // Добавляем обработчики событий для кнопок отправки формы
+            const btnEditCinema = document.getElementById('editCinemaButton');
+            const btnCreateHall = document.getElementById('createHallButton');
+
+            // Добавляем обработчики событий для кнопок
+            btnEditCinema.addEventListener('click', function(e) {
+                e.preventDefault(); // Предотвращаем стандартное поведение отправки формы
+
+                // Валидируем форму
+                const formValidationExamples = document.querySelector(".needs-validation");
+                const fv = FormValidation.formValidation(formValidationExamples);
+                let id = [[${cinema.id}]];
+                console.log(id);
+                let topBanner =  document.getElementById("topBanner"+id).getAttribute('src') === appContextPath+ '/customAssets/noImage.png';
+                let logoPath =  document.getElementById("logoPath"+id).getAttribute('src') === appContextPath+ '/customAssets/noImage.png';
+                console.log(topBanner);
+                if(topBanner){
+                    (function () {
+                        const formValidationExamples = document.querySelector(".needs-validation");
+                        const fv = FormValidation.formValidation(formValidationExamples, {
+                            fields: {
+                                topBanner: {
+                                    validators: {
+                                        notEmpty: {
+                                            message: 'Загрузите изображение'
+                                        }
+                                    }
+                                },
+                            },
+                            plugins: {
+                                trigger: new FormValidation.plugins.Trigger(),
+                                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                                    eleValidClass: '',
+                                    rowSelector: '.row',
+                                }),
+                                submitButton: new FormValidation.plugins.SubmitButton(),
+                                defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+                                autoFocus: new FormValidation.plugins.AutoFocus()
+                            },
+                            init: instance => {
+                                instance.on('plugins.message.placed', function (e) {
+                                    if (e.element.parentElement.classList.contains('input-group')) {
+
+                                        e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                                    }
+                                    if (e.element.parentElement.parentElement.classList.contains('custom-option')) {
+                                        e.element.closest('.row').insertAdjacentElement('afterend', e.messageElement);
+                                    }
+                                });
+                            }
+                        });
+                    })();
+                }
+                if(logoPath){
+                    (function () {
+                        const formValidationExamples = document.querySelector(".needs-validation");
+                        const fv = FormValidation.formValidation(formValidationExamples, {
+                            fields: {
+                                logoPath: {
+                                    validators: {
+                                        notEmpty: {
+                                            message: 'Загрузите изображение'
+                                        }
+                                    }
+                                },
+                            },
+                            plugins: {
+                                trigger: new FormValidation.plugins.Trigger(),
+                                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                                    eleValidClass: '',
+                                    rowSelector: '.row',
+                                }),
+                                submitButton: new FormValidation.plugins.SubmitButton(),
+                                defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+                                autoFocus: new FormValidation.plugins.AutoFocus()
+                            },
+                            init: instance => {
+                                instance.on('plugins.message.placed', function (e) {
+                                    if (e.element.parentElement.classList.contains('input-group')) {
+
+                                        e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                                    }
+                                    if (e.element.parentElement.parentElement.classList.contains('custom-option')) {
+                                        e.element.closest('.row').insertAdjacentElement('afterend', e.messageElement);
+                                    }
+                                });
+                            }
+                        });
+                    })();
+                }
+                (function () {
+                    const formValidationExamples = document.querySelector(".needs-validation");
+                    const fv = FormValidation.formValidation(formValidationExamples, {
+                        fields: {
+                            name: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите ваше имя'
+                                    },
+                                    regexp: {
+                                        regexp: /^[а-яА-ЯёЁa-zA-Z0-9]+$/,
+                                        message: 'Имя должно содержать только буквы'
+                                    }
+                                }
+                            },
+                            description: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите описание'
+                                    },
+                                    stringLength: {
+                                        min: 10,
+                                        max: 1000,
+                                        message: 'Описание должно содержать не менее 10 символов'
+                                    }
+
+                                }
+                            },
+                            conditions: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите условия'
+                                    },
+                                    stringLength: {
+                                        min: 10,
+                                        max: 1000,
+                                        message: 'Условия должны содержать не менее 10 символов'
+                                    }
+                                }
+                            },
+                            seoUrl: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO URL'
+                                    }
+                                }
+                            },
+                            seoTitle: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO Title'
+                                    }
+                                }
+                            },
+                            seoDescription: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO Description'
+                                    }
+                                }
+                            },
+                            seoKeywords: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Пожалуйста, введите SEO Keywords'
+                                    }
+                                }
+                            },
+                        },
+
+                        plugins: {
+                            trigger: new FormValidation.plugins.Trigger(),
+                            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                                eleValidClass: '',
+                                rowSelector: '.row',
+                            }),
+                            submitButton: new FormValidation.plugins.SubmitButton(),
+                            defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+                            autoFocus: new FormValidation.plugins.AutoFocus()
+                        },
+                        init: instance => {
+                            instance.on('plugins.message.placed', function (e) {
+                                if (e.element.parentElement.classList.contains('input-group')) {
+
+                                    e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                                }
+                                if (e.element.parentElement.parentElement.classList.contains('custom-option')) {
+                                    e.element.closest('.row').insertAdjacentElement('afterend', e.messageElement);
+                                }
+                            });
+                        }
+                    });
+                })();
+                // Проверяем, валидна ли форма
+                fv.validate().then(function(status) {
+                    if (status === 'Valid') {
+                        // Отправляем форму на конечную точку редактирования кинотеатра
+                        fetch(endPointEditCinema, {
+                            method: 'POST',
+                            body: new FormData(formValidationExamples)
+                        })
+                            .then(response => {
+                                // Обрабатываем ответ от сервера
+                                console.log('Форма отправлена на конечную точку редактирования кинотеатра');
+                            })
+                            .catch(error => {
+                                // Обрабатываем ошибки
+                                console.error('Ошибка при отправке формы:', error);
+                            });
+                    }
+                });
+            });
+
+            btnCreateHall.addEventListener('click', function(e) {
+                e.preventDefault(); // Предотвращаем стандартное поведение отправки формы
+
+                // Валидируем форму
+                const formValidationExamples = document.querySelector(".needs-validation");
+                const fv = FormValidation.formValidation(formValidationExamples);
+
+                // Проверяем, валидна ли форма
+                fv.validate().then(function(status) {
+                    if (status === 'Valid') {
+                        // Отправляем форму на конечную точку создания зала
+                        fetch(endPointCreateHall, {
+                            method: 'POST',
+                            body: new FormData(formValidationExamples)
+                        })
+                            .then(response => {
+                                // Обрабатываем ответ от сервера
+                                console.log('Форма отправлена на конечную точку создания зала');
+                            })
+                            .catch(error => {
+                                // Обрабатываем ошибки
+                                console.error('Ошибка при отправке формы:', error);
+                            });
+                    }
+                });
+            });
+        </script>
+
     </div>
 </div>
 </body>

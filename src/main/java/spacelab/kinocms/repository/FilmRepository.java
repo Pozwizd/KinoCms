@@ -22,4 +22,6 @@ public interface FilmRepository extends JpaRepository<Film, Long> {
             "AND FUNCTION('MONTH', f.startPremiereDate) = :month")
     int countFilmsInMonth(int year, int month);
 
+    @Query("SELECT MAX(f.id) FROM Film f")
+    Long idLastFilm();
 }

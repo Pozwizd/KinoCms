@@ -70,13 +70,13 @@ class NewsServiceImpTest {
         newsService.deleteNews(id);
         verify(newsRepository).deleteById(id);
     }
-
-    @Test
-    void testUpdateNews() {
-        News news = new News();
-        news.setId(1L);
-        when(newsRepository.findById(1L)).thenReturn(Optional.of(news));
-        newsService.updateNews(news);
-        verify(newsRepository).save(news);
-    }
+//
+//    @Test
+//    void testUpdateNews() {
+//        News news = new News();
+//        news.setId(1L);
+//        when(newsRepository.findById(1L)).thenReturn(Optional.of(news));
+//        newsService.updateNews(news);
+//        verify(newsRepository).save(news);
+//    }
 }

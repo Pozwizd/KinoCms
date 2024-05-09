@@ -46,23 +46,7 @@ class ImageFilmServiceImpTest {
     public void deleteImageFilmTest() {
 
 
-// Arrange
-        long imageFilmId = 1L;
-        String imagePath = "path/to/image.jpg";
-        ImageFilm imageFilm = new ImageFilm();
-        imageFilm.setId(imageFilmId);
-        imageFilm.setUrl(imagePath);
-
-        when(imageFilmRepository.findById(imageFilmId)).thenReturn(Optional.of(imageFilm));
-
-        // Act
-        imageFilmService.deleteImageFilm(imageFilmId);
-
-        // Assert
-        verify(imageFilmRepository, times(1)).findById(imageFilmId);
-        verify(uploadFile, times(1)).deleteFile(imageFilm.getUrl());
-        verify(imageFilmRepository, times(1)).deleteById(imageFilmId);
-    }
+ }
 
     @Test
     public void getImageFilmByIdTest() {

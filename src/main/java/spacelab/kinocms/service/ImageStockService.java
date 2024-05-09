@@ -19,7 +19,7 @@ public interface ImageStockService {
 
     List<ImageStock> getAllImagesStockByStock(Stock stock);
 
-    void deleteImageStock(long id);
+    void deleteImageStock(ImageStock imageStock);
 
     void updateImageStock(ImageStock imageStock);
 

@@ -10,9 +10,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import spacelab.kinocms.Dto.FilmDto;
 import spacelab.kinocms.Dto.NewsDto;
 import spacelab.kinocms.Mapper.NewsMapper;
 import spacelab.kinocms.UploadFile;
+import spacelab.kinocms.model.Film;
+import spacelab.kinocms.model.ImagesEntity.ImageFilm;
 import spacelab.kinocms.model.ImagesEntity.ImageNews;
 import spacelab.kinocms.model.News;
 import spacelab.kinocms.service.ImageNewsService;
@@ -55,27 +58,42 @@ public class NewsController {
     }
 
     @PostMapping("/editNews/{id}")
-    public ModelAndView editBasicPage(@Valid @ModelAttribute("news") NewsDto news,
+    public ModelAndView editBasicPage(@Valid @ModelAttribute("news") NewsDto newsDto,
                                       BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("title", "Редактирование новости " + newsService.getNews(news.getId()).getName());
-            model.addAttribute("pageActive", "News");
+            model.addAttribute("title", "Редактирование фильма " + newsDto.getName());
+            model.addAttribute("pageActive", "film");
+            model.addAttribute("film", newsService.getNews(newsDto.getId()));
             return new ModelAndView("admin/news/editNews");
         }
+        if(newsDto.getImagesNews() != null) {
+            newsDto.getImagesNews().removeIf(imageNewsDto -> imageNewsDto.getId() == null
+                    && imageNewsDto.getUrl().getSize() == 0);
+            if(newsDto
+                    .getImagesNews()
+                    .stream()
+                    .anyMatch(image -> !uploadFile
+                            .isAllowedImageTypeAndSize(image.getUrl()))){
+                model.addAttribute("title", "Редактирование новости " + newsDto.getName());
+                model.addAttribute("pageActive", "news");
+                model.addAttribute("news", newsService.getNews(newsDto.getId()));
+                return new ModelAndView("admin/news/editNews");
+            }
 
-        newsService.updateNews(newsMapper.toEntity(news));
+        }
+        newsService.updateNews(newsMapper.toEntity(newsDto));
         return new ModelAndView("redirect:/admin/news");
     }
 
     @GetMapping("/createNews")
     public ModelAndView createNewPage(Model model, HttpServletRequest request) {
         News news = new News();
-        news.setDateCreated(Date.valueOf(LocalDate.now()));
-        news.setName("Новая новость");
-        newsService.saveNews(news);
-        String referer = request.getHeader("Referer");
-        return new ModelAndView("redirect:" + referer);
+        news.setId(newsService.idLastFilm() + 1);
+        news.setName("Новый новость");
+        news.setMainImage(null);
+
+        return new ModelAndView("admin/news/editNews", "news", news);
     }
 
     @GetMapping("/removeNews/{id}")
@@ -85,76 +103,5 @@ public class NewsController {
         return new ModelAndView("redirect:" + referer);
     }
 
-// Ajax ====================================================================
-
-    @GetMapping("/editNews/showMainPage/{id}")
-    @ResponseBody
-    public News showMainImageNews(Model model, @PathVariable long id) {
-        return newsService.getNews(id);
-    }
-
-    @PostMapping("/editNews/editMainPage/{id}")
-    @ResponseBody
-    public ResponseEntity<String> editMainImageNews(@RequestPart("file") MultipartFile file,
-                                                    @PathVariable Long id) {
-
-        News news = newsService.getNews(id);
-        news.setMainImage(uploadFile.uploadFile(file, news.getMainImage()));
-        newsService.saveNews(news);
-
-        return ResponseEntity.ok("Файл успешно загружен");
-    }
-
-    @PostMapping("/editNews/deleteMainPage/{id}")
-    @ResponseBody
-    public ResponseEntity<String> deleteImageNews(@PathVariable long id) {
-        News news = newsService.getNews(id);
-        uploadFile.deleteFile(news.getMainImage());
-        news.setMainImage(null);
-        newsService.saveNews(news);
-        return ResponseEntity.ok("Файл успешно удален");
-    }
-
-    @GetMapping("/editNews/showAllImages/{id}")
-    @ResponseBody
-    public List<ImageNews> showAllImages(@PathVariable String id) {
-        return imageNewsService.getAllImagesNewsByNews(newsService.getNews(Long.parseLong(id)));
-    }
-
-    @GetMapping("/editNews/getImage/{id}")
-    @ResponseBody
-    public ImageNews getImage(@PathVariable String id) {
-        return imageNewsService.getImageNews(Long.parseLong(id));
-    }
-
-    @GetMapping("/editNews/deleteImage/{id}")
-    @ResponseBody
-    public ResponseEntity<String> deleteImage(@PathVariable String id) {
-        uploadFile.deleteFile(imageNewsService.getImageNews(Long.parseLong(id)).getUrl());
-        imageNewsService.deleteImageNews(Long.parseLong(id));
-        return ResponseEntity.ok("Image deleted successfully");
-    }
-
-    @GetMapping("/editNews/createNewImage/{id}")
-    @ResponseBody
-    public ImageNews createImageNews(@PathVariable String id) {
-        ImageNews imageNews = new ImageNews();
-        imageNews.setNews(newsService.getNews(Long.parseLong(id)));
-        imageNewsService.saveImageNews(imageNews);
-        imageNews = imageNewsService.getLastImageNews(id);
-        return imageNews;
-    }
-
-    @PostMapping("/editNews/editImageNews/{id}")
-    @ResponseBody
-    public ResponseEntity<String> editImageNews(@RequestPart("file") MultipartFile file,
-                                                @PathVariable Long id) {
-
-        ImageNews imageNews = imageNewsService.getImageNews(id);
-        imageNews.setUrl(uploadFile.uploadFile(file, imageNews.getUrl()));
-        imageNewsService.saveImageNews(imageNews);
-
-        return ResponseEntity.ok("Файл успешно загружен");
-    }
 }
 

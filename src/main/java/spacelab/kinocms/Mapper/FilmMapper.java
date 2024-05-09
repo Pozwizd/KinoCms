@@ -2,47 +2,83 @@ package spacelab.kinocms.Mapper;
 
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.Dto.FilmDto;
+import spacelab.kinocms.Dto.Images.ImageFilmDto;
+import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.model.Film;
+import spacelab.kinocms.model.ImagesEntity.ImageFilm;
 import spacelab.kinocms.service.FilmService;
+import spacelab.kinocms.service.ImageFilmService;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class FilmMapper {
 
     private final FilmService filmService;
+    private final UploadFile uploadFile;
+    private final ImageFilmService imageFilmService;
 
-    public FilmMapper(FilmService filmService) {
+    public FilmMapper(FilmService filmService, UploadFile uploadFile, ImageFilmService imageFilmService) {
         this.filmService = filmService;
+        this.uploadFile = uploadFile;
+        this.imageFilmService = imageFilmService;
     }
 
-    public FilmDto toDto(Film film) {
-    FilmDto filmDto = new FilmDto();
-        filmDto.setId(film.getId());
-        filmDto.setName(film.getName());
-        filmDto.setDescription(film.getDescription());
-        filmDto.setLinkTrailer(film.getLinkTrailer());
-        filmDto.setTypeFilm(film.getTypeFilm());
-        filmDto.setSeoUrl(film.getSeoUrl());
-        filmDto.setSeoTitle(film.getSeoTitle());
-        filmDto.setSeoKeywords(film.getSeoKeywords());
-        filmDto.setSeoDescription(film.getSeoDescription());
-        filmDto.setStartPremiereDate(film.getStartPremiereDate());
-        filmDto.setEndPremiereDate(film.getEndPremiereDate());
-        return filmDto;
-}
 
     public Film toEntity(FilmDto filmDto) {
-        Film film = filmService.getFilm(filmDto.getId());
-        film.setName(filmDto.getName());
-        film.setDescription(filmDto.getDescription());
-        film.setLinkTrailer(filmDto.getLinkTrailer());
-        film.setTypeFilm(filmDto.getTypeFilm());
-        film.setSeoUrl(filmDto.getSeoUrl());
-        film.setSeoTitle(filmDto.getSeoTitle());
-        film.setSeoKeywords(filmDto.getSeoKeywords());
-        film.setSeoDescription(filmDto.getSeoDescription());
-        film.setStartPremiereDate(filmDto.getStartPremiereDate());
-        film.setEndPremiereDate(filmDto.getEndPremiereDate());
-        return film;
+
+        Film filmFromDb = filmService.getFilm(filmDto.getId());
+        filmFromDb.setName(filmDto.getName());
+        filmFromDb.setDescription(filmDto.getDescription());
+        filmFromDb.setSeoUrl(filmDto.getSeoUrl());
+        filmFromDb.setSeoTitle(filmDto.getSeoTitle());
+        filmFromDb.setSeoKeywords(filmDto.getSeoKeywords());
+        filmFromDb.setSeoDescription(filmDto.getSeoDescription());
+        filmFromDb.setStartPremiereDate(filmDto.getStartPremiereDate());
+        filmFromDb.setEndPremiereDate(filmDto.getEndPremiereDate());
+        filmFromDb.setLinkTrailer(filmDto.getLinkTrailer());
+        filmFromDb.setTypeFilm(filmDto.getTypeFilm());
+
+
+        filmService.saveFilm(filmFromDb);
+
+        if (filmDto.getImagesFilm() != null) {
+            List<Long> ids = filmDto
+                    .getImagesFilm().stream().map(ImageFilmDto::getId).filter(Objects::nonNull).toList();
+
+            filmFromDb.getImagesFilm().stream().filter(imageFilm -> !ids.contains(imageFilm.getId()))
+                    .forEach(imageFilm -> imageFilmService.deleteImageFilm(imageFilmService.getImageFilmById(imageFilm.getId())));
+            filmFromDb.getImagesFilm()
+                    .removeIf(imageFilm -> !ids.contains(imageFilm.getId()));
+        }
+
+        if (filmDto.getMainImage().getSize() != 0) {
+            filmFromDb.setMainImage(uploadFile.uploadFile(filmDto.getMainImage(), filmFromDb.getMainImage()));
+        }
+
+        if (filmDto.getImagesFilm() != null) {
+            for (ImageFilmDto imageFilmDto : filmDto.getImagesFilm()) {
+                ImageFilm imageFilm = imageFilmDto.getId() == null ? new ImageFilm() :  imageFilmService.getImageFilmById(imageFilmDto.getId());
+                imageFilm.setId(imageFilmDto.getId());
+                if (!imageFilmDto.getUrl().isEmpty()) {
+                    imageFilm.setUrl(uploadFile.uploadFile(imageFilmDto.getUrl(), imageFilm.getUrl()));
+                }
+                imageFilm.setFilm(filmFromDb);
+                imageFilmService.updateImageFilm(imageFilm);
+                filmFromDb.getImagesFilm().add(imageFilm);
+            }
+        } else {
+            if (filmFromDb.getImagesFilm() != null) {
+                for (ImageFilm imageFilm : filmFromDb.getImagesFilm()) {
+                    imageFilmService.deleteImageFilm(imageFilm);
+                }
+                filmFromDb.setImagesFilm(new ArrayList<>());
+            }
+        }
+
+        return filmFromDb;
     }
 
 }

@@ -1,51 +1,85 @@
 package spacelab.kinocms.Mapper;
 
 import org.springframework.stereotype.Service;
+import spacelab.kinocms.Dto.Images.ImageFilmDto;
+import spacelab.kinocms.Dto.Images.ImageNewsDto;
 import spacelab.kinocms.Dto.NewsDto;
+import spacelab.kinocms.UploadFile;
+import spacelab.kinocms.model.Film;
+import spacelab.kinocms.model.ImagesEntity.ImageFilm;
+import spacelab.kinocms.model.ImagesEntity.ImageNews;
 import spacelab.kinocms.model.News;
+import spacelab.kinocms.service.ImageNewsService;
 import spacelab.kinocms.service.NewsService;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class NewsMapper {
     private final NewsService newsService;
+    private final ImageNewsService imageNewsService;
+    private final UploadFile uploadFile;
 
-    public NewsMapper(NewsService newsService) {
+    public NewsMapper(NewsService newsService, ImageNewsService imageNewsService, UploadFile uploadFile) {
         this.newsService = newsService;
+        this.imageNewsService = imageNewsService;
+        this.uploadFile = uploadFile;
     }
 
     public News toEntity(NewsDto newsDto) {
-        News news = newsService.getNews(newsDto.getId());
-        if (news == null) {
-            news = new News();
+
+        News newsFromDb = newsService.getNews(newsDto.getId());
+        if (newsFromDb.getId() == null){
+            newsFromDb.setDateCreated(new Date(System.currentTimeMillis()));
         }
-        news.setId(newsDto.getId());
-        news.setStatus(newsDto.getStatus());
-        news.setName(newsDto.getName());
-        news.setDatePosting(Date.valueOf(newsDto.getDatePosting()));
-        news.setDescription(newsDto.getDescription());
-        news.setLinkVideo(newsDto.getLinkVideo());
-        news.setSeoUrl(newsDto.getSeoUrl());
-        news.setSeoTitle(newsDto.getSeoTitle());
-        news.setSeoKeywords(newsDto.getSeoKeywords());
-        news.setSeoDescription(newsDto.getSeoDescription());
+        newsFromDb.setName(newsDto.getName());
+        newsFromDb.setDatePosting(Date.valueOf(newsDto.getDatePosting()));
+        newsFromDb.setDescription(newsDto.getDescription());
+        newsFromDb.setLinkVideo(newsDto.getLinkVideo());
+        newsFromDb.setSeoUrl(newsDto.getSeoUrl());
+        newsFromDb.setSeoTitle(newsDto.getSeoTitle());
+        newsFromDb.setSeoKeywords(newsDto.getSeoKeywords());
+        newsFromDb.setSeoDescription(newsDto.getSeoDescription());
 
-        return news;
-    }
 
-    public NewsDto toDto(News news) {
-        NewsDto newsDto = new NewsDto();
-        newsDto.setId(news.getId());
-        newsDto.setStatus(news.getStatus());
-        newsDto.setName(news.getName());
-        newsDto.setDatePosting(news.getDatePosting().toLocalDate());
-        newsDto.setDescription(news.getDescription());
-        newsDto.setLinkVideo(news.getLinkVideo());
-        newsDto.setSeoUrl(news.getSeoUrl());
-        newsDto.setSeoTitle(news.getSeoTitle());
-        newsDto.setSeoKeywords(news.getSeoKeywords());
-        newsDto.setSeoDescription(news.getSeoDescription());
-        return newsDto;
+        newsService.saveNews(newsFromDb);
+
+        if (newsDto.getImagesNews() != null) {
+            List<Long> ids = newsDto
+                    .getImagesNews().stream().map(ImageNewsDto::getId).filter(Objects::nonNull).toList();
+
+            newsFromDb.getImagesNews().stream().filter(imageNews -> !ids.contains(imageNews.getId()))
+                    .forEach(imageNewsService::deleteImageNews);
+            newsFromDb.getImagesNews()
+                    .removeIf(imageFilm -> !ids.contains(imageFilm.getId()));
+        }
+
+        if (newsDto.getMainImage().getSize() != 0) {
+            newsFromDb.setMainImage(uploadFile.uploadFile(newsDto.getMainImage(), newsFromDb.getMainImage()));
+        }
+
+        if (newsDto.getImagesNews() != null) {
+            for (ImageNewsDto imageNewsDto : newsDto.getImagesNews()) {
+                ImageNews imageNews = imageNewsDto.getId() == null ? new ImageNews() :  imageNewsService.getImageNews(imageNewsDto.getId());
+                imageNews.setId(imageNewsDto.getId());
+                if (!imageNewsDto.getUrl().isEmpty()) {
+                    imageNews.setUrl(uploadFile.uploadFile(imageNewsDto.getUrl(), imageNews.getUrl()));
+                }
+                imageNews.setNews(newsFromDb);
+                imageNewsService.updateImageNews(imageNews);
+                newsFromDb.getImagesNews().add(imageNews);
+            }
+        } else {
+            if (newsFromDb.getImagesNews() != null) {
+                for (ImageNews imageNews : newsFromDb.getImagesNews()) {
+                    imageNewsService.deleteImageNews(imageNews);
+                }
+                newsFromDb.setImagesNews(new ArrayList<>());
+            }
+        }
+        return newsFromDb;
     }
 }
