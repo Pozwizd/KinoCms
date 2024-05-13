@@ -7,10 +7,12 @@
 <div layout:fragment="content">
     <div class="container">
         <form th:method="post"
+              class="needs-validation"
               th:object="${pageCommon}"
-              th:action="@{{id}(id=${pageCommon.id})}"
+              th:action="@{/admin/pages/editPage/{id}(id=${pageCommon.id})}"
               enctype="multipart/form-data">
             <div class="row justify-content-end">
+                <input type="hidden" th:field="*{id}"/>
                 <div class="flex justify-content-end row">
                     <div class="card-header">
                         <ul class="nav nav-pills card-header-pills" role="tablist"
@@ -81,9 +83,9 @@
                                     <label class="col-form-label col-sm-2">
                                         Главная картинка
                                     </label>
-                                    <img th:src="@{${pageCommon.mainImage == null || pageCommon.mainImage == '' ? '/customAssets/noImage.png' : news.mainImage  }}"
+                                    <img th:src="@{${pageCommon.mainImage == null || pageCommon.mainImage == '' ? '/customAssets/noImage.png' : pageCommon.mainImage  }}"
                                          class="img-fluid" id="mainImage"
-                                         th:id="'MainImageFilm' + ${news.id}"
+                                         th:id="'MainImageFilm' + ${pageCommon.id}"
                                          style="max-width: 250px;
                                           max-height: 200px;" alt="">
                                 </div>
@@ -110,7 +112,7 @@
                                         <div class="card text-center mb-2">
                                             <div style="object-fit : contain" class="card-header">
                                                 <img th:src="@{*{imagesAboutCinema[__${i.index}__].url} }"
-                                                     th:id="'imageFilm' + ${i.index}"
+                                                     th:id="'imagesAboutCinema' + ${i.index}"
                                                      class="img-fluid mb-2"
                                                      style="object-fit : cover; height: 200px">
                                             </div>
@@ -118,7 +120,7 @@
                                                 <input type=hidden class="form-control"
                                                        th:field="*{imagesAboutCinema[__${i.index}__].id}">
                                                 <input type="file" class="form-control"
-                                                       th:data-image-id="'imageFilm' + ${i.index}"
+                                                       th:data-image-id="'imagesAboutCinema' + ${i.index}"
                                                        th:field="*{imagesAboutCinema[__${i.index}__].url}"
                                                        accept="image/png, image/jpeg"
                                                        onchange="previewImage(this)"
@@ -150,7 +152,7 @@
                                 });
 
                                 document.getElementById("add-image-button").addEventListener("click", function () {
-                                    addNewImageItem('imagesNews');
+                                    addNewImageItem('imagesAboutCinema');
                                 });
 
                                 document.addEventListener('DOMContentLoaded', function (e) {

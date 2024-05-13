@@ -27,12 +27,22 @@ public class SessionValidator {
             if (session.getHallId() == null || session.getHallId().isEmpty()) {
                 sessionValid.setHallId(false);
             }
+            if (session.getPrice() < 0) {
+                sessionValid.setPrice(false);
+            }
+            if (session.getPriceVip() < 0) {
+                sessionValid.setPriceVip(false);
+            }
             if (!sessionValid.getTimeSession()
                     || !sessionValid.getFilmId()
                     || !sessionValid.getCinemaId()
-                    || !sessionValid.getHallId()) {
+                    || !sessionValid.getHallId()
+                    || !sessionValid.getPrice()
+                    || !sessionValid.getPriceVip()) {
                 sessionDtosWithErrors.add(sessionValid);
             }
+
+
         }
 
         for (SessionValid item : sessionDtosWithErrors) {
@@ -47,6 +57,12 @@ public class SessionValidator {
             }
             if (!item.getHallId()) {
                 errors.add("hallId"+item.getId());
+            }
+            if (!item.getPrice()) {
+                errors.add("price"+item.getId());
+            }
+            if (!item.getPriceVip()) {
+                errors.add("priceVip"+item.getId());
             }
 
         }

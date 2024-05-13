@@ -10,7 +10,7 @@
               th:object="${film}"
               class="needs-validation"
               th:action="@{/admin/films/editFilm/{id}(id=${film.id})}"
-              enctype="multipart/form-data" novalidate>
+              enctype="multipart/form-data">
             <div class="row justify-content-end">
                 <input type="hidden" th:field="*{id}" >
                 <div class="flex justify-content-end row">
@@ -302,149 +302,117 @@
             });
 
             document.addEventListener('DOMContentLoaded', function (e) {
+                let fields = {
+                    newImageItem: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Загрузите изображение'
+                            }
+                        }
+                    },
+                    name: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите ваше имя'
+                            },
+                            regexp: {
+                                regexp: /^[а-яА-ЯёЁa-zA-Z0-9]+$/,
+                                message: 'Имя должно содержать только буквы'
+                            }
+                        }
+                    },
+                    startPremiereDate: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите дату начала премьеры'
+                            }
+                        }
+                    },
+                    endPremiereDate: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите дату окончания премьеры'
+                            }
+                        }
+                    },
+                    description: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите описание'
+                            },
+                            stringLength: {
+                                min: 10,
+                                max: 1000,
+                                message: 'Описание должно содержать не менее 10 символов'
+                            }
+
+                        }
+                    },
+                    "typeFilm[]": {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, выберите тип кино'
+                            }
+                        }
+                    },
+                    linkTrailer: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите ссылку на трейлер'
+                            },
+                            regexp: {
+                                regexp: /https:\/\/youtu\.be\/([a-zA-Z0-9_-]{1,100})/,
+                                message: 'Ссылка должна быть в формате https://youtu.be/трейлер'
+                            }
+                        },
+                    },
+                    seoUrl: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите SEO URL'
+                            }
+                        }
+                    },
+                    seoTitle: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите SEO Title'
+                            }
+                        }
+                    },
+                    seoDescription: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите SEO Description'
+                            }
+                        }
+                    },
+                    seoKeywords: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Пожалуйста, введите SEO Keywords'
+                            }
+                        }
+                    },
+                };
                 let id = document.getElementById("id").value;
                 let mainImage =  document.getElementById("MainImageFilm"+id).getAttribute('src') === appContextPath+ '/customAssets/noImage.png';
                 console.log(mainImage);
                 if(mainImage){
-                    (function () {
-                        const formValidationExamples = document.querySelector(".needs-validation");
-                        const fv = FormValidation.formValidation(formValidationExamples, {
-                            fields: {
-                                newImageItem: {
-                                    validators: {
-                                        notEmpty: {
-                                            message: 'Загрузите изображение'
-                                        }
-                                    }
-                                },
-                                mainImage: {
-                                    validators: {
-                                        notEmpty: {
-                                            message: 'Загрузите изображение'
-                                        }
-                                    }
-                                },
-                            },
-                            plugins: {
-                                trigger: new FormValidation.plugins.Trigger(),
-                                bootstrap5: new FormValidation.plugins.Bootstrap5({
-                                    eleValidClass: '',
-                                    rowSelector: '.row',
-                                }),
-                                submitButton: new FormValidation.plugins.SubmitButton(),
-                                defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
-                                autoFocus: new FormValidation.plugins.AutoFocus()
-                            },
-                            init: instance => {
-                                instance.on('plugins.message.placed', function (e) {
-                                    if (e.element.parentElement.classList.contains('input-group')) {
-
-                                        e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
-                                    }
-                                    if (e.element.parentElement.parentElement.classList.contains('custom-option')) {
-                                        e.element.closest('.row').insertAdjacentElement('afterend', e.messageElement);
-                                    }
-                                });
+                    fields["mainImage"] = {
+                        mainImage: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Загрузите изображение'
+                                }
                             }
-                        });
-                    })();
+                        },
+                    }
                 }
                 (function () {
                     const formValidationExamples = document.querySelector(".needs-validation");
                     const fv = FormValidation.formValidation(formValidationExamples, {
-                        fields: {
-                            newImageItem: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'Загрузите изображение'
-                                    }
-                                }
-                            },
-                            name: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'Пожалуйста, введите ваше имя'
-                                    },
-                                    regexp: {
-                                        regexp: /^[а-яА-ЯёЁa-zA-Z0-9]+$/,
-                                        message: 'Имя должно содержать только буквы'
-                                    }
-                                }
-                            },
-                            startPremiereDate: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'Пожалуйста, введите дату начала премьеры'
-                                    }
-                                }
-                            },
-                            endPremiereDate: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'Пожалуйста, введите дату окончания премьеры'
-                                    }
-                                }
-                            },
-                            description: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'Пожалуйста, введите описание'
-                                    },
-                                    stringLength: {
-                                        min: 10,
-                                        max: 1000,
-                                        message: 'Описание должно содержать не менее 10 символов'
-                                    }
-
-                                }
-                            },
-                            "typeFilm[]": {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'Пожалуйста, выберите тип кино'
-                                    }
-                                }
-                            },
-                            linkTrailer: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'Пожалуйста, введите ссылку на трейлер'
-                                    },
-                                    regexp: {
-                                        regexp: /https:\/\/youtu\.be\/([a-zA-Z0-9_-]{1,100})/,
-                                        message: 'Ссылка должна быть в формате https://youtu.be/трейлер'
-                                    }
-                                },
-                            },
-                            seoUrl: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'Пожалуйста, введите SEO URL'
-                                    }
-                                }
-                            },
-                            seoTitle: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'Пожалуйста, введите SEO Title'
-                                    }
-                                }
-                            },
-                            seoDescription: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'Пожалуйста, введите SEO Description'
-                                    }
-                                }
-                            },
-                            seoKeywords: {
-                                validators: {
-                                    notEmpty: {
-                                        message: 'Пожалуйста, введите SEO Keywords'
-                                    }
-                                }
-                            },
-                        },
+                        fields,
 
                         plugins: {
                             trigger: new FormValidation.plugins.Trigger(),

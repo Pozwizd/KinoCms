@@ -52,6 +52,7 @@ public class PageMapper {
             pageFromDb.setDateOfCreated(new Date(System.currentTimeMillis()));
         }
         pageFromDb.setName(filmDto.getName());
+        pageFromDb.setStatus(filmDto.getStatus());
         pageFromDb.setDescription(filmDto.getDescription());
         pageFromDb.setSeoUrl(filmDto.getSeoUrl());
         pageFromDb.setSeoTitle(filmDto.getSeoTitle());

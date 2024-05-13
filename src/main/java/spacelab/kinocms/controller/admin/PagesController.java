@@ -89,7 +89,7 @@ public class  PagesController {
     public ModelAndView editBasicPage(Model model, @PathVariable long id) {
         model.addAttribute("title", "Редактирование cтраницы " + pageService.getPage(id).getName());
         model.addAttribute("pageActive", "pages");
-        model.addAttribute("pageCommon", pageMapper.toDto(pageService.getPage(id)));
+        model.addAttribute("pageCommon", pageService.getPage(id));
 
         return new ModelAndView("admin/page/editPage");
     }
