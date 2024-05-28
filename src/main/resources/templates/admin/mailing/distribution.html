@@ -243,7 +243,6 @@
                                 method: 'GET',
                                 dataType: 'JSON',
                                 success: function (result) {
-                                    console.log("Загружено");
                                     for (let data of result) {
                                         $('<div class="list-group-item d-flex justify-content-around" id="mailTemplate">\n' +
                                             '      <input\n' +
@@ -277,7 +276,6 @@
                                 processData: false,
                                 contentType: false,
                                 success: function (result) {
-                                    console.log(result)
                                     if (result === '2') {
                                         let lastElement = $('[id="mailTemplate"]').last();
                                         lastElement.remove();
@@ -288,7 +286,6 @@
                                         method: 'GET',
                                         dataType: 'JSON',
                                         success: function (result) {
-                                            console.log("Загружено", result);
                                             $('#mailTemplateList input[type="checkbox"]').prop('checked', false);
                                             $('<div class="list-group-item d-flex justify-content-around" id="mailTemplate">\n' +
                                                 '      <input\n' +

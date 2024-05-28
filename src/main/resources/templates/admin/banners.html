@@ -98,10 +98,8 @@
         <script>
 
             function previewImage(input) {
-                console.log(input);
                 let file = input.files[0];
 
-                console.log(file);
                 // Проверка типа файла
                 if (!file.type.match("image.*")) {
                     showToast('error', 'Ошибка', 'Укажите фото');
@@ -129,7 +127,6 @@
                             ".image-container"
                         );
                     let image = imageContainer.querySelector("img");
-                    console.log(image);
                     image.src = e.target.result;
                     image.alt = "Предварительный просмотр";
                     image.classList.add("img-preview");
@@ -170,11 +167,9 @@
                             contentType: false,
                             processData: false,
                             success: function (response) {
-                                console.log(response);
                                 showToast('success', 'Успешно', 'Объекты обновлены');
                             },
                             error: function (xhr, status, error) {
-                                console.log(xhr.responseText);
                                 showToast('error', 'Ошибка', 'Перезагрузите страницу и попробуйте ещё раз');
                             }
                         });

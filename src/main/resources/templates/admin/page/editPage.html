@@ -9,7 +9,7 @@
         <form th:method="post"
               class="needs-validation"
               th:object="${pageCommon}"
-              th:action="@{/admin/pages/editPage/{id}(id=${pageCommon.id})}"
+              th:action="@{/admin/pages/edit/{id}(id=${pageCommon.id})}"
               enctype="multipart/form-data">
             <div class="row justify-content-end">
                 <input type="hidden" th:field="*{id}"/>

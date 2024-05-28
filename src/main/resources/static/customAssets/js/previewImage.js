@@ -1,8 +1,6 @@
 function previewImage(input) {
-    console.log(input);
     let file = input.files[0];
 
-    console.log(file);
     // Проверка типа файла
     if (!file.type.match("image.*")) {
         showToast('error', 'Ошибка', 'Укажите фото');
@@ -27,7 +25,6 @@ function previewImage(input) {
     reader.onload = function (e) {
         let id = input.getAttribute('data-image-id');
         let image = document.getElementById(id);
-        console.log(image);
         image.src = e.target.result;
         image.alt = "Предварительный просмотр";
         image.classList.add("img-preview");

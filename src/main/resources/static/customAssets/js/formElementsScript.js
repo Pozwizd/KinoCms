@@ -2,10 +2,6 @@ function addNewImageItem(entityGroupName) {
 
     let items = document.querySelectorAll('.image-item');
     let lastItem = items[items.length - 1];
-    if (lastItem !== undefined) {
-        console.log(lastItem);
-        console.log(lastItem.querySelector('input[type=hidden]').value);
-    }
     let hiddenInput;
     if (lastItem !== undefined) {
         hiddenInput = lastItem.querySelector('input[type=hidden]').value != null

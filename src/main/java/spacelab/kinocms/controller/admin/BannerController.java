@@ -70,8 +70,9 @@ public class BannerController {
         if (bannerBlockUpdateDTO.getBanners() != null) {
             bannerBlockUpdateDTO.getBanners().removeIf(bannerUpdateDTO -> bannerUpdateDTO.getId() == null);
             for (BannerUpdateDTO bannerUpdateDTO : bannerBlockUpdateDTO.getBanners()) {
-                if (uploadFile.isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())
-                        && !banners.stream().map(Banner::getId).collect(Collectors.toList()).contains(Long.parseLong(bannerUpdateDTO.getId()))) {
+                if (!uploadFile.isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())
+                        && !banners.stream().map(Banner::getId)
+                        .toList().contains(Long.parseLong(bannerUpdateDTO.getId()))) {
                     return ResponseEntity.badRequest().body("Недопустимый тип файла");
                 }
             }
@@ -151,17 +152,17 @@ public class BannerController {
 
         List<BannerForNewsAndStocks> banners = bannerForNewsAndStocksService.getAllBannerForNewsAndStocks();
 
-
-
         if (bannerForNewsAndStockBlockDto.getBanners() != null) {
 
             bannerForNewsAndStockBlockDto.getBanners().removeIf(bannerUpdateDTO -> bannerUpdateDTO.getId() == null);
             for (BannerForNewsAndStocksItemDto bannerUpdateDTO : bannerForNewsAndStockBlockDto.getBanners()) {
-                if (uploadFile.isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())
-                        && !banners.stream().map(BannerForNewsAndStocks::getId).collect(Collectors.toList()).contains(bannerUpdateDTO.getId())) {
+                if (!uploadFile.isAllowedImageTypeAndSize(bannerUpdateDTO.getPathImage())
+                        && !banners.stream().map(BannerForNewsAndStocks::getId).toList().contains(bannerUpdateDTO.getId())) {
                     return ResponseEntity.badRequest().body("Недопустимый тип файла");
                 }
             }
+
+
 
             // Удалить баннера айди которых нет в списке
             List<Long> ids = bannerForNewsAndStockBlockDto

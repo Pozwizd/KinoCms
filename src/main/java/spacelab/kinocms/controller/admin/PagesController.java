@@ -85,7 +85,7 @@ public class  PagesController {
 
     }
 
-    @GetMapping("/editPage/{id}")
+    @GetMapping("/edit/{id}")
     public ModelAndView editBasicPage(Model model, @PathVariable long id) {
         model.addAttribute("title", "Редактирование cтраницы " + pageService.getPage(id).getName());
         model.addAttribute("pageActive", "pages");
@@ -94,7 +94,7 @@ public class  PagesController {
         return new ModelAndView("admin/page/editPage");
     }
 
-    @PostMapping("/editPage/{id}")
+    @PostMapping("/edit/{id}")
     public ModelAndView editBasicPage(@Valid @ModelAttribute("pageCommon") PageDto pageDto,
                                       BindingResult bindingResult, Model model) {
 

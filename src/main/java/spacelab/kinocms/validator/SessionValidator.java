@@ -27,10 +27,10 @@ public class SessionValidator {
             if (session.getHallId() == null || session.getHallId().isEmpty()) {
                 sessionValid.setHallId(false);
             }
-            if (session.getPrice() < 0) {
+            if (session.getPrice() <= 0) {
                 sessionValid.setPrice(false);
             }
-            if (session.getPriceVip() < 0) {
+            if (session.getPriceVip() <= 0) {
                 sessionValid.setPriceVip(false);
             }
             if (!sessionValid.getTimeSession()

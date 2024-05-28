@@ -36,8 +36,8 @@
     <link rel="stylesheet" th:href="@{/assets/vendor/fonts/flag-icons.css}" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" th:href="@{/assets/vendor/css/rtl/core.css}" />
-    <link rel="stylesheet" th:href="@{/assets/vendor/css/rtl/theme-default.css}" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/css/rtl/core-dark.css}" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/css/rtl/theme-default-dark.css}" />
     <link rel="stylesheet" th:href="@{/assets/css/demo.css}" />
 
     <!-- Vendors CSS -->
@@ -62,9 +62,9 @@
 <!-- Error -->
 <div class="container-xxl container-p-y">
     <div class="misc-wrapper">
-        <h2 class="mb-1 mt-4">403 forbidden</h2>
-        <p class="mb-4 mx-2">403 forbidden</p>
-        <a href="javascript:history.back()" class="btn btn-primary mb-4">Back to home</a>
+        <h2 class="mb-1 mt-4" th:text="${textError}">Page Not Found :(</h2>
+
+        <a href="javascript:history.back()" class="btn btn-primary mb-4">Назад</a>
         <div class="mt-4">
             <img
                     th:src="@{/assets/img/illustrations/page-misc-error.png}"

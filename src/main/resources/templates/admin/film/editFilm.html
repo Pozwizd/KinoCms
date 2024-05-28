@@ -397,7 +397,6 @@
                 };
                 let id = document.getElementById("id").value;
                 let mainImage =  document.getElementById("MainImageFilm"+id).getAttribute('src') === appContextPath+ '/customAssets/noImage.png';
-                console.log(mainImage);
                 if(mainImage){
                     fields["mainImage"] = {
                         mainImage: {

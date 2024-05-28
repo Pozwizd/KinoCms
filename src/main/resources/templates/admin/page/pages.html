@@ -47,7 +47,7 @@
                             <td th:text="${basicPage.status == true ? 'Активен' : 'Отключен'}">3</td>
                             <td >
                                 <a style="max-width: 24px;"
-                                   th:href="@{pages/editPage/{id}(id=${basicPage.id})}"
+                                   th:href="@{pages/edit/{id}(id=${basicPage.id})}"
                                    class="btn btn-primary">
                                     <i class="ti ti-edit">
                                     </i>
@@ -87,7 +87,7 @@
                             <td th:text="${newsPage.status == true ? 'Активен' : 'Отключен'}">3</td>
                             <td >
                                 <a style="max-width: 24px;"
-                                   th:href="@{pages/editPage/{id}(id=${newsPage.id})}"
+                                   th:href="@{pages/edit/{id}(id=${newsPage.id})}"
                                    class="btn btn-primary">
                                     <i class="ti ti-edit">
                                     </i>

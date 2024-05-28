@@ -17,7 +17,7 @@
                         class="btn rounded-pill btn-icon btn-label-danger position-absolute top-0 end-0">
                     <span class="fa-solid fa-x"></span>
                 </a>
-                <a th:href="@{cinema/editCinema/{id}(id=*{cinema.id})}">
+                <a th:href="@{cinema/edit/{id}(id=*{cinema.id})}">
                     <img class="card-img-top"
                          th:src="@{${cinema.logoPath == null || cinema.logoPath .isEmpty() ? 'https://via.placeholder.com/250x200&text=Empty' : cinema.logoPath}}"
                          alt="Card image cap"/>

@@ -74,6 +74,6 @@ public class UploadFile {
             return true;
         }
 
-        return !StringUtils.startsWithIgnoreCase(file.getContentType(), "image/");
+        return StringUtils.startsWithIgnoreCase(file.getContentType(), "image/");
     }
 }

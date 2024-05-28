@@ -168,11 +168,11 @@
                                             '</select>' +
                                             '</td>' +
                                             '<td>' +
-                                            '<input class="form-control" type="text" name="price" value="'
+                                            '<input class="form-control" type="text" data-price id="price' + i + '" name="price'+ response.sessions[i].id +'" value="'
                                             + response.sessions[i].price + '" />' +
                                             '</td>' +
                                             '<td>' +
-                                            '<input class="form-control" type="text" name="priceVip" value="' + response.sessions[i].priceVip + '" />' +
+                                            '<input class="form-control" type="text" data-priceVip id="priceVip' + i + '"  name="priceVip'+ response.sessions[i].id +'" value="' + response.sessions[i].priceVip + '" />' +
                                             '</td>' +
                                             '<td>' +
                                             '<a style="max-width: 24px;" onclick="removeSession(this)" class="btn btn-danger">\n' +
@@ -232,6 +232,10 @@
                                     $('input[name="'+errors[i]+'"]').addClass('is-invalid');
                                     continue;
                                 }
+                                if (errors[i][0] === 'p') {
+                                    $('input[name="'+errors[i]+'"]').addClass('is-invalid');
+                                    continue;
+                                }
                                 $('select[name="'+errors[i]+'"]').addClass('is-invalid');
                             }
                         }
@@ -240,7 +244,6 @@
                             let lastSessionId = 0;
                             // Найти последний сеанс
                             let lastSession = document.querySelectorAll('tr').length;
-                            console.log(lastSession);
                             if (lastSession > 1) {
                                 let lastElement = document.querySelectorAll('tr')[lastSession - 1];
                                 lastSessionId = lastElement.querySelector('input[name="id"]').value;
@@ -253,7 +256,6 @@
                                 url: appContextPath + '/admin/session/getSessionPageDto',
                                 type: 'GET',
                                 success: function (response) {
-                                    console.log("work");
                                     let row = '<tr>' +
                                         '<input type="hidden" value="' + lastSessionId + '" name="id" />' +
                                         '<td>' +
@@ -277,11 +279,11 @@
                                         '</select>' +
                                         '</td>' +
                                         '<td>' +
-                                        '<input class="form-control" type="text" name="price' + lastSession + '" value="'
+                                        '<input class="form-control" type="text" data-price id="price'+lastSession+'" name="price'+ lastSessionId +'" value="'
                                         + 0 + '" />' +
                                         '</td>' +
                                         '<td>' +
-                                        '<input class="form-control" type="text" name="priceVip' + lastSession + '" value="' + 0 + '" />' +
+                                        '<input class="form-control" type="text" data-priceVip id="priceVip'+lastSession+'" name="priceVip'+ lastSessionId +'" value="' + 0 + '" />' +
                                         '</td>' +
                                         '<td>' +
                                         '<a style="max-width: 24px;" onclick="removeSession(this)" class="btn btn-danger">\n' +
@@ -312,8 +314,6 @@
                         function cleanForm(form) {
                             // Находим все элементы с классом "is-invalid"
                             let invalidElements = document.querySelectorAll(".is-invalid");
-                            console.log(invalidElements);
-
                             // Проходимся по каждому элементу и удаляем класс "is-invalid"
                             invalidElements.forEach(function(element) {
                                 element.classList.remove("is-invalid");
@@ -332,8 +332,8 @@
                                 let cinemaId = $('[data-cinemaId]').eq(index).val();
                                 let filmId = $('[data-filmId]').eq(index).val();
                                 let hallId = $('[data-hallId]').eq(index).val();
-                                let price = $('input[name="price"]').eq(index).val();
-                                let priceVip = $('input[name="priceVip"]').eq(index).val();
+                                let price = $('[data-price]').eq(index).val();
+                                let priceVip = $('[data-priceVip]').eq(index).val();
 
                                 let formData = {
                                     id: id,
@@ -354,19 +354,12 @@
                                 data: jsonData,
                                 contentType: 'application/json',
                                 success: function (response) {
-
-                                    console.log('Форма успешно отправлена');
                                     showToast("success", "Успешно", "Объекты обновлены");
                                     cleanForm('#sessionForm');
                                 },
                                 error: function (error) {
-
                                     showToast("error", "Ошибка", "Укажите корректные значения");
-
                                     let errorArray = error.responseText.split(",").map(item => item.trim().replace(/[\[\]]/g, ''));
-                                    for (let i = 0; i < errorArray.length; i++) {
-                                        console.log(errorArray[i]);
-                                    }
                                     showError(errorArray);
 
 

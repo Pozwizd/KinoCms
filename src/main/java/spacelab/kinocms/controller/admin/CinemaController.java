@@ -35,7 +35,7 @@ public class CinemaController {
         return new ModelAndView("admin/cinemas/cinemas");
     }
 
-    @GetMapping("/editCinema/{id}")
+    @GetMapping("/edit/{id}")
     public ModelAndView editCinema(Model model, @PathVariable String id){
         model.addAttribute("title", "Кинотеатр");
         model.addAttribute("pageActive", "cinema");
@@ -46,7 +46,7 @@ public class CinemaController {
 
 
 
-    @PostMapping({"/editCinema/{id}",})
+    @PostMapping({"/edit/{id}",})
     public ModelAndView editBasicPage(@Valid @ModelAttribute("cinema") CinemaDto cinemaDto,
                                       BindingResult bindingResult, Model model) {
 
