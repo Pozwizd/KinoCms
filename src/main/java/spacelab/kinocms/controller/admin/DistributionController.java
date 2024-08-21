@@ -31,7 +31,6 @@ public class DistributionController {
     private final MailTemplateService mailTemplateService;
     private final UploadFile uploadFile;
 
-    private JavaMailSender mailSender;
 
     @GetMapping({"/", ""})
     public ModelAndView index(Model model, HttpSession session) {
