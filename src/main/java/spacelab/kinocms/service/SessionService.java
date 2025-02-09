@@ -1,10 +1,10 @@
 package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.Cinema;
-import spacelab.kinocms.model.Film;
-import spacelab.kinocms.model.Hall;
-import spacelab.kinocms.model.Session;
+import spacelab.kinocms.entity.Cinema;
+import spacelab.kinocms.entity.Film;
+import spacelab.kinocms.entity.Hall;
+import spacelab.kinocms.entity.Session;
 
 import java.sql.Date;
 import java.util.List;

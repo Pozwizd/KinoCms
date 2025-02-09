@@ -3,26 +3,16 @@ package spacelab.kinocms.controller.admin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import spacelab.kinocms.Dto.NewsDto;
 import spacelab.kinocms.Dto.StockDto;
 import spacelab.kinocms.Mapper.StockMapper;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.ImagesEntity.ImageStock;
-import spacelab.kinocms.model.News;
-import spacelab.kinocms.model.Stock;
-import spacelab.kinocms.service.ImageStockService;
+import spacelab.kinocms.entity.Stock;
 import spacelab.kinocms.service.StockService;
-
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.List;
 
 @Controller
 @RequestMapping("admin/stocks")

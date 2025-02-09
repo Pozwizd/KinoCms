@@ -3,7 +3,7 @@ package spacelab.kinocms.Dto.Page;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
-import spacelab.kinocms.model.page.ContactCinema;
+import spacelab.kinocms.entity.page.ContactCinema;
 
 import java.io.Serializable;
 

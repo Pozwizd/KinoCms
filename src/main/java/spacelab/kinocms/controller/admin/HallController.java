@@ -3,21 +3,18 @@ package spacelab.kinocms.controller.admin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.Dto.CinemaDto;
 import spacelab.kinocms.Dto.HallDto;
 import spacelab.kinocms.Mapper.CinemaMapper;
 import spacelab.kinocms.Mapper.HallMapper;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.Cinema;
-import spacelab.kinocms.model.Hall;
-import spacelab.kinocms.model.ImagesEntity.ImageHall;
+import spacelab.kinocms.entity.Cinema;
+import spacelab.kinocms.entity.Hall;
 import spacelab.kinocms.service.CinemaService;
 import spacelab.kinocms.service.HallService;
 import spacelab.kinocms.service.ImageCinemaService;
@@ -25,7 +22,6 @@ import spacelab.kinocms.service.ImageHallService;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
 
 @Controller
 @AllArgsConstructor

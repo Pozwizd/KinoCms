@@ -4,10 +4,9 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import spacelab.kinocms.enums.Gender;
 import spacelab.kinocms.enums.Lanquage;
-import spacelab.kinocms.model.Role;
-import spacelab.kinocms.model.User;
+import spacelab.kinocms.entity.Role;
+import spacelab.kinocms.entity.User;
 
-import java.io.Serializable;
 import java.sql.Date;
 
 /**

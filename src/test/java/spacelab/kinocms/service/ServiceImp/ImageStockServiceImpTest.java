@@ -6,8 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import spacelab.kinocms.model.ImagesEntity.ImageStock;
-import spacelab.kinocms.model.Stock;
+import spacelab.kinocms.entity.ImagesEntity.ImageStock;
+import spacelab.kinocms.entity.Stock;
 import spacelab.kinocms.repository.ImageStocksRepository;
 
 import java.util.Arrays;

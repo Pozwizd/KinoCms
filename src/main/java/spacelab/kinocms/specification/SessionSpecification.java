@@ -3,10 +3,10 @@ package spacelab.kinocms.specification;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import spacelab.kinocms.enums.TypeFilm;
-import spacelab.kinocms.model.Cinema;
-import spacelab.kinocms.model.Film;
-import spacelab.kinocms.model.Hall;
-import spacelab.kinocms.model.Session;
+import spacelab.kinocms.entity.Cinema;
+import spacelab.kinocms.entity.Film;
+import spacelab.kinocms.entity.Hall;
+import spacelab.kinocms.entity.Session;
 
 import java.sql.Date;
 import java.time.LocalDate;

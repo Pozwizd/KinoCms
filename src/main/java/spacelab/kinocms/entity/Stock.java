@@ -1,14 +1,11 @@
-package spacelab.kinocms.model;
+package spacelab.kinocms.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.model.ImagesEntity.ImageNews;
+import spacelab.kinocms.entity.ImagesEntity.ImageStock;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -19,8 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "news")
-public class News {
+@Table(name = "stock")
+public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,8 +36,8 @@ public class News {
     private String description;
     @Column
     private String mainImage;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "news")
-    private List<ImageNews> imagesNews = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "stock")
+    private List<ImageStock> imagesStock = new ArrayList<>();
     @Column
     private String linkVideo;
     @Column
@@ -49,6 +46,7 @@ public class News {
     private String seoTitle;
     @Column
     private String seoKeywords;
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String seoDescription;
 }

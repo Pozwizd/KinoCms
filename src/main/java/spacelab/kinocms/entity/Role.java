@@ -1,4 +1,4 @@
-package spacelab.kinocms.model;
+package spacelab.kinocms.entity;
 
 public enum Role {
     ADMIN,

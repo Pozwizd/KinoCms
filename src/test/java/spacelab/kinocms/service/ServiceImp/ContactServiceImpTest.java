@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import spacelab.kinocms.Dto.Page.ContactCinemaDto;
 import spacelab.kinocms.Dto.Page.ContactPageDto;
-import spacelab.kinocms.model.page.ContactPage;
+import spacelab.kinocms.entity.page.ContactPage;
 import spacelab.kinocms.repository.ContactPageRepository;
 import spacelab.kinocms.service.ContactCinemaService;
 

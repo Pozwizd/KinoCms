@@ -1,7 +1,7 @@
 package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.banners.BannerBlock;
+import spacelab.kinocms.entity.banners.BannerBlock;
 
 @Service
 public interface BannerBlockService {

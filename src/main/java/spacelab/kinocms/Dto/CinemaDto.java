@@ -4,8 +4,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 import spacelab.kinocms.Dto.Images.ImageCinemaDto;
-import spacelab.kinocms.model.Cinema;
-import spacelab.kinocms.model.Hall;
+import spacelab.kinocms.entity.Cinema;
+import spacelab.kinocms.entity.Hall;
 
 import java.io.Serializable;
 import java.util.ArrayList;

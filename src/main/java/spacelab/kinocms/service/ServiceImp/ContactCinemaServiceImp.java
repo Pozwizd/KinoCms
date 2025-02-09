@@ -6,17 +6,14 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.Dto.Page.ContactCinemaDto;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.page.ContactCinema;
-import spacelab.kinocms.model.page.ContactPage;
+import spacelab.kinocms.entity.page.ContactCinema;
+import spacelab.kinocms.entity.page.ContactPage;
 import spacelab.kinocms.repository.ContactCinemaRepository;
 import spacelab.kinocms.service.ContactCinemaService;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import spacelab.kinocms.model.banners.BannerBackground;
+import spacelab.kinocms.entity.banners.BannerBackground;
 import spacelab.kinocms.repository.BannerBackgroundRepository;
 
 import java.util.Arrays;

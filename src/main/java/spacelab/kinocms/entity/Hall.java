@@ -1,16 +1,14 @@
-package spacelab.kinocms.model;
+package spacelab.kinocms.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import spacelab.kinocms.model.ImagesEntity.ImageHall;
+import spacelab.kinocms.entity.ImagesEntity.ImageHall;
 
 import java.util.ArrayList;
 import java.util.Date;

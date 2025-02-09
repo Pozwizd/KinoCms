@@ -1,4 +1,4 @@
-package spacelab.kinocms.model;
+package spacelab.kinocms.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

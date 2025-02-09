@@ -6,11 +6,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.jpa.domain.Specification;
-import spacelab.kinocms.model.Cinema;
-import spacelab.kinocms.model.Film;
-import spacelab.kinocms.model.Hall;
-import spacelab.kinocms.model.Session;
+import spacelab.kinocms.entity.Cinema;
+import spacelab.kinocms.entity.Film;
+import spacelab.kinocms.entity.Hall;
+import spacelab.kinocms.entity.Session;
 import spacelab.kinocms.repository.SessionRepository;
 import spacelab.kinocms.specification.SessionSpecification;
 

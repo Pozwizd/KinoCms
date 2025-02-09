@@ -1,5 +1,6 @@
-package spacelab.kinocms.model;
+package spacelab.kinocms.entity.page;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,13 +12,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table
-public class MailTemplate {
+@Table(name = "image_page")
+public class ImagePage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    private String name;
+
+    @Column
     private String url;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "page_id", nullable = false)
+    private Page page;
 
 }

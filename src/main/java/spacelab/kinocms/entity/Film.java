@@ -1,4 +1,4 @@
-package spacelab.kinocms.model;
+package spacelab.kinocms.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -7,8 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import spacelab.kinocms.enums.TypeFilm;
-import spacelab.kinocms.model.ImagesEntity.ImageCinema;
-import spacelab.kinocms.model.ImagesEntity.ImageFilm;
+import spacelab.kinocms.entity.ImagesEntity.ImageFilm;
 
 import java.sql.Date;
 import java.util.ArrayList;

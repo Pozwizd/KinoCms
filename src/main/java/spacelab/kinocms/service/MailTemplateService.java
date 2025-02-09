@@ -1,7 +1,7 @@
 package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.MailTemplate;
+import spacelab.kinocms.entity.MailTemplate;
 
 import java.util.List;
 

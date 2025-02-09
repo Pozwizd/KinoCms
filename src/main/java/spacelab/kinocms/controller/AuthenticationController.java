@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
-import spacelab.kinocms.model.User;
+import spacelab.kinocms.entity.User;
 import spacelab.kinocms.repository.UserRepository;
 import spacelab.kinocms.service.UserService;
 

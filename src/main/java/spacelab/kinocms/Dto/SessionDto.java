@@ -1,8 +1,7 @@
 package spacelab.kinocms.Dto;
 
 import lombok.Data;
-import lombok.NonNull;
-import spacelab.kinocms.model.Session;
+import spacelab.kinocms.entity.Session;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

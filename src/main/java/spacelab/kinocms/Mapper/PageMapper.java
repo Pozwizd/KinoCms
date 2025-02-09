@@ -1,18 +1,13 @@
 package spacelab.kinocms.Mapper;
 
-import lombok.Data;
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.Dto.Images.ImageFilmDto;
 import spacelab.kinocms.Dto.Page.ImagePageDto;
 import spacelab.kinocms.Dto.Page.PageDto;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.Film;
-import spacelab.kinocms.model.ImagesEntity.ImageFilm;
-import spacelab.kinocms.model.page.ImagePage;
-import spacelab.kinocms.model.page.Page;
+import spacelab.kinocms.entity.page.ImagePage;
+import spacelab.kinocms.entity.page.Page;
 import spacelab.kinocms.service.ImagePageService;
 import spacelab.kinocms.service.PageService;
-import spacelab.kinocms.service.UserService;
 
 import java.sql.Date;
 import java.util.ArrayList;

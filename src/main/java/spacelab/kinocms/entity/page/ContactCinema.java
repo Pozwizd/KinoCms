@@ -1,4 +1,4 @@
-package spacelab.kinocms.model.page;
+package spacelab.kinocms.entity.page;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

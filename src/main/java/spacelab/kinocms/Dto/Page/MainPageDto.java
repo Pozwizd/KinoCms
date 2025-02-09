@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import spacelab.kinocms.model.page.MainPage;
+import spacelab.kinocms.entity.page.MainPage;
 
 import java.io.Serializable;
 

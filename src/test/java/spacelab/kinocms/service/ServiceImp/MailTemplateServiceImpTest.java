@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import spacelab.kinocms.model.MailTemplate;
+import spacelab.kinocms.entity.MailTemplate;
 import spacelab.kinocms.repository.MailTemplateRepository;
 
 import java.util.Arrays;

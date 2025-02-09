@@ -7,13 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import spacelab.kinocms.model.Film;
+import spacelab.kinocms.entity.Film;
 import spacelab.kinocms.service.BannerBackgroundService;
 import spacelab.kinocms.service.BannerBlockService;
 import spacelab.kinocms.service.BannerService;
 import spacelab.kinocms.service.FilmService;
-
-import java.util.Arrays;
 
 import static java.util.Locale.filter;
 

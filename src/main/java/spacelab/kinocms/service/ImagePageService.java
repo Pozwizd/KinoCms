@@ -1,8 +1,8 @@
 package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.page.ImagePage;
-import spacelab.kinocms.model.page.Page;
+import spacelab.kinocms.entity.page.ImagePage;
+import spacelab.kinocms.entity.page.Page;
 
 import java.util.List;
 

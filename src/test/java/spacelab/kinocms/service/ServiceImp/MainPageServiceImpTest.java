@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import spacelab.kinocms.model.page.MainPage;
+import spacelab.kinocms.entity.page.MainPage;
 import spacelab.kinocms.repository.MainPageRepository;
 
 import java.util.Optional;

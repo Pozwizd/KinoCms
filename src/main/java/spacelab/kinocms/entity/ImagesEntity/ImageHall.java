@@ -1,12 +1,10 @@
-package spacelab.kinocms.model.ImagesEntity;
+package spacelab.kinocms.entity.ImagesEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import spacelab.kinocms.model.Hall;
+import spacelab.kinocms.entity.Hall;
 
 @Getter
 @Setter

@@ -1,20 +1,16 @@
-package spacelab.kinocms.model.page;
+package spacelab.kinocms.entity.ImagesEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import spacelab.kinocms.entity.Stock;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "image_page")
-public class ImagePage {
-
+@Table(name = "image_stocks")
+public class ImageStock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -22,10 +18,10 @@ public class ImagePage {
 
     @Column
     private String url;
-
-    @JsonIgnore
+    
     @ManyToOne
-    @JoinColumn(name = "page_id", nullable = false)
-    private Page page;
+    @JsonIgnore
+    @JoinColumn(name = "stocks_id")
+    private Stock stock;
 
 }

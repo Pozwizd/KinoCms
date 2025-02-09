@@ -2,13 +2,11 @@ package spacelab.kinocms.Mapper;
 
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.Dto.HallDto;
-import spacelab.kinocms.Dto.Images.ImageCinemaDto;
 import spacelab.kinocms.Dto.Images.ImageHallDto;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.Cinema;
-import spacelab.kinocms.model.Hall;
-import spacelab.kinocms.model.ImagesEntity.ImageCinema;
-import spacelab.kinocms.model.ImagesEntity.ImageHall;
+import spacelab.kinocms.entity.Cinema;
+import spacelab.kinocms.entity.Hall;
+import spacelab.kinocms.entity.ImagesEntity.ImageHall;
 import spacelab.kinocms.service.CinemaService;
 import spacelab.kinocms.service.HallService;
 import spacelab.kinocms.service.ImageHallService;

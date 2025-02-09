@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.banners.BannerBlock;
+import spacelab.kinocms.entity.banners.BannerBlock;
 import spacelab.kinocms.repository.BannerBlockRepository;
 import spacelab.kinocms.service.BannerBlockService;
 

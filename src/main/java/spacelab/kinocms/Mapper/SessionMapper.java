@@ -2,7 +2,7 @@ package spacelab.kinocms.Mapper;
 
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.Dto.SessionDto;
-import spacelab.kinocms.model.Session;
+import spacelab.kinocms.entity.Session;
 import spacelab.kinocms.service.CinemaService;
 import spacelab.kinocms.service.FilmService;
 import spacelab.kinocms.service.HallService;

@@ -1,4 +1,4 @@
-package spacelab.kinocms.model.banners;
+package spacelab.kinocms.entity.banners;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,20 +6,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class BannerBackground {
+@Table(name = "banner_block")
+public class BannerBlock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private Boolean isDefault;
+    @Column (name = "status")
+    private Boolean status;
 
-    private String url;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bannerBlock")
+    private List<Banner> banners;
+
+    @Column
+    private String timeChange;
 
 }

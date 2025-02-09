@@ -11,12 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.User;
+import spacelab.kinocms.entity.User;
 import spacelab.kinocms.repository.UserRepository;
 import spacelab.kinocms.service.UserService;
 import spacelab.kinocms.specification.UserSpecification;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -76,6 +77,13 @@ public class UserServiceImp implements UserService, UserDetailsService {
                 .findUserByEmail(name)
                 .orElseThrow(
                         () -> new UsernameNotFoundException(null));
+    }
+
+    @Override
+    public Optional<User> findByUsername(String mail) {
+        logger.info("Get user by email: {}", mail);
+        return userRepository
+                .findUserByEmail(mail);
     }
 
     @Override

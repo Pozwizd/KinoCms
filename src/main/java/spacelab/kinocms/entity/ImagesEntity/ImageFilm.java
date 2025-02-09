@@ -1,16 +1,20 @@
-package spacelab.kinocms.model.ImagesEntity;
+package spacelab.kinocms.entity.ImagesEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.model.Stock;
+import spacelab.kinocms.entity.Film;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "image_stocks")
-public class ImageStock {
+@Table(name = "image_film")
+public class ImageFilm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -18,10 +22,10 @@ public class ImageStock {
 
     @Column
     private String url;
-    
+
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "stocks_id")
-    private Stock stock;
+    @JoinColumn(name = "film_id")
+    private Film film;
 
 }

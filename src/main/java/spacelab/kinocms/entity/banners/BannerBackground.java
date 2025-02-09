@@ -1,31 +1,25 @@
-package spacelab.kinocms.model.ImagesEntity;
+package spacelab.kinocms.entity.banners;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.model.Film;
+
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "image_film")
-public class ImageFilm {
+public class BannerBackground {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column
-    private String url;
+    private Boolean isDefault;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "film_id")
-    private Film film;
+    private String url;
 
 }

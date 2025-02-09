@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.MailTemplate;
+import spacelab.kinocms.entity.MailTemplate;
 import spacelab.kinocms.repository.MailTemplateRepository;
 import spacelab.kinocms.service.MailTemplateService;
 

@@ -82,8 +82,7 @@
                                             Главная картинка
                                         </label>
                                         <img
-                                                th:src="@{{logoImage}(logoImage=
-                                                            *{!#strings.isEmpty(contactCinemas[__${cont.index}__].logo)}
+                                                th:src="@{{logoImage}(logoImage=*{!#strings.isEmpty(contactCinemas[__${cont.index}__].logo)}
                                                 ? ${appContextPath} + *{contactCinemas[__${cont.index}__].logo}
                                                 : 'https://via.placeholder.com/250x200.png?text=Нет+Изображения')}"
                                                 alt=""

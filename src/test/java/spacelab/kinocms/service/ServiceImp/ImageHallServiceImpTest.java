@@ -7,8 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import spacelab.kinocms.model.Hall;
-import spacelab.kinocms.model.ImagesEntity.ImageHall;
+import spacelab.kinocms.entity.Hall;
+import spacelab.kinocms.entity.ImagesEntity.ImageHall;
 import spacelab.kinocms.repository.ImageHallRepository;
 
 import java.util.ArrayList;

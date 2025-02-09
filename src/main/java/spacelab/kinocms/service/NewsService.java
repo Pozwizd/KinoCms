@@ -1,6 +1,6 @@
 package spacelab.kinocms.service;
 
-import spacelab.kinocms.model.News;
+import spacelab.kinocms.entity.News;
 
 public interface NewsService {
 

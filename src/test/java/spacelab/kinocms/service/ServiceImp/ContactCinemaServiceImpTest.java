@@ -9,8 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import spacelab.kinocms.Dto.Page.ContactCinemaDto;
-import spacelab.kinocms.model.page.ContactCinema;
-import spacelab.kinocms.model.page.ContactPage;
+import spacelab.kinocms.entity.page.ContactCinema;
+import spacelab.kinocms.entity.page.ContactPage;
 import spacelab.kinocms.repository.ContactCinemaRepository;
 
 import java.util.Arrays;

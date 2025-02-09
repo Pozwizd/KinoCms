@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.MailService;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.MailTemplate;
-import spacelab.kinocms.model.User;
+import spacelab.kinocms.entity.MailTemplate;
+import spacelab.kinocms.entity.User;
 import spacelab.kinocms.service.MailTemplateService;
 import spacelab.kinocms.service.UserService;
 

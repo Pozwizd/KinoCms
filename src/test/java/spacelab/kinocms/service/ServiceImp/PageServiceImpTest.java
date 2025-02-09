@@ -7,16 +7,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.page.Page;
+import spacelab.kinocms.entity.page.Page;
 import spacelab.kinocms.repository.PageRepository;
 import spacelab.kinocms.service.ImagePageService;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

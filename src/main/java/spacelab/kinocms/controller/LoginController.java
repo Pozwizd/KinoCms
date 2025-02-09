@@ -33,7 +33,7 @@ public class LoginController {
     public ModelAndView login(Model model){
         model.addAttribute("title", "Вход в систему");
         model.addAttribute("admin", userService.getUser(1L));
-        model.addAttribute("user", userService.getUser(2L));
+//        model.addAttribute("user", userService.getUser(2L));
 
         return new ModelAndView("admin/login");
     }

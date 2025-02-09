@@ -1,7 +1,7 @@
 package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.Stock;
+import spacelab.kinocms.entity.Stock;
 
 @Service
 public interface StockService {

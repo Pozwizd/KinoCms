@@ -1,10 +1,10 @@
-package spacelab.kinocms.model.ImagesEntity;
+package spacelab.kinocms.entity.ImagesEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import spacelab.kinocms.model.News;
+import spacelab.kinocms.entity.News;
 
 @Getter
 @Setter

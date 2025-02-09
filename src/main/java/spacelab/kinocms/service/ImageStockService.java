@@ -1,8 +1,8 @@
 package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.ImagesEntity.ImageStock;
-import spacelab.kinocms.model.Stock;
+import spacelab.kinocms.entity.ImagesEntity.ImageStock;
+import spacelab.kinocms.entity.Stock;
 
 import java.util.List;
 

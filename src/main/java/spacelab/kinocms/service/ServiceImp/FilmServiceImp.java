@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.Film;
+import spacelab.kinocms.entity.Film;
 import spacelab.kinocms.repository.FilmRepository;
 import spacelab.kinocms.service.FilmService;
 

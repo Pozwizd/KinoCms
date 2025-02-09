@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.Cinema;
+import spacelab.kinocms.entity.Cinema;
 import spacelab.kinocms.repository.CinemaRepository;
 import spacelab.kinocms.service.CinemaService;
 

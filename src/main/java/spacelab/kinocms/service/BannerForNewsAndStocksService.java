@@ -1,7 +1,7 @@
 package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.banners.BannerForNewsAndStocks;
+import spacelab.kinocms.entity.banners.BannerForNewsAndStocks;
 
 import java.util.List;
 

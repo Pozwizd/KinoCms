@@ -3,8 +3,8 @@ package spacelab.kinocms.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import spacelab.kinocms.model.page.ImagePage;
-import spacelab.kinocms.model.page.Page;
+import spacelab.kinocms.entity.page.ImagePage;
+import spacelab.kinocms.entity.page.Page;
 
 import java.util.List;
 

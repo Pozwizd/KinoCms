@@ -1,52 +1,55 @@
-package spacelab.kinocms.model;
+package spacelab.kinocms.entity.page;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.model.ImagesEntity.ImageStock;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "stock")
-public class Stock {
+@Table(name = "mainPage")
+public class MainPage{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(name = "name")
+    private String name;
+
+
     @Column
     private Boolean status;
+
     @Column
-    private String name;
+    private String phoneNumber;
+
     @Column
-    private Date datePosting;
-    @Column
-    private Date dateCreated;
+    private String phoneNumber2;
+
     @Lob
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String seoText;
+
     @Column
-    private String mainImage;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "stock")
-    private List<ImageStock> imagesStock = new ArrayList<>();
-    @Column
-    private String linkVideo;
+    private Date dateOfCreated;
+
     @Column
     private String seoUrl;
+
     @Column
     private String seoTitle;
+
     @Column
     private String seoKeywords;
-    @Lob
-    @Column(columnDefinition = "TEXT")
+
+    @Column
     private String seoDescription;
 }

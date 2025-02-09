@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.banners.BannerBlockForNewsAndStocks;
+import spacelab.kinocms.entity.banners.BannerBlockForNewsAndStocks;
 import spacelab.kinocms.repository.BannerBlockForNewsAndStocksRepository;
 import spacelab.kinocms.service.BannerBlockForNewsAndStocksService;
 

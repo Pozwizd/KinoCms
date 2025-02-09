@@ -1,16 +1,11 @@
 package spacelab.kinocms.Dto.Page;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
-import spacelab.kinocms.model.page.ImagePage;
-import spacelab.kinocms.model.page.Page;
+import spacelab.kinocms.entity.page.Page;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

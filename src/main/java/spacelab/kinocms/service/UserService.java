@@ -2,9 +2,10 @@ package spacelab.kinocms.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.User;
+import spacelab.kinocms.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface UserService {
@@ -19,4 +20,6 @@ public interface UserService {
     Page<User> findUsersByRequest(int page, int pageSize, String search);
 
     User getUserByEmail(String name);
+
+    Optional<User> findByUsername(String mail);
 }

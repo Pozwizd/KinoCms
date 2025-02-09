@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
-import spacelab.kinocms.model.User;
+import spacelab.kinocms.entity.User;
 import spacelab.kinocms.repository.UserRepository;
 
 import java.util.Arrays;

@@ -6,8 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import spacelab.kinocms.model.banners.BannerBlockForNewsAndStocks;
-import spacelab.kinocms.model.banners.BannerForNewsAndStocks;
+import spacelab.kinocms.entity.banners.BannerBlockForNewsAndStocks;
+import spacelab.kinocms.entity.banners.BannerForNewsAndStocks;
 import spacelab.kinocms.repository.BannerBlockForNewsAndStocksRepository;
 
 import java.util.List;

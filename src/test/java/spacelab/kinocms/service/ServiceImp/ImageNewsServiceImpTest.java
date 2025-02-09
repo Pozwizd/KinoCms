@@ -7,8 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import spacelab.kinocms.model.ImagesEntity.ImageNews;
-import spacelab.kinocms.model.News;
+import spacelab.kinocms.entity.ImagesEntity.ImageNews;
+import spacelab.kinocms.entity.News;
 import spacelab.kinocms.repository.ImageNewsRepository;
 import spacelab.kinocms.service.NewsService;
 

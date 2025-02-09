@@ -1,15 +1,9 @@
 package spacelab.kinocms.Dto;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.Value;
 import org.springframework.web.multipart.MultipartFile;
 import spacelab.kinocms.Dto.Images.ImageStockDto;
-import spacelab.kinocms.model.ImagesEntity.ImageStock;
-import spacelab.kinocms.model.Stock;
+import spacelab.kinocms.entity.Stock;
 
 import java.io.Serializable;
 import java.sql.Date;

@@ -8,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.Film;
-import spacelab.kinocms.model.ImagesEntity.ImageFilm;
+import spacelab.kinocms.entity.Film;
+import spacelab.kinocms.entity.ImagesEntity.ImageFilm;
 import spacelab.kinocms.repository.FilmRepository;
 
 import java.sql.Date;

@@ -3,9 +3,9 @@ package spacelab.kinocms.Mapper;
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.Dto.Images.ImageCinemaDto;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.Cinema;
+import spacelab.kinocms.entity.Cinema;
 import spacelab.kinocms.Dto.CinemaDto;
-import spacelab.kinocms.model.ImagesEntity.ImageCinema;
+import spacelab.kinocms.entity.ImagesEntity.ImageCinema;
 import spacelab.kinocms.service.CinemaService;
 import spacelab.kinocms.service.ImageCinemaService;
 

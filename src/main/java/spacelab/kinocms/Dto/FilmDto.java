@@ -11,7 +11,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 import spacelab.kinocms.Dto.Images.ImageFilmDto;
 import spacelab.kinocms.enums.TypeFilm;
-import spacelab.kinocms.model.Film;
+import spacelab.kinocms.entity.Film;
 
 import java.io.Serializable;
 import java.sql.Date;

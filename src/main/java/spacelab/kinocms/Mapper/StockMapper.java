@@ -1,15 +1,11 @@
 package spacelab.kinocms.Mapper;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.Dto.Images.ImageNewsDto;
 import spacelab.kinocms.Dto.Images.ImageStockDto;
 import spacelab.kinocms.Dto.StockDto;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.ImagesEntity.ImageNews;
-import spacelab.kinocms.model.ImagesEntity.ImageStock;
-import spacelab.kinocms.model.News;
-import spacelab.kinocms.model.Stock;
+import spacelab.kinocms.entity.ImagesEntity.ImageStock;
+import spacelab.kinocms.entity.Stock;
 import spacelab.kinocms.service.ImageStockService;
 import spacelab.kinocms.service.StockService;
 

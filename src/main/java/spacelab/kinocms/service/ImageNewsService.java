@@ -1,8 +1,8 @@
 package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.ImagesEntity.ImageNews;
-import spacelab.kinocms.model.News;
+import spacelab.kinocms.entity.ImagesEntity.ImageNews;
+import spacelab.kinocms.entity.News;
 
 import java.util.List;
 

@@ -6,14 +6,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.Dto.FilmDto;
 import spacelab.kinocms.Mapper.FilmMapper;
 import spacelab.kinocms.UploadFile;
 import spacelab.kinocms.enums.TypeFilm;
-import spacelab.kinocms.model.Film;
+import spacelab.kinocms.entity.Film;
 import spacelab.kinocms.service.FilmService;
 import spacelab.kinocms.service.ImageFilmService;
 

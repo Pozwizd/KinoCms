@@ -6,7 +6,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.Specification;
-import spacelab.kinocms.model.User;
+import spacelab.kinocms.entity.User;
 
 public class UserSpecification implements Specification<User> {
     private final String searchValue;

@@ -2,7 +2,7 @@ package spacelab.kinocms.Dto.Page;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import spacelab.kinocms.model.page.ContactPage;
+import spacelab.kinocms.entity.page.ContactPage;
 
 import java.io.Serializable;
 import java.util.List;

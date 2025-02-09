@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.Dto.UserDto;
 import spacelab.kinocms.Mapper.UserMapper;
-import spacelab.kinocms.model.User;
+import spacelab.kinocms.entity.User;
 import spacelab.kinocms.service.UserService;
 
 @Controller

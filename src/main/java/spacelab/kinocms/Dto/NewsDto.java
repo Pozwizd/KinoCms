@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 import spacelab.kinocms.Dto.Images.ImageNewsDto;
-import spacelab.kinocms.model.News;
+import spacelab.kinocms.entity.News;
 
 import java.io.Serializable;
 import java.time.LocalDate;

@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import spacelab.kinocms.Dto.CinemaDto;
 import spacelab.kinocms.Mapper.CinemaMapper;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.Cinema;
+import spacelab.kinocms.entity.Cinema;
 import spacelab.kinocms.service.CinemaService;
 import spacelab.kinocms.service.HallService;
 import spacelab.kinocms.service.ImageCinemaService;

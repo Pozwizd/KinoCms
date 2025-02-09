@@ -1,14 +1,11 @@
 package spacelab.kinocms.Mapper;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.Dto.Images.ImageFilmDto;
 import spacelab.kinocms.Dto.Images.ImageNewsDto;
 import spacelab.kinocms.Dto.NewsDto;
 import spacelab.kinocms.UploadFile;
-import spacelab.kinocms.model.Film;
-import spacelab.kinocms.model.ImagesEntity.ImageFilm;
-import spacelab.kinocms.model.ImagesEntity.ImageNews;
-import spacelab.kinocms.model.News;
+import spacelab.kinocms.entity.ImagesEntity.ImageNews;
+import spacelab.kinocms.entity.News;
 import spacelab.kinocms.service.ImageNewsService;
 import spacelab.kinocms.service.NewsService;
 

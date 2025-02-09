@@ -1,4 +1,4 @@
-package spacelab.kinocms.model.ImagesEntity;
+package spacelab.kinocms.entity.banners;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -6,26 +6,28 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spacelab.kinocms.model.Cinema;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "image_cinema")
-public class ImageCinema {
+@Table(name = "banner")
+public class Banner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column
-    private String url;
+    private String pathImage;
+
+    private String url = "";
+
+    private String title = "";
 
     @ManyToOne
-    @JoinColumn(name = "cinema_id")
     @JsonIgnore
-    private Cinema cinema;
+    @JoinColumn(name = "banner_block_id")
+    private BannerBlock bannerBlock;
 
 }

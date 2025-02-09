@@ -1,4 +1,4 @@
-package spacelab.kinocms.model.page;
+package spacelab.kinocms.entity.page;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,42 +7,39 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "mainPage")
-public class MainPage{
-
+@Table(name = "contact_page")
+public class ContactPage{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name")
+    @Column
     private String name;
 
+    @OneToMany(mappedBy = "contactPage",fetch = FetchType.EAGER)
+    private List<ContactCinema> contactCinemas = new ArrayList<>();
+
+    @Column
+    private String  linkVideo;
 
     @Column
     private Boolean status;
 
     @Column
-    private String phoneNumber;
-
-    @Column
-    private String phoneNumber2;
-
-    @Lob
-    @Column(columnDefinition = "TEXT")
-    private String seoText;
+    private String seoUrl;
 
     @Column
     private Date dateOfCreated;
-
-    @Column
-    private String seoUrl;
 
     @Column
     private String seoTitle;
@@ -50,6 +47,7 @@ public class MainPage{
     @Column
     private String seoKeywords;
 
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String seoDescription;
 }

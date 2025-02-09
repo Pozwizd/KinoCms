@@ -1,8 +1,8 @@
 package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.banners.Banner;
-import spacelab.kinocms.model.banners.BannerBlock;
+import spacelab.kinocms.entity.banners.Banner;
+import spacelab.kinocms.entity.banners.BannerBlock;
 
 import java.util.List;
 

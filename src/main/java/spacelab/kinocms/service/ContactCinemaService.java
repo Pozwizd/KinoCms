@@ -2,8 +2,8 @@ package spacelab.kinocms.service;
 
 import org.springframework.stereotype.Service;
 import spacelab.kinocms.Dto.Page.ContactCinemaDto;
-import spacelab.kinocms.model.page.ContactCinema;
-import spacelab.kinocms.model.page.ContactPage;
+import spacelab.kinocms.entity.page.ContactCinema;
+import spacelab.kinocms.entity.page.ContactPage;
 
 import java.util.List;
 

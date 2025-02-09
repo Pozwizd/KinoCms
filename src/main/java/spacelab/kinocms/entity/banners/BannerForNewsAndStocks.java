@@ -1,4 +1,4 @@
-package spacelab.kinocms.model.banners;
+package spacelab.kinocms.entity.banners;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

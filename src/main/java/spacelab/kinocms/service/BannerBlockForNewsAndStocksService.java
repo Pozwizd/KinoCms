@@ -1,6 +1,6 @@
 package spacelab.kinocms.service;
 
-import spacelab.kinocms.model.banners.BannerBlockForNewsAndStocks;
+import spacelab.kinocms.entity.banners.BannerBlockForNewsAndStocks;
 
 
 public interface BannerBlockForNewsAndStocksService {

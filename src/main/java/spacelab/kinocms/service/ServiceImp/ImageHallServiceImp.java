@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import spacelab.kinocms.model.Hall;
-import spacelab.kinocms.model.ImagesEntity.ImageHall;
+import spacelab.kinocms.entity.Hall;
+import spacelab.kinocms.entity.ImagesEntity.ImageHall;
 import spacelab.kinocms.repository.ImageHallRepository;
 import spacelab.kinocms.service.ImageHallService;
 
